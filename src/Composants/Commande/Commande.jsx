@@ -136,7 +136,6 @@ export default function Commande(props) {
         // Récupération des médicaments dans la base via une requête Ajax
         if (date_j.getTime() <= date_e.getTime()) {
             fetchProduits();
-            fecthCodeFacture();
         } else {
             setTimeout(() => {
                 props.setConnecter(false);
@@ -247,19 +246,6 @@ export default function Commande(props) {
         });
 
         req.send();
-    }
-
-    const fecthCodeFacture = () => {
-
-        fetch('http://serveur/backend-cmab/recuperer_code_fac.php?id=1')
-        .then(response => response.json())
-        .then(data => {
-            setMessageErreur('');
-            setidFacture(parseInt(data[0].code_facture));
-        })
-        .catch(error => {
-            setMessageErreur('Erreur réseau');
-        })
     }
 
     // permet de récolter les informations sur le médicament sélectioné
@@ -403,7 +389,6 @@ export default function Commande(props) {
         req.open('POST', 'http://serveur/backend-cmab/factures_pharmacie.php');
 
         req.addEventListener('load', () => {
-            majDuCodeFacture();
             setMedoSelect(false);
             setMessageErreur('');
             toastVenteEnregistrer();
@@ -420,43 +405,6 @@ export default function Commande(props) {
         req.send(data);
 
     }
-
-    const majDuCodeFacture = () => {
-
-        var newCode = idFacture + 1;
-        setidFacture(newCode);
-
-        fetch(`http://serveur/backend-cmab/recuperer_code_fac.php?code_facture=${newCode}&id=1`)
-        .then(response => {
-            if (response.status >= 200 && response.status < 400) {
-                setMessageErreur('');
-            } else {
-                setMessageErreur('Une erreur est survenue lors de la facturation');
-            }
-        })
-        .catch(error => {
-            setMessageErreur('Erreur réseau');
-        })
-    }
-
-    // const enregistrerAssurance = (data) => {
-    //     data.append('catego', 'pharmacie');
-
-    //     const req = new XMLHttpRequest();
-    //     req.open('POST', 'http://serveur/backend-cmab/data_assurance.php');
-
-    //     req.send(data);
-
-    //     req.addEventListener("load", function () {
-    //         // La requête n'a pas réussi à atteindre le serveur
-    //         setMessageErreur('');
-    //     });
-
-    //     req.addEventListener("error", function () {
-    //         // La requête n'a pas réussi à atteindre le serveur
-    //         setMessageErreur('Erreur réseau');
-    //     });
-    // }
 
     const validerCommande = () => {
 
@@ -482,13 +430,15 @@ export default function Commande(props) {
             });
 
             let i = 0;
+            const idFac = idUnique();
+            setidFacture(idFac);
             medocCommandes.map(item => {
 
                 const data2 = new FormData();
                 data2.append('code', item.code);
                 data2.append('designation', item.designation);
                 data2.append('id_prod', item.id);
-                data2.append('id_facture', idFacture + 'P');
+                data2.append('id_facture', idFac);
                 data2.append('categorie', item.categorie);
                 data2.append('genre', item.genre);
                 data2.append('date_peremption', item.date_peremption);
@@ -518,7 +468,7 @@ export default function Commande(props) {
                         });
                         i++;
                         if (i === medocCommandes.length) {
-                            enregisterFacture(idFacture + 'P');
+                            enregisterFacture(idFac);
                         }
                     }
                 });
@@ -877,7 +827,7 @@ export default function Commande(props) {
                             ref={componentRef}
                             medocCommandes={medocCommandes}
                             nomConnecte={props.nomConnecte} 
-                            idFacture={idFacture + 'P'}
+                            idFacture={idFacture}
                             prixTotal={qtePrixTotal.prix_total}
                             aPayer={qtePrixTotal.a_payer}
                             montantVerse={montantVerse}
