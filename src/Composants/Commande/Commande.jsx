@@ -361,9 +361,9 @@ export default function Commande(props) {
 
     const idUnique = () => {
         // Création d'un identifiant unique pour la facture
-        return Math.floor((1 + Math.random()) * 0x10000000000)
-               .toString(16)
-               .substring(1) + qtePrixTotal.prix_total;
+        return Math.floor((1 + Math.random()) * 0x10000000000000)
+               .toString(32)
+               .substring(1);
     }
 
     const enregisterFacture = (id) => {

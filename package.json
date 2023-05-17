@@ -2,7 +2,7 @@
   "name": "Pharmacie-Bepanda",
   "author": "Chrisppo Youmbissi Kamdem",
   "copyright": "Copyright © 2021 Chrisppo Youmbissi",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "main": "public/electron.js",
   "homepage": "./",
   "build": {
