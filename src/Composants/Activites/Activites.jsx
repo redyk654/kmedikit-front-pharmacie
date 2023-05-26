@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import './Activites.css';
 import { ContextChargement } from '../../Context/Chargement';
-import { isAlertStockShow, mois, selectProd, genererId } from "../../shared/Globals";
+import { isAlertStockShow, mois, selectProd, genererId, badges } from "../../shared/Globals";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
 import { Toaster } from "react-hot-toast";
 import { useSpring, animated } from 'react-spring';
+import { CBadge } from "@coreui/react";
 import AfficherListeProdInventaires from '../../shared/AfficherListeProdInventaires';
 import SaveInventaire from '../SaveInventaire/SaveInventaire';
 
@@ -348,7 +349,7 @@ export default function Activites(props) {
                     </div>
                 </div>
             </Modal>
-            <h1>Inventaires des produits</h1>
+            <h1 >Inventaires des produits</h1>
             <div className='erreur-message'>{messageErreur}</div>
             <div className="container-historique">
                 <div className="medocs-sortis">
@@ -419,7 +420,9 @@ export default function Activites(props) {
                                     <td>{item.qte_entre}</td>
                                     <td>{item.qte_sortie}</td>
                                     <td>{item.qte_dispo}</td>
-                                    <td>{item.remarque}</td>
+                                    <td>
+                                        <CBadge color={badges[item.remarque]}>{item.remarque}</CBadge>
+                                    </td>
                                 </tr>
                             )) : null}
                         </tbody>

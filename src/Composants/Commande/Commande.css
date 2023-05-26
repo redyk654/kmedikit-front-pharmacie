@@ -15,7 +15,7 @@
     text-align: center;
     margin: 0px 5px;
     border-radius: 10px 10px 0px 0px;
-
+    font-size: larger;
 }
 
 .commande .left-side .liste-medoc h1 {
@@ -24,6 +24,7 @@
     width: 100%;
     border-radius: 10px 10px 0px 0px;
     padding: 4px;
+    font-size: larger;    
 }
 
 .commande .left-side {

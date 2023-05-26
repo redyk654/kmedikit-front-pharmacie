@@ -1,5 +1,5 @@
 {
-  "name": "Pharmacie-Bepanda",
+  "name": "KMD-Pharmacie",
   "author": "Chrisppo Youmbissi Kamdem",
   "copyright": "Copyright © 2021 Chrisppo Youmbissi",
   "version": "2.0.5",
@@ -20,9 +20,10 @@
         "repo": "https://github.com/redyk654/pharmacie-cmab"
       }
     ]
-
   },
   "dependencies": {
+    "@coreui/coreui": "^4.2.6",
+    "@coreui/react": "^4.8.0",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
