@@ -1,6 +1,5 @@
 import './App.css';
 import { Fragment, useState, useEffect, useContext } from 'react';
-import '@coreui/coreui/dist/css/coreui.min.css'
 import Entete from './Composants/Entete/Entete';
 import Connexion from './Composants/Connexion/Connexion';
 import Commande from './Composants/Commande/Commande';
@@ -10,10 +9,9 @@ import Comptes from './Composants/Comptes/Comptes';
 import GestionFactures from './Composants/GestionFactures/GestionFactures';
 import Etats from './Composants/Etats/Etats';
 import Stats from './Composants/Stats/Stats.jsx';
-import { FaChartBar, FaClipboardList, FaLayerGroup, FaReceipt, FaStore, FaUsers } from 'react-icons/fa';
+import { FaChartBar, FaClipboardList, FaLayerGroup, FaReceipt, FaStore, FaTruck, FaUsers } from 'react-icons/fa';
 import { ContextChargement } from './Context/Chargement';
 import ListeProduits from './Composants/ListeProduits/ListeProduits';
-import FactureManuelle from './Composants/FactureManuelle/FactureManuelle';
 import { ROLES } from "./shared/Globals";
 
 
@@ -56,13 +54,6 @@ function App() {
     case 7:
       contenu = <Stats nomConnecte={nomConnecte} />
       break;
-    case 8:
-      contenu = <FactureManuelle nomConnecte={nomConnecte} />
-      break;
-  }
-
-  const changerOnglet = (onglet) => {
-    setOnglet(onglet);
   }
 
   if (connecter) {
@@ -72,27 +63,27 @@ function App() {
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
             <div className="onglets-blocs" style={{width: '97%', fontSize: '12px'}}>
-              <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(6)}}>
+              <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(6)}}>
                 <FaReceipt size={18} />
                 &nbsp;
                 Etats
               </div>
-              <div className={`tab ${onglet === 2 ? 'active' : ''}  ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(2)}}>
+              <div className={`tab ${onglet === 2 ? 'active' : ''}  ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(2)}}>
                 <FaClipboardList size={19} />
                 &nbsp;
                 Inventaires
               </div>
-              <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(3)}}>
+              <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(3)}}>
                 <FaLayerGroup size={18} />
                 &nbsp;
                 Gestion des stocks
               </div>
-              <div className={`tab ${onglet === 4 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(4)}}>
+              <div className={`tab ${onglet === 4 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(4)}}>
                 <FaUsers size={20} />
                 &nbsp;
                 Comptes
               </div>
-              <div className={`tab ${onglet === 7 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(7)}}>
+              <div className={`tab ${onglet === 7 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(7)}}>
                 <FaChartBar size={19} />
                 &nbsp;
                 Statistiques
@@ -110,17 +101,17 @@ function App() {
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
             <div className="onglets-blocs" style={{width: '75%'}}>
-              <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(1)}}>
+              <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(1)}}>
                 <FaStore size={22} />
                 &nbsp;
                 Ventes
               </div>
-              <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(3)}}>
+              <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(3)}}>
                 <FaLayerGroup size={22} />
                 &nbsp;
                 Gestion des stocks
               </div>
-              <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(6)}}>
+              <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(6)}}>
                 <FaReceipt size={22} />
                 &nbsp;
                 Etats
@@ -137,21 +128,16 @@ function App() {
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
-            <div className="onglets-blocs" style={{width: '65%', fontSize: '13px'}}>
-              <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(1)}}>
+            <div className="onglets-blocs" style={{width: '28%'}}>
+              <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(1)}}>
                 <FaStore size={22} />
                 &nbsp;
                 Ventes
               </div>
-              <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(6)}}>
-                <FaClipboardList size={22} />
-                &nbsp;
-                Etats
-              </div>
-              <div className={`tab ${onglet === 8 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(8)}}>
+              <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(6)}}>
                 <FaReceipt size={22} />
                 &nbsp;
-                Factures Manuelles
+                Etats
               </div>
             </div>
             <div className="onglets-contenu">

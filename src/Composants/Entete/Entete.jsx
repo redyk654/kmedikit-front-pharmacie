@@ -88,6 +88,11 @@ export default function Entete(props) {
         }
     }
 
+    // const verifierMaj = () => {
+    //     // autoUpdater.checkForUpdates();
+    //     // console.log(autoUpdater);
+    // }
+
     const handleChange = (e) => {
         setNouveauMdp({...nouveauMdp, [e.target.name]: e.target.value});
     }
