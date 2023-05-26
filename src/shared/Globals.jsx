@@ -85,6 +85,13 @@ export const colors = {
     undef: '',
 }
 
+export const badges = {
+    inventaire: "dark",
+    correction: "dark",
+    sortie: "info",
+    livraison: "success",
+}
+
 export function isAlertStockShow (produit) {
     if (parseInt(produit.en_stock) === 0) {
         var msgAlerteStock = getMsgAlerteStock(produit.designation, produit.en_stock);
