@@ -19,8 +19,8 @@ function createWindow () {
       isDev ? 'http:localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
     )
 
-    // win.setMenuBarVisibility(false)
-    // win.removeMenu()
+    win.setMenuBarVisibility(false)
+    win.removeMenu()
 }
 
 
@@ -41,9 +41,9 @@ app.whenReady().then( async () => {
   autoUpdater.setFeedURL({
     provider: 'github',
     owner: 'redyk654',
-    repo: 'https://github.com/redyk654/pharmacie-cmab/tree/bepanda',
+    repo: 'https://github.com/redyk654/kmedikit-front-pharmacie/tree/mbanga',
     releaseType: 'release',
-    url: 'https://github.com/redyk654/pharmacie-cmab/releases/latest',
+    url: 'https://github.com/redyk654/kmedikit-front-pharmacie/releases/latest',
     
   });
 

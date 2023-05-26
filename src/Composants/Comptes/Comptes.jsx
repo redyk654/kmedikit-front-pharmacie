@@ -158,13 +158,14 @@ export default function Comptes(props) {
             req.open('POST', 'http://serveur/backend-cmab/enregistrer_compte.php');
     
             req.addEventListener('load', () => {
-                if (req.response.length === 0) {
+                if (req.response.toLowerCase() == "cet identifiant est déjà utilisé. choisissez en un autre".toLowerCase()) {
+                    setMsgErreur(req.response);
+                } else {
+                    console.log(req.response);
                     setNvCompte(utilisateur);
                     fermerModalConfirmation();
                     setReussi('');
                     setModalReussi(true);
-                } else {
-                    setMsgErreur(req.response);
                 }
             })
     

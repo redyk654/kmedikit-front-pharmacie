@@ -69,7 +69,7 @@ export default class ImprimerEtat extends Component {
                                 <thead>
                                     <th style={table_styles1}>Désignation</th>
                                     <th style={table_styles1}>Qte sortie</th>
-                                    <th style={table_styles1}>Montant</th>
+                                    <th style={table_styles1}>Total</th>
                                 </thead>
                                 <tbody>
                                     {this.props.historique.length > 0  ? this.props.historique.map(item => (

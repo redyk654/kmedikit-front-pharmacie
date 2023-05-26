@@ -39,7 +39,7 @@ export default function EditerPatient({ ajouterNouveauPatient, resetInfosDuPatie
 
   return (
     <form action="" className="form-editer-patient">
-        <a className='a-link' style={{width: '90px', display: `${enCours ? 'none' : 'block'}`}} onClick={retour}>retour</a>
+        <a className='a-link link-primary' style={{width: '90px', display: `${enCours ? 'none' : 'block'}`}} onClick={retour}>retour</a>
         <h2 style={{textAlign: 'center', color: '#000'}}>Nouveau patient</h2>
         <div className="box-input">
             <p className="input-zone">
