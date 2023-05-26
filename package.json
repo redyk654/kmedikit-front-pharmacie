@@ -17,13 +17,12 @@
       {
         "provider": "github",
         "owner": "redyk654",
-        "repo": "https://github.com/redyk654/kmedikit-front-pharmacie"
+        "repo": "https://github.com/redyk654/pharmacie-cmab"
       }
     ]
+
   },
   "dependencies": {
-    "@coreui/coreui": "^4.2.6",
-    "@coreui/react": "^4.8.0",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
