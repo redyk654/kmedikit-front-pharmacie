@@ -129,7 +129,7 @@ export default function FactureManuelle(props) {
     const [modalPatient, setModalPatient] = useState(false);
     const [assurance, setAssurance] = useState(assuranceDefaut);
     const [typeAssurance, setTypeAssurance] = useState(0);
-    const [statu, setStatu] = useState('done');
+    const [statu, setStatu] = useState('DONE');
     const [rafraichir, setRafraichir] = useState(false);
     const [enCours, setEncours] = useState(false);
 
@@ -371,7 +371,7 @@ export default function FactureManuelle(props) {
                .substring(1) + qtePrixTotal.prix_total;
     }
 
-    const enregisterFacture = (id) => {
+    const enregisterFacture = (id, dateVente) => {
 
         // Enregistrement de la facture
 
@@ -382,15 +382,11 @@ export default function FactureManuelle(props) {
         data.append('vendeur', props.nomConnecte);
         data.append('prix_total', qtePrixTotal.prix_total);
         data.append('a_payer', qtePrixTotal.a_payer);
-        data.append('montant_verse', qtePrixTotal.prix_total);
-        data.append('relicat', 0);
-        data.append('reste_a_payer', 0);
-        data.append('assurance', assurance);
-        data.append('type_assurance', typeAssurance);
+        data.append('date_vente', dateVente);
         data.append('statu', statu);
 
         const req = new XMLHttpRequest();
-        req.open('POST', 'http://serveur/backend-cmab/facture_manuelle.php');
+        req.open('POST', 'http://serveur/backend-cmab/facture_manuelle.php?enregistrer_facture');
 
         req.addEventListener('load', () => {
             setMedoSelect(false);
@@ -476,7 +472,7 @@ export default function FactureManuelle(props) {
                         });
                         i++;
                         if (i === medocCommandes.length) {
-                            enregisterFacture(idFac);
+                            enregisterFacture(idFac, dateVente);
                         }
                     }
                 });

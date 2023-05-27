@@ -5,6 +5,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import ReactToPrint from 'react-to-print';
 import ImprimerEtat from './ImprimerEtat';
 import { useSpring, animated } from 'react-spring';
+import { CFormSwitch, CFormSelect } from '@coreui/react';
 
 import { genres } from '../../shared/Globals';
 
@@ -25,7 +26,6 @@ export default function Etats(props) {
     const {chargement, stopChargement, startChargement} = useContext(ContextChargement);
 
     const [historique, sethistorique] = useState([]);
-    const [historique2, sethistorique2] = useState([]);
     const [historiqueSauvegarde, setHistoriqueSauvegarde] = useState([]);
     const [listeComptes, setListeComptes] = useState([]);
     const [recetteReel, setRecetteReel] = useState(false);
@@ -52,6 +52,10 @@ export default function Etats(props) {
             }, 6000);
         }
     }, []);
+
+    useEffect(() => {
+        !recetteTotal && sethistorique([])
+    }, [recetteTotal]);
 
     useEffect(() => {
         startChargement();
@@ -253,8 +257,13 @@ export default function Etats(props) {
                                     {
                                     props.role === admin && 
                                     <Fragment>
-                                        <label htmlFor="filtre">Filtrer : </label>
-                                        <input type="checkbox" id="filtre" checked={filtre} onChange={(e) => setFiltre(!filtre)} />
+                                        <CFormSwitch
+                                            label="Filtrer"
+                                            id="formSwitchCheckDefault"
+                                            checked={filtre}
+                                            reverse={true}
+                                            onChange={(e) => setFiltre(!filtre)}
+                                        />
                                     </Fragment>
                                     }
                                 </p>
@@ -264,20 +273,21 @@ export default function Etats(props) {
                                     <input type="checkbox" id="non_paye" checked={non_paye} onChange={(e) => setNonPaye(!non_paye)} />
                                 </p>
                                 <label htmlFor="">Vendeur : </label>
-                                    <select name="caissier" id="caissier" onChange={(e) => setCaissier(e.target.value)}>
+                                    <CFormSelect className='w-10' name="caissier" id="caissier" onChange={(e) => setCaissier(e.target.value)}>
                                         {props.role !== admin ? 
-                                        <option value={props.nomConnecte}>{props.nomConnecte.toUpperCase()}</option> :
-                                        listeComptes.map(item => (
-                                            <option value={item.nom_user}>{item.nom_user.toUpperCase()}</option>
+                                            <option value={props.nomConnecte}>{props.nomConnecte.toUpperCase()}</option> 
+                                        :
+                                            listeComptes.map(item => (
+                                                <option value={item.nom_user}>{item.nom_user.toUpperCase()}</option>
                                         ))}
-                                    </select>
+                                    </CFormSelect>
                                 </p>
                             </div>
                             <button className='bootstrap-btn' onClick={rechercherHistorique}>rechercher</button>
-                            <div>Génériques : <span style={{fontWeight: '700'}}>{recetteGenerique ? recetteGenerique + ' Fcfa' : '0 Fcfa'}</span></div>
-                            <div>Spécialités : <span style={{fontWeight: '700'}}>{recetteSp ? recetteSp + ' Fcfa' : '0 Fcfa'}</span></div>
+                            <div>Génériques : <span style={{fontWeight: '700'}}>{total ? recetteGenerique + ' Fcfa' : '0 Fcfa'}</span></div>
+                            <div>Spécialités : <span style={{fontWeight: '700'}}>{total ? recetteSp + ' Fcfa' : '0 Fcfa'}</span></div>
                             <div>Total : <span style={{fontWeight: '700'}}>{total ? total + ' Fcfa' : '0 Fcfa'}</span></div>
-                            <div>Recette : <span style={{fontWeight: '700'}}>{recetteReel ? recetteReel + ' Fcfa' : '0 Fcfa'}</span></div>
+                            <div>Recette : <span style={{fontWeight: '700'}}>{total ? recetteReel + ' Fcfa' : '0 Fcfa'}</span></div>
                         </div>
                         <div className='erreur-message'>{messageErreur}</div>
 
@@ -326,6 +336,7 @@ export default function Etats(props) {
                         recetteReel={recetteReel}
                         recetteGenerique={recetteGenerique}
                         recetteSp={recetteSp}
+                        filtre={filtre}
                     />
                 </div>
             </section>
