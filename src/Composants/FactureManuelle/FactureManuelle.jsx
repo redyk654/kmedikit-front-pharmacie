@@ -102,7 +102,7 @@ export default function FactureManuelle(props) {
     const date_e = new Date('2024-12-15');
     const date_j = new Date();
 
-    const [enDev, setEnDev] = useState(true);
+    const [enDev, setEnDev] = useState(false);
     const [listeMedoc, setListeMedoc] = useState([]);
     const [listeMedocSauvegarde, setListeMedocSauvegarde] = useState([]);
     const [qteDesire, setQteDesire] = useState('');
