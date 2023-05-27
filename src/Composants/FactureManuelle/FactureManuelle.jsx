@@ -102,6 +102,7 @@ export default function FactureManuelle(props) {
     const date_e = new Date('2024-12-15');
     const date_j = new Date();
 
+    const [enDev, setEnDev] = useState(true);
     const [listeMedoc, setListeMedoc] = useState([]);
     const [listeMedocSauvegarde, setListeMedocSauvegarde] = useState([]);
     const [qteDesire, setQteDesire] = useState('');
@@ -693,181 +694,189 @@ export default function FactureManuelle(props) {
         });
     }
 
-    return (
-        <animated.div style={props1}>
-        <div><Toaster/></div>
-        <section className="commande">
-            <Modal
-                isOpen={modalPatient}
-                style={customStyles4}
-                contentLabel="information du patient"
-                ariaHideApp={false}
-                onRequestClose={fermerModalPatient}
-            >
-                {contenuModal()}
-            </Modal>
-            <Modal
-                isOpen={modalAlerte}
-                style={customStyles3}
-                onRequestClose={fermModalAlerte}
-            >
-                <h2 style={{color: '#fff'}}>{alerteStock}</h2>
-                <button style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={fermModalAlerte}>Fermer</button>
-            </Modal>
-            <Modal
-                isOpen={modalConfirmation}
-                style={customStyles1}
-                contentLabel="validation commande"
-            >
-                <h2 style={{color: `${darkLight ? '#fff' : '#18202e'}`, textAlign: 'center', marginBottom: '30px'}}>Confirmation</h2>
-                <p style={{fontWeight: '600', textAlign: 'center', opacity: '.8'}}>
-                    Vous allez valider la vente. Etes-vous sûr ?
-                </p>
-                <div style={{textAlign: 'center', marginTop: '12px'}} className=''>
-                    {enCours ? 
-                    <Loader type="TailSpin" color="#03ca7e" height={50} width={50}/> 
-                        : 
-                    <div>
-                        <button ref={elt2} className='bootstrap-btn annuler' style={{width: '30%', height: '5vh', cursor: 'pointer', marginRight: '10px', borderRadius: '15px'}} onClick={fermerModalConfirmation}>Annuler</button>
-                        <button ref={elt} className="bootstrap-btn valider" style={{width: '30%', height: '5vh', cursor: 'pointer', borderRadius: '15px'}} onClick={validerCommande}>Confirmer</button>
-                    </div>
-                    }
-                </div>
-            </Modal>
-            <Modal
-                isOpen={modalReussi}
-                style={customStyles2}
-                contentLabel="Commande réussie"
-                onRequestClose={fermerModalReussi}
-            >
-                <h2 style={{color: '#fff'}}>La vente a bien été enregistré !</h2>
-                <button style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={fermerModalReussi}>Fermer</button>
-            </Modal>
-            <div className="left-side">
-
-                <p className="search-zone">
-                    <input type="text" placeholder="recherchez un produit" className="recherche" onChange={filtrerListe} />
-                </p>
-                <p>
-                    {/* <button className="rafraichir" onClick={() => {setRafraichir(!rafraichir)}}>rafraichir</button> */}
-                </p>
-                <div className="liste-medoc">
-                    <h1>Liste de produits</h1>
-                    <ul>
-                        {chargement ? <div className="loader"><Loader type="TailSpin" color="#03ca7e" height={100} width={100}/></div> : listeMedoc.map(item => (
-                            <li value={item.id} key={item.id} onClick={afficherInfos} style={{color: `${parseInt(item.en_stock) < parseInt(item.min_rec) || parseInt(item.en_stock) === 0 ? '#ec4641' : ''}`}}>{item.designation.toLowerCase()}</li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-
-            <div className="right-side">
-                <h1>{medocSelect ? "Détails du produit" : "Selectionnez un produit pour voir les détails"}</h1>
-
-                <div className="infos-medoc">
-                    {medocSelect && medocSelect.map(item => (
-                    <AfficherProd
-                        key={item.id}
-                        code={item.code}
-                        designation={item.designation}
-                        pu_vente={item.pu_vente}
-                        en_stock={item.en_stock}
-                        min_rec={item.min_rec}
-                        categorie={item.categorie}
-                        conditionnement={item.conditionnement}
-                        date_peremption={item.date_peremption}
-                        genre={item.genre}
-                        />
-                    ))}
-                </div>
-                <div className="box">
-                    <div className="detail-item">
-                        <input type="text" name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
-                        {/* <button onClick={ajouterMedoc}>ajouter</button> */}
-                        <div onClick={ajouterMedoc} style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
-                            <FaPlusSquare color='#00BCD4' size={35} />
-                        </div>
-                    </div>
-                    {/* <div style={{textAlign: 'center'}}>
-                        <button className='btn-patient' onClick={infosPatient}>Infos du patient</button>
-                    </div> */}
-                    <div style={{textAlign: 'center'}}>
-                        {nomPatient ? (
-                            <div>
-                                Patient: <span style={{color: '#0e771a', fontWeight: '700'}}>{nomPatient.toLocaleUpperCase()}</span>
-                            </div>
-                        ) : null}
-                        {assurance !== assuranceDefaut ? (
-                            <div style={{}}>
-                                Couvert par: <span style={{color: '#0e771a', fontWeight: '700'}}>{assurance.toLocaleUpperCase()}</span>
-                            </div>
-                        ) : null}
-                    </div>
-                    <div>
-                        <label htmlFor="">Date : </label>
-                        <input style={{width: '12vw'}} type="date" ref={date_select1} />
-                    </div>
-                </div>
-
-                <div className='erreur-message'>{messageErreur}</div>
-
-                <div className="details-commande">
-                    <h1>Vente en cours</h1>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Produits</td>
-                                <td>Quantités</td>
-                                <td>Pu</td>
-                                <td>Total</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {medocCommandes.map(item => (
-                                <tr key={item.id} style={{fontWeight: '600'}}>
-                                    <td>{item.designation}</td>
-                                    <td style={{color: `${parseInt(item.en_stock) < parseInt(item.qte_commander) ? 'red' : ''}`}}>{item.qte_commander}</td>
-                                    <td>{item.pu_vente + ' Fcfa'}</td>
-                                    <td>{item.prix + ' Fcfa' }</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-                    <div className="valider-annuler">
-
-                        <div className="totaux">
-                            Produits : <span style={{color: "#0e771a", fontWeight: "600"}}>{medocCommandes.length}</span>
-                        </div>
-                        <div className="totaux">
-                            Prix total : <span style={{color: "#0e771a", fontWeight: "600"}}>{medocCommandes.length > 0 ? qtePrixTotal.prix_total + ' Fcfa': 0 + ' Fcfa'}</span>
-                        </div>
-                        <div>
-                            Net à payer : <span style={{color: "#0e771a", fontWeight: "600"}}>{qtePrixTotal.a_payer ? qtePrixTotal.a_payer + ' Fcfa': 0 + ' Fcfa'}</span>
-                        </div>
-                        <button ref={refBtnAnnuler} className='bootstrap-btn annuler' onClick={annulerCommande}>Annnuler</button>
-                        <button ref={refBtnValider} className='bootstrap-btn valider' onClick={validerCommande}>Valider</button>
-
-                    </div>
-                    <div>
-                        <div style={{display: 'none'}}>
-                            <Facture 
-                            ref={componentRef}
-                            medocCommandes={medocCommandes}
-                            nomConnecte={props.nomConnecte} 
-                            idFacture={idFacture}
-                            prixTotal={qtePrixTotal.prix_total}
-                            aPayer={qtePrixTotal.a_payer}
-                            montantVerse={montantVerse}
-                            relicat={relicat}
-                            resteaPayer={resteaPayer}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        </animated.div>
-    )
+    if (enDev) {
+      return (
+        <div className='text-center'>
+          En cours de développement
+        </div>
+      )
+    } else {
+      return (
+          <animated.div style={props1}>
+          <div><Toaster/></div>
+          <section className="commande">
+              <Modal
+                  isOpen={modalPatient}
+                  style={customStyles4}
+                  contentLabel="information du patient"
+                  ariaHideApp={false}
+                  onRequestClose={fermerModalPatient}
+              >
+                  {contenuModal()}
+              </Modal>
+              <Modal
+                  isOpen={modalAlerte}
+                  style={customStyles3}
+                  onRequestClose={fermModalAlerte}
+              >
+                  <h2 style={{color: '#fff'}}>{alerteStock}</h2>
+                  <button style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={fermModalAlerte}>Fermer</button>
+              </Modal>
+              <Modal
+                  isOpen={modalConfirmation}
+                  style={customStyles1}
+                  contentLabel="validation commande"
+              >
+                  <h2 style={{color: `${darkLight ? '#fff' : '#18202e'}`, textAlign: 'center', marginBottom: '30px'}}>Confirmation</h2>
+                  <p style={{fontWeight: '600', textAlign: 'center', opacity: '.8'}}>
+                      Vous allez valider la vente. Etes-vous sûr ?
+                  </p>
+                  <div style={{textAlign: 'center', marginTop: '12px'}} className=''>
+                      {enCours ? 
+                      <Loader type="TailSpin" color="#03ca7e" height={50} width={50}/> 
+                          : 
+                      <div>
+                          <button ref={elt2} className='bootstrap-btn annuler' style={{width: '30%', height: '5vh', cursor: 'pointer', marginRight: '10px', borderRadius: '15px'}} onClick={fermerModalConfirmation}>Annuler</button>
+                          <button ref={elt} className="bootstrap-btn valider" style={{width: '30%', height: '5vh', cursor: 'pointer', borderRadius: '15px'}} onClick={validerCommande}>Confirmer</button>
+                      </div>
+                      }
+                  </div>
+              </Modal>
+              <Modal
+                  isOpen={modalReussi}
+                  style={customStyles2}
+                  contentLabel="Commande réussie"
+                  onRequestClose={fermerModalReussi}
+              >
+                  <h2 style={{color: '#fff'}}>La vente a bien été enregistré !</h2>
+                  <button style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={fermerModalReussi}>Fermer</button>
+              </Modal>
+              <div className="left-side">
+  
+                  <p className="search-zone">
+                      <input type="text" placeholder="recherchez un produit" className="recherche" onChange={filtrerListe} />
+                  </p>
+                  <p>
+                      {/* <button className="rafraichir" onClick={() => {setRafraichir(!rafraichir)}}>rafraichir</button> */}
+                  </p>
+                  <div className="liste-medoc">
+                      <h1>Liste de produits</h1>
+                      <ul>
+                          {chargement ? <div className="loader"><Loader type="TailSpin" color="#03ca7e" height={100} width={100}/></div> : listeMedoc.map(item => (
+                              <li value={item.id} key={item.id} onClick={afficherInfos} style={{color: `${parseInt(item.en_stock) < parseInt(item.min_rec) || parseInt(item.en_stock) === 0 ? '#ec4641' : ''}`}}>{item.designation.toLowerCase()}</li>
+                          ))}
+                      </ul>
+                  </div>
+              </div>
+  
+              <div className="right-side">
+                  <h1>{medocSelect ? "Détails du produit" : "Selectionnez un produit pour voir les détails"}</h1>
+  
+                  <div className="infos-medoc">
+                      {medocSelect && medocSelect.map(item => (
+                      <AfficherProd
+                          key={item.id}
+                          code={item.code}
+                          designation={item.designation}
+                          pu_vente={item.pu_vente}
+                          en_stock={item.en_stock}
+                          min_rec={item.min_rec}
+                          categorie={item.categorie}
+                          conditionnement={item.conditionnement}
+                          date_peremption={item.date_peremption}
+                          genre={item.genre}
+                          />
+                      ))}
+                  </div>
+                  <div className="box">
+                      <div className="detail-item">
+                          <input type="text" name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
+                          {/* <button onClick={ajouterMedoc}>ajouter</button> */}
+                          <div onClick={ajouterMedoc} style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
+                              <FaPlusSquare color='#00BCD4' size={35} />
+                          </div>
+                      </div>
+                      {/* <div style={{textAlign: 'center'}}>
+                          <button className='btn-patient' onClick={infosPatient}>Infos du patient</button>
+                      </div> */}
+                      <div style={{textAlign: 'center'}}>
+                          {nomPatient ? (
+                              <div>
+                                  Patient: <span style={{color: '#0e771a', fontWeight: '700'}}>{nomPatient.toLocaleUpperCase()}</span>
+                              </div>
+                          ) : null}
+                          {assurance !== assuranceDefaut ? (
+                              <div style={{}}>
+                                  Couvert par: <span style={{color: '#0e771a', fontWeight: '700'}}>{assurance.toLocaleUpperCase()}</span>
+                              </div>
+                          ) : null}
+                      </div>
+                      <div>
+                          <label htmlFor="">Date : </label>
+                          <input style={{width: '12vw'}} type="date" ref={date_select1} />
+                      </div>
+                  </div>
+  
+                  <div className='erreur-message'>{messageErreur}</div>
+  
+                  <div className="details-commande">
+                      <h1>Vente en cours</h1>
+  
+                      <table>
+                          <thead>
+                              <tr>
+                                  <td>Produits</td>
+                                  <td>Quantités</td>
+                                  <td>Pu</td>
+                                  <td>Total</td>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {medocCommandes.map(item => (
+                                  <tr key={item.id} style={{fontWeight: '600'}}>
+                                      <td>{item.designation}</td>
+                                      <td style={{color: `${parseInt(item.en_stock) < parseInt(item.qte_commander) ? 'red' : ''}`}}>{item.qte_commander}</td>
+                                      <td>{item.pu_vente + ' Fcfa'}</td>
+                                      <td>{item.prix + ' Fcfa' }</td>
+                                  </tr>
+                              ))}
+                          </tbody>
+                      </table>
+  
+                      <div className="valider-annuler">
+  
+                          <div className="totaux">
+                              Produits : <span style={{color: "#0e771a", fontWeight: "600"}}>{medocCommandes.length}</span>
+                          </div>
+                          <div className="totaux">
+                              Prix total : <span style={{color: "#0e771a", fontWeight: "600"}}>{medocCommandes.length > 0 ? qtePrixTotal.prix_total + ' Fcfa': 0 + ' Fcfa'}</span>
+                          </div>
+                          <div>
+                              Net à payer : <span style={{color: "#0e771a", fontWeight: "600"}}>{qtePrixTotal.a_payer ? qtePrixTotal.a_payer + ' Fcfa': 0 + ' Fcfa'}</span>
+                          </div>
+                          <button ref={refBtnAnnuler} className='bootstrap-btn annuler' onClick={annulerCommande}>Annnuler</button>
+                          <button ref={refBtnValider} className='bootstrap-btn valider' onClick={validerCommande}>Valider</button>
+  
+                      </div>
+                      <div>
+                          <div style={{display: 'none'}}>
+                              <Facture 
+                              ref={componentRef}
+                              medocCommandes={medocCommandes}
+                              nomConnecte={props.nomConnecte} 
+                              idFacture={idFacture}
+                              prixTotal={qtePrixTotal.prix_total}
+                              aPayer={qtePrixTotal.a_payer}
+                              montantVerse={montantVerse}
+                              relicat={relicat}
+                              resteaPayer={resteaPayer}
+                              />
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </section>
+          </animated.div>
+      )
+    }
 }

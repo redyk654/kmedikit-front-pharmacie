@@ -7,6 +7,8 @@ import ImprimerEtat from './ImprimerEtat';
 import { useSpring, animated } from 'react-spring';
 import { CFormSwitch, CFormSelect } from '@coreui/react';
 
+import { genres } from '../../shared/Globals';
+
 export default function Etats(props) {
 
     const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
@@ -20,18 +22,14 @@ export default function Etats(props) {
     let date_select2 = useRef();
     let heure_select1 = useRef();
     let heure_select2 = useRef();
-    const genres = {
-        generique: "generique",
-        specialite: "sp"
-    }
 
     const {chargement, stopChargement, startChargement} = useContext(ContextChargement);
 
     const [historique, sethistorique] = useState([]);
     const [historiqueSauvegarde, setHistoriqueSauvegarde] = useState([]);
     const [listeComptes, setListeComptes] = useState([]);
-    const [dateJour, setdateJour] = useState('');
-    const [recetteTotal, setRecetteTotal] = useState(false);
+    const [recetteReel, setRecetteReel] = useState(false);
+    const [total, setTotal] = useState(false);
     const [recetteGenerique, setRecetteGenerique] = useState(0);
     const [recetteSp, setRecetteSp] = useState(0);
     const [messageErreur, setMessageErreur] = useState('');
@@ -41,7 +39,6 @@ export default function Etats(props) {
     const [caissier, setCaissier] = useState('');
     const [filtre, setFiltre] = useState(false);
     const [non_paye, setNonPaye] = useState(false);
-    const [reload, setReload] = useState(false);
 
     useEffect(() => {
         startChargement();
@@ -92,21 +89,21 @@ export default function Etats(props) {
                 stopChargement();
                 let recette = 0;
                 if (result.length > 0) {
+                    recupererRecetteReel(dateD, dateF);
                     if (props.role !== admin) {
                         setFiltre(true);
                         setCaissier(props.nomConnecte);
-                        // setReload(!reload);
                     } else {
                         let tab = result.filter(item => (item.status_vente === "payé"));
                         sethistorique(tab);
                         recette = tab.reduce((acc, curr) => acc + parseInt(curr.prix_total), 0);
 
                         calculerRecetteParGenre(tab);
-                        setRecetteTotal(recette);
+                        setTotal(recette);
                     }
 
                 } else {
-                    setRecetteTotal(0);
+                    setTotal(0);
                 }
             });
 
@@ -120,6 +117,35 @@ export default function Etats(props) {
 
     }, [dateDepart, dateFin, search, filtre, caissier]);
 
+    const recupererRecetteReel = (dateD, dateF) => {
+        // console.log("passage");
+        const data = new FormData();
+        data.append('dateD', dateD);
+        data.append('dateF', dateF);
+
+        if (props.role !== admin) {
+            data.append('vendeur', props.nomConnecte);
+        } else {
+            data.append('vendeur', caissier);
+        }
+        const req = new XMLHttpRequest();
+
+        req.open('POST', `http://serveur/backend-cmab/index.php?recette_reel_pharmacie`);
+
+        req.addEventListener('load', () => {
+            const result = JSON.parse(req.responseText);
+            // console.log(req.responseText);
+            setRecetteReel(result[0].recette_reel);
+        });
+
+        req.addEventListener("error", function () {
+            // La requête n'a pas réussi à atteindre le serveur
+            setMessageErreur('Erreur réseau');
+        });
+
+        req.send(data);
+    }
+
     useEffect(() => {
         if (filtre) {
             let recette = 0;
@@ -127,7 +153,7 @@ export default function Etats(props) {
 
             if (tab.length === 0) {
                 sethistorique([]);
-                setRecetteTotal(0);
+                setTotal(0);
             } else {
                 if (non_paye) {
                     tab = tab.filter(item => (item.status_vente.toLowerCase() === "non payé"));
@@ -143,7 +169,7 @@ export default function Etats(props) {
                     calculerRecetteParGenre(tab)
 
                 }
-                setRecetteTotal(recette);
+                setTotal(recette);
                 sethistorique(tab);
             }
         } else {
@@ -154,9 +180,9 @@ export default function Etats(props) {
                 recette += parseInt(item.prix_total);
             });
 
-            setRecetteTotal(recette);
+            setTotal(recette);
         }
-    }, [caissier, filtre, non_paye, reload]);
+    }, [caissier, filtre, non_paye]);
 
     useEffect(() => {
         // Récupération des comptes
@@ -258,9 +284,10 @@ export default function Etats(props) {
                                 </p>
                             </div>
                             <button className='bootstrap-btn' onClick={rechercherHistorique}>rechercher</button>
-                            <div>Recette des génériques : <span style={{fontWeight: '700'}}>{recetteTotal ? recetteGenerique + ' Fcfa' : '0 Fcfa'}</span></div>
-                            <div>Recette des spécialités : <span style={{fontWeight: '700'}}>{recetteTotal ? recetteSp + ' Fcfa' : '0 Fcfa'}</span></div>
-                            <div>Recette total : <span style={{fontWeight: '700'}}>{recetteTotal ? recetteTotal + ' Fcfa' : '0 Fcfa'}</span></div>
+                            <div>Génériques : <span style={{fontWeight: '700'}}>{total ? recetteGenerique + ' Fcfa' : '0 Fcfa'}</span></div>
+                            <div>Spécialités : <span style={{fontWeight: '700'}}>{total ? recetteSp + ' Fcfa' : '0 Fcfa'}</span></div>
+                            <div>Total : <span style={{fontWeight: '700'}}>{total ? total + ' Fcfa' : '0 Fcfa'}</span></div>
+                            <div>Recette : <span style={{fontWeight: '700'}}>{total ? recetteReel + ' Fcfa' : '0 Fcfa'}</span></div>
                         </div>
                         <div className='erreur-message'>{messageErreur}</div>
 
@@ -305,7 +332,8 @@ export default function Etats(props) {
                         dateFin={dateFin}
                         caissier={caissier}
                         historique={historique}
-                        recetteTotal={recetteTotal}
+                        total={total}
+                        recetteReel={recetteReel}
                         recetteGenerique={recetteGenerique}
                         recetteSp={recetteSp}
                         filtre={filtre}
