@@ -58,11 +58,15 @@ export default class ImprimerEtat extends Component {
                 </div>
                 <div style={{fontSize: 9, display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '10px',}}>
                     <div style={{textAlign: 'center', width: '410px'}}>
+                        <p className='text-center h4'>Fiche des recettes de la pharmacie</p>
                         <div style={{marginTop: 5}}>
                             tiré le &nbsp;
                             <span style={{fontWeight: '600', marginTop: '15px'}}>{this.props.infoRecette ? mois(this.props.infoRecette[0].date_heure.substring(0, 11)) : (mois(new Date().toLocaleDateString()) + ' ')} à {this.props.infoRecette ? this.props.infoRecette[0].date_heure.substring(11,) : (' ' + new Date().getHours() + 'h' + new Date().getMinutes() + 'min')}</span>
                         </div>
-                        <div style={{marginTop: 5}}>Service fait par <span style={{fontWeight: '600', marginTop: '15px'}}>{this.props.caissier}</span></div>
+                        {this.props.filtre ? 
+                            <div style={{marginTop: 5}}>Service fait par <span style={{fontWeight: '600', marginTop: '15px'}}>{this.props.caissier.toUpperCase()}</span></div>
+                            : null
+                        }
                         <div style={{marginTop: 5}}>Du <span style={{fontWeight: '600', marginTop: '15px'}}>{mois2(this.props.dateDepart)} à {this.props.dateDepart.substring(10, 13)}h{this.props.dateDepart.substring(14, 16)}min</span> Au <strong>{mois2(this.props.dateFin)} à {this.props.dateFin.substring(10, 13)}h{this.props.dateFin.substring(14, 16)}min</strong></div>
                         <div style={{textAlign: 'center', marginBottom: 15}}>
                             <table style={table_styles}>
@@ -83,10 +87,10 @@ export default class ImprimerEtat extends Component {
                                 </tbody>
                             </table>
                         </div>
-                        <div style={{marginTop: 15}}>Génériques : <strong>{this.props.recetteGenerique ? this.props.recetteGenerique + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
-                        <div style={{marginTop: 15}}>Specialités : <strong>{this.props.recetteSp ? this.props.recetteSp + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
+                        <div style={{marginTop: 15}}>Génériques : <strong>{this.props.total ? this.props.recetteGenerique + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
+                        <div style={{marginTop: 15}}>Specialités : <strong>{this.props.total ? this.props.recetteSp + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
                         <div style={{marginTop: 15}}>Total : <strong>{this.props.total ? this.props.total + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
-                        <div style={{marginTop: 15}}>Recette : <strong>{this.props.recetteReel ? this.props.recetteReel + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
+                        <div style={{marginTop: 15}}>Recette : <strong>{this.props.total ? this.props.recetteReel + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
                     </div>
                 </div>
             </div>
