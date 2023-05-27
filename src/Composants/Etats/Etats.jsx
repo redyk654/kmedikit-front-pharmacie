@@ -7,7 +7,7 @@ import ImprimerEtat from './ImprimerEtat';
 import { useSpring, animated } from 'react-spring';
 import { CFormSwitch, CFormSelect } from '@coreui/react';
 
-import { genres } from '../../shared/Globals';
+import { genres, nomDns } from '../../shared/Globals';
 
 export default function Etats(props) {
 
@@ -71,12 +71,12 @@ export default function Etats(props) {
 
             const req = new XMLHttpRequest();
             if (props.role !== admin) {
-                req.open('POST', `http://serveur/backend-cmab/etats.php?vendeur=${props.nomConnecte}`);
+                req.open('POST', `${nomDns}etats.php?vendeur=${props.nomConnecte}`);
             } else {
                 if (filtre) {
-                    req.open('POST', `http://serveur/backend-cmab/etats.php?vendeur=${caissier}`);
+                    req.open('POST', `${nomDns}etats.php?vendeur=${caissier}`);
                 } else {
-                    req.open('POST', `http://serveur/backend-cmab/etats.php`);
+                    req.open('POST', `${nomDns}etats.php`);
                 }
             }
             
@@ -130,7 +130,7 @@ export default function Etats(props) {
         }
         const req = new XMLHttpRequest();
 
-        req.open('POST', `http://serveur/backend-cmab/index.php?recette_reel_pharmacie`);
+        req.open('POST', `${nomDns}index.php?recette_reel_pharmacie`);
 
         req.addEventListener('load', () => {
             const result = JSON.parse(req.responseText);
@@ -188,7 +188,7 @@ export default function Etats(props) {
         // Récupération des comptes
 
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/recuperer_comptes.php');
+        req.open('GET', `${nomDns}recuperer_comptes.php`);
 
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {

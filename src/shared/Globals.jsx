@@ -167,3 +167,5 @@ export const styleEntete = {
     borderBottom: '1px dotted #000',
     letterSpacing: '1px'
 }
+
+export const nomDns = 'http://serveur/backend-cmab/';

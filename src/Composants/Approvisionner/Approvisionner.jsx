@@ -6,6 +6,7 @@ import EditerProd from './EditerProd';
 import { Toaster, toast } from "react-hot-toast";
 import Loader from "react-loader-spinner";
 import { ContextChargement } from '../../Context/Chargement';
+import { nomDns } from '../../shared/Globals';
 
 
 const medocs = {
@@ -119,7 +120,7 @@ export default function Approvisionner(props) {
     useEffect(() => {
         // Récupération de la liste de produits via Ajax
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/recuperer_medoc.php?stock=filtre');
+        req.open('GET', `${nomDns}recuperer_medoc.php?stock=filtre`);
 
         req.addEventListener('load', () => {
             const result = JSON.parse(req.responseText);
@@ -136,7 +137,7 @@ export default function Approvisionner(props) {
     useEffect(() => {
         // Récupération de la des fournisseurs
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/recuperer_fournisseurs.php');
+        req.open('GET', `${nomDns}recuperer_fournisseurs.php`);
 
         req.addEventListener('load', () => {
             const result = JSON.parse(req.responseText);
@@ -235,7 +236,7 @@ export default function Approvisionner(props) {
     
             const req = new XMLHttpRequest();
     
-            req.open('POST', 'http://serveur/backend-cmab/ajouter_produit.php');
+            req.open('POST', `${nomDns}ajouter_produit.php`);
                 
             req.addEventListener('load', () => {
                 setInfosMedoc(medocs);
@@ -265,7 +266,7 @@ export default function Approvisionner(props) {
             data.append('produit', JSON.stringify(item));
             
             const req = new XMLHttpRequest();
-            req.open('POST', 'http://serveur/backend-cmab/gestion_stock.php?remarque=livraison');
+            req.open('POST', `${nomDns}gestion_stock.php?remarque=livraison`);
             
             req.addEventListener('load', () => {
                 i++
@@ -293,7 +294,7 @@ export default function Approvisionner(props) {
         data.append('produit', JSON.stringify(produitsCommandes));
 
         const req = new XMLHttpRequest();
-        req.open('POST', 'http://serveur/backend-cmab/approvisionnement.php');
+        req.open('POST', `${nomDns}approvisionnement.php`);
         
         req.addEventListener('load', () => {
             mettreAjourStock();
@@ -327,7 +328,7 @@ export default function Approvisionner(props) {
         data.append('montant', montantCommande);
         
         const req = new XMLHttpRequest();
-        req.open('POST', 'http://serveur/backend-cmab/approvisionnement.php');
+        req.open('POST', `${nomDns}approvisionnement.php`);
         
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {

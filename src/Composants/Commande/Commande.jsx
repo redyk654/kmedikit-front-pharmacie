@@ -5,6 +5,7 @@ import { ContextChargement } from '../../Context/Chargement';
 import AfficherPatient from '../Patients/AfficherPatient';
 import EditerPatient from '../Patients/EditerPatient';
 import ModalPatient from '../Patients/ModalPatient';
+import { nomDns } from '../../shared/Globals';
 
 // Importation des librairies installées
 import Modal from 'react-modal';
@@ -232,7 +233,7 @@ export default function Commande(props) {
     const fetchProduits = () => {
         // Récupération des médicaments dans la base via une requête Ajax
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/recuperer_medoc.php');
+        req.open('GET', `${nomDns}recuperer_medoc.php`);
         req.addEventListener("load", () => {
             if (req.status >= 200 && req.status < 400) { // Le serveur a réussi à traiter la requête
                 setMessageErreur('');
@@ -286,7 +287,7 @@ export default function Commande(props) {
 
     const sauvegarder = () => {
         const req = new XMLHttpRequest();
-        req.open('POST', 'http://serveur/backend-cmab/backup.php');
+        req.open('POST', `${nomDns}backup.php`);
         req.send();
 
         req.addEventListener('load', () => {
@@ -347,7 +348,7 @@ export default function Commande(props) {
         data.append('statu', statu);
 
         const req = new XMLHttpRequest();
-        req.open('POST', 'http://serveur/backend-cmab/index.php?enreg_facture_pharmacie');
+        req.open('POST', `${nomDns}index.php?enreg_facture_pharmacie`);
 
         req.addEventListener('load', () => {
             majListeProduits(listeMedocSauvegarde);
@@ -410,7 +411,7 @@ export default function Commande(props) {
 
                 // Envoi des données
                 const req2 = new XMLHttpRequest();
-                req2.open('POST', 'http://serveur/backend-cmab/maj_historique.php');
+                req2.open('POST', `${nomDns}maj_historique.php`);
                 
                 // Une fois la requête charger on vide tout les états
                 req2.addEventListener('load', () => {
@@ -484,7 +485,7 @@ export default function Commande(props) {
         setModalPatient(true);
 
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/gestion_patients.php');
+        req.open('GET', `${nomDns}gestion_patients.php`);
 
         req.addEventListener('load', () => {
             setMessageErreur('');
@@ -505,7 +506,7 @@ export default function Commande(props) {
 
         const req = new XMLHttpRequest();
 
-        req.open('GET', `http://serveur/backend-cmab/rechercher_patient.php?str=${e.target.value}`);
+        req.open('GET', `${nomDns}rechercher_patient.php?str=${e.target.value}`);
 
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
@@ -593,7 +594,7 @@ export default function Commande(props) {
         data.append('code', creerCodePatient());
         data.append('nouveau_patient', JSON.stringify(nouveauPatient))
 
-        req.open('POST', 'http://serveur/backend-cmab/index.php');
+        req.open('POST', `${nomDns}index.php`);
 
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {

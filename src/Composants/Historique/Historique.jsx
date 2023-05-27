@@ -1,10 +1,6 @@
 import React, { useState, useContext } from 'react';
-import Approvisionner from '../Approvisionner/Approvisionner';
-import Bordereau from '../Bordereau/Bordereau';
-import ModifierProduit from '../ModifierProduit/ModifierProduit';
 import Activites from '../Activites/Activites';
 import '../Maj/Maj.css';
-import { FaList, FaPen, FaTruck } from 'react-icons/fa';
 import { AiFillSave } from 'react-icons/ai';
 import { TbActivity } from "react-icons/tb";
 import { ContextChargement } from '../../Context/Chargement';
