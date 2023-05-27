@@ -54,8 +54,8 @@ export default function Etats(props) {
     }, []);
 
     useEffect(() => {
-        !recetteTotal && sethistorique([])
-    }, [recetteTotal]);
+        !total && sethistorique([])
+    }, [total]);
 
     useEffect(() => {
         startChargement();

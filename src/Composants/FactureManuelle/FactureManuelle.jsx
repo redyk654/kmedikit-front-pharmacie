@@ -378,8 +378,8 @@ export default function FactureManuelle(props) {
 
         const data = new FormData();
 
-        data.append('id', id);
-        data.append('vendeur', props.nomConnecte);
+        data.append('id', id.toUpperCase());
+        data.append('vendeur', props.nomConnecte.toUpperCase());
         data.append('prix_total', qtePrixTotal.prix_total);
         data.append('a_payer', qtePrixTotal.a_payer);
         data.append('date_vente', dateVente);
@@ -488,7 +488,7 @@ export default function FactureManuelle(props) {
 
     const mettreAjourStock = (produit, dateVente) => {
         const data = new FormData();
-        data.append('vendeur', props.nomConnecte)
+        data.append('vendeur', props.nomConnecte.toUpperCase())
         data.append('date_vente', dateVente);
         data.append('produit', JSON.stringify(produit));
 
