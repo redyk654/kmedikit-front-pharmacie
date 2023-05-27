@@ -9,7 +9,7 @@
 }
 
 .modif-produit .col-2 {
-    width: 100%;
+    width: 68%;
 }
 
 .modif-produit h1 {
@@ -60,19 +60,15 @@
 }
 
 .modif-produit .details-prod .box {
-    display: flex;
+    /* display: flex;
     justify-content: space-around;
     align-items: flex-start;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 10px; */
 }
 
 .modif-produit .details-prod .box p {
-    width: 22vw;
-}
-
-.modif-produit .details-prod .box .item p:first-child {
-    color: #03ca7e;
+    /* width: 22vw; */
 }
 
 .modif-produit .details-prod .box .item p:last-child {

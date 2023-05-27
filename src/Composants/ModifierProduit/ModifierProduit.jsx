@@ -205,7 +205,7 @@ export default function ModifierProduit() {
     return (
         <animated.div style={props1}>
             <div><Toaster/></div>
-            <section className="modif-produit">
+            <section className="modif-produit border border-black">
                 <Modal
                     isOpen={modalConfirmation}
                     onRequestClose={setModalConfirmation}
@@ -276,7 +276,7 @@ export default function ModifierProduit() {
                             />
                         </>
                     ) : (
-                        <div className="details-prod">
+                        <div className="infos-medoc">
                             {produitSelectionne.length > 0 && produitSelectionne.map(item => (
                                 <AfficherProd
                                 key={item.id}

@@ -1,5 +1,6 @@
 import React, { Fragment, useContext } from 'react';
 import { ContextChargement } from '../../Context/Chargement';
+import { CContainer, CRow, CCol } from '@coreui/react';
 
 export default function AfficherProd(props) {
 
@@ -13,53 +14,53 @@ export default function AfficherProd(props) {
 
 
     return (
-        <Fragment>
-            <div className="box">
-                <div className="item">
+        <CContainer>
+            <CRow className="box">
+                <CCol className="item">
                     <p>Désignation</p>
                     <p>{props.designation}</p>
-                </div>
-                <div className="item">
+                </CCol>
+                <CCol className="item">
                     <p>Prix de vente</p>
                     <p>{props.pu_vente + ' Fcfa'}</p> 
-                </div>
-                <div className="item">
+                </CCol>
+                <CCol className="item">
                     <p>En stock</p>
                     <p style={{color: `${parseInt(props.en_stock) < parseInt(props.min_rec) ? '#ec4641' : ''}`}}>{props.en_stock}</p>
-                </div>
-                <div className="item">
-                    <p>Categorie</p>
-                    <p>{genres[props.genre]}</p> 
-                </div>
-            </div>
-            <div className="box">
-                <div className="item">
+                </CCol>
+            </CRow>
+            <CRow className="box">
+                <CCol className="item">
                     <p>Forme</p>
                     <p>{props.categorie}</p> 
-                </div>
-                <div className="item">
+                </CCol>
+                <CCol className="item">
                     <p>stock minimum</p>
                     <p>{props.min_rec}</p> 
-                </div>
-                <div className="item">
+                </CCol>
+                <CCol className="item">
                     <p>Conditionnement</p>
                     <p>{props.conditionnement}</p> 
-                </div>
-            </div>
-            <div className="box" style={{display: `${role === "admin" ? 'flex' : 'none'}`}}>
-                <div className="item">
+                </CCol>
+            </CRow>
+            <CRow className="box" style={{display: `${role === "admin" ? 'flex' : 'none'}`}}>
+                <CCol className="item">
                     <p>Classe</p>
                     <p>{props.classe}</p>
-                </div>
-                <div className="item">
+                </CCol>
+                <CCol className="item">
                     <p>Prix d'achat</p>
                     <p>{props.pu_achat}</p>
-                </div>
-                <div className="item">
+                </CCol>
+                <CCol className="item">
                     <p>Date depéremption</p>
                     <p>{props.date_peremption}</p>
-                </div>
-            </div>
-        </Fragment>
+                </CCol>
+                <CCol className="item">
+                    <p>Categorie</p>
+                    <p>{genres[props.genre]}</p> 
+                </CCol>
+            </CRow>
+        </CContainer>
     )
 }
