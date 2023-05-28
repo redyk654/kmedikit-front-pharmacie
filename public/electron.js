@@ -41,9 +41,9 @@ app.whenReady().then( async () => {
   autoUpdater.setFeedURL({
     provider: 'github',
     owner: 'redyk654',
-    repo: 'https://github.com/redyk654/kmedikit-front-pharmacie/tree/mbanga',
+    repo: 'https://github.com/redyk654/kmd-pharmacie-hdmbanga',
     releaseType: 'release',
-    url: 'https://github.com/redyk654/kmedikit-front-pharmacie/releases/latest',
+    url: 'https://github.com/redyk654/kmd-pharmacie-hdmbanga/releases/latest',
     
   });
 
@@ -60,13 +60,10 @@ app.whenReady().then( async () => {
     })
   })
 
-  autoUpdater.on('update-not-available', () => {
-    dialog.showMessageBox({
-      type: 'info',
-      message: 'Une mise à jour est disponible, télécharger maintenant ou plus tard ?',
-      buttons: ['OK']
-    })
-  })
+  autoUpdater.on('update-downloaded', () => {
+    // La mise à jour a été téléchargée et va être installée
+    autoUpdater.quitAndInstall();
+  });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -92,12 +89,6 @@ app.whenReady().then( async () => {
 
 // autoUpdater.on('download-progress', progressObj => {
 //   // Afficher la progression du téléchargement
-//   // showNotification();
-// });
-
-// autoUpdater.on('update-downloaded', () => {
-//   // La mise à jour a été téléchargée et va être installée
-//   autoUpdater.quitAndInstall();
 //   // showNotification();
 // });
 
