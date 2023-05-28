@@ -38,6 +38,7 @@ export default function AfficherProd(props) {
                 </CCol>
             </CRow>
             <CRow className={`box`}>
+
                 <CCol className="item">
                     <p>Classe</p>
                     <p>{props.classe}</p>

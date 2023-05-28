@@ -7,6 +7,7 @@ import { ContextChargement } from '../../Context/Chargement';
 import { Toaster, toast } from "react-hot-toast";
 import EditerProd from '../Approvisionner/EditerProd';
 import GererClasses from '../GererClasses/GererClasses';
+import { nomDns } from '../../shared/Globals';
 
 const customStyles1 = {
     content: {
@@ -74,7 +75,7 @@ export default function ModifierProduit() {
     useEffect(() => {
         // Récupération de la liste de produits via Ajax
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/recuperer_medoc.php');
+        req.open('GET', `${nomDns}recuperer_medoc.php`);
 
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {
@@ -116,7 +117,7 @@ export default function ModifierProduit() {
             data.append('id', produitSelectionne[0].id);
 
             const req = new XMLHttpRequest();
-            req.open('POST', 'http://serveur/backend-cmab/supprimer_produit.php');
+            req.open('POST', `${nomDns}supprimer_produit.php`);
 
             req.addEventListener('load', () => {
                 if (req.status >= 200 && req.status < 400) {
@@ -144,7 +145,7 @@ export default function ModifierProduit() {
             data.append('produit', JSON.stringify(infosMedoc));
             
             const req = new XMLHttpRequest();
-            req.open('POST', 'http://serveur/backend-cmab/modif_prod.php');
+            req.open('POST', `${nomDns}modif_prod.php`);
             
             req.addEventListener('load', () => {
                 if (req.status >= 200 && req.status < 400) {
@@ -163,7 +164,7 @@ export default function ModifierProduit() {
 
     const supprimerProduitEpuise = () => {
         const req = new XMLHttpRequest();
-        req.open('POST', 'http://serveur/backend-cmab/vider.php?stock=0');
+        req.open('POST', `${nomDns}vider.php?stock=0`);
         
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
@@ -206,7 +207,7 @@ export default function ModifierProduit() {
     return (
         <animated.div style={props1}>
             <div><Toaster/></div>
-            <section className="modif-produit">
+            <section className="modif-produit border border-black">
                 <Modal
                     isOpen={modalConfirmation}
                     onRequestClose={setModalConfirmation}

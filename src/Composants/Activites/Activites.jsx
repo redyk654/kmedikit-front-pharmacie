@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import './Activites.css';
 import { ContextChargement } from '../../Context/Chargement';
-import { isAlertStockShow, mois, selectProd, genererId, badges } from "../../shared/Globals";
+import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns } from "../../shared/Globals";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
 import { Toaster } from "react-hot-toast";
@@ -77,7 +77,7 @@ export default function Activites(props) {
         if (date_j.getTime() <= date_e.getTime()) {
             // Récupération de la liste de produits
             const req = new XMLHttpRequest();
-            req.open('GET', 'http://serveur/backend-cmab/recuperer_historique.php');
+            req.open('GET', `${nomDns}recuperer_historique.php`);
 
             req.addEventListener('load', () => {
                 const result = JSON.parse(req.responseText);
@@ -115,7 +115,7 @@ export default function Activites(props) {
             data.append('pu_vente', puVente);
 
             const req = new XMLHttpRequest();
-            req.open('POST', 'http://serveur/backend-cmab/gestion_stock.php?rem=inventaire');
+            req.open('POST', `${nomDns}gestion_stock.php?rem=inventaire`);
     
             req.addEventListener('load', () => {
                 fermerModalConfirmation();
@@ -185,7 +185,7 @@ export default function Activites(props) {
         setDatePeremtion(medocSelectionne.date_peremption);
 
         const req1 = new XMLHttpRequest();
-        req1.open('POST', `http://serveur/backend-cmab/gestion_stock.php?id=${medocSelectionne.id}`);
+        req1.open('POST', `${nomDns}gestion_stock.php?id=${medocSelectionne.id}`);
         req1.addEventListener('load', () => {
             if (req1.status >= 200 && req1.status < 400) {
                 const result = JSON.parse(req1.responseText);
@@ -253,7 +253,7 @@ export default function Activites(props) {
 
         const req = new XMLHttpRequest();
 
-        req.open('POST', 'http://serveur/backend-cmab/sauvegarder_inventaire.php');
+        req.open('POST', `${nomDns}sauvegarder_inventaire.php`);
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
                 sauvegarderProduitsInventaire(idInventaire)
@@ -287,7 +287,7 @@ export default function Activites(props) {
 
             const req = new XMLHttpRequest();
     
-            req.open('POST', 'http://serveur/backend-cmab/sauvegarder_inventaire.php');
+            req.open('POST', `${nomDns}sauvegarder_inventaire.php`);
             req.addEventListener('load', () => {
                 if (req.status >= 200 && req.status < 400) {
                     i++;

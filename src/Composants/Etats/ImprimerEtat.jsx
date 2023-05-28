@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { mois, mois2 } from "../../shared/Globals";
+import { mois, mois2, styleEntete } from "../../shared/Globals";
+import logo from '../../images/logo-minsante.png';
 
 const styles = {
     // display: 'flex',
@@ -35,40 +36,24 @@ const table_styles = {
 
 export default class ImprimerEtat extends Component {
 
-    extraireCode = (designation) => {
-        const codes = ['RX', 'LAB', 'MA', 'MED', 'CHR', 'CO', 'UPEC', 'SP', 'CA'];
-        let designation_extrait = '';
-        
-        codes.forEach(item => {
-            if(designation.toUpperCase().indexOf(item) === 0) {
-                designation_extrait =  designation.slice(item.length + 1);
-            } else if (designation.toUpperCase().indexOf('ECHO') === 0)  {
-                designation_extrait = designation;
-            }
-        });
-
-        if (designation_extrait === '') designation_extrait = designation;
-
-        return designation_extrait;
-    }
-
     render() {
         return (
             <div style={{backgroundColor: '#f1f1f1', height: '100vh', marginTop: '70px'}}>
+                <div className='logo-minsante'>
+                    <img src={logo} alt="" width={80} height={80} />
+                </div>
                 <div style={{textTransform: 'uppercase', padding: '15px 135px', fontSize: 7, marginBottom: '12px', width: '100%', display: 'flex', justifyContent: 'space-between'}}>
                     <div style={{ lineHeight: '20px'}}>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Republique du Cameroun <br/><em style={{textTransform: 'capitalize'}}>Paix-Travail-Patrie</em></strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Ministere de la sante publique</strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Delegation regionale du Littoral</strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>District sante de Deido</strong></div>
-                        <div style={{color: 'black',}}><strong>CMA de Bepanda</strong></div> 
+                        <div style={styleEntete}><strong>Republique du Cameroun <br/><em style={{textTransform: 'capitalize'}}>Paix-Travail-Patrie</em></strong></div>
+                        <div style={styleEntete}><strong>Ministere de la sante publique</strong></div>
+                        <div style={styleEntete}><strong>Delegation regionale du Littoral</strong></div>
+                        <div style={styleEntete}><strong>District sante de Mbanga</strong></div>
                     </div>
                     <div style={{ lineHeight: '20px'}}>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Republic of Cameroon <br/><em style={{textTransform: 'capitalize'}}>Peace-Work-Fatherland</em></strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Minister of Public Health</strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Littoral regional delegation</strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Deido Health District</strong></div>
-                        <div style={{color: 'black',}}><strong>Bepanda CMA</strong></div> 
+                        <div style={styleEntete}><strong>Republic of Cameroon <br/><em style={{textTransform: 'capitalize'}}>Peace-Work-Fatherland</em></strong></div>
+                        <div style={styleEntete}><strong>Minister of Public Health</strong></div>
+                        <div style={styleEntete}><strong>Littoral regional delegation</strong></div>
+                        <div style={styleEntete}><strong>Mbanga Health District</strong></div>
                     </div>
                 </div>
                 <div style={{fontSize: 9, display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '10px',}}>
@@ -88,7 +73,7 @@ export default class ImprimerEtat extends Component {
                                 <thead>
                                     <th style={table_styles1}>Désignation</th>
                                     <th style={table_styles1}>Qte sortie</th>
-                                    <th style={table_styles1}>Montant</th>
+                                    <th style={table_styles1}>Total</th>
                                 </thead>
                                 <tbody>
                                     {this.props.historique.length > 0  ? this.props.historique.map(item => (
@@ -102,9 +87,10 @@ export default class ImprimerEtat extends Component {
                                 </tbody>
                             </table>
                         </div>
-                        <div style={{marginTop: 15}}>Génériques : <strong>{this.props.recetteTotal ? this.props.recetteGenerique + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
-                        <div style={{marginTop: 15}}>Specialités : <strong>{this.props.recetteTotal ? this.props.recetteSp + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
-                        <div style={{marginTop: 15}}>Total : <strong>{this.props.recetteTotal ? this.props.recetteTotal + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
+                        <div style={{marginTop: 15}}>Génériques : <strong>{this.props.total ? this.props.recetteGenerique + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
+                        <div style={{marginTop: 15}}>Specialités : <strong>{this.props.total ? this.props.recetteSp + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
+                        <div style={{marginTop: 15}}>Total : <strong>{this.props.total ? this.props.total + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
+                        <div style={{marginTop: 15}}>Recette : <strong>{this.props.total ? this.props.recetteReel + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
                     </div>
                 </div>
             </div>

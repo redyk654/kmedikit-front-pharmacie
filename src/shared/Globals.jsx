@@ -122,7 +122,6 @@ export function filtrerListe(prop, val, liste) {
     return liste.filter(item => (item[prop].toLowerCase().includes(val.toLowerCase())));
 }
 
-export const nomDns = "http://serveur/backend-cmab/";
 
 export const genres = {
     "": "non répertorié",
@@ -131,3 +130,46 @@ export const genres = {
 }
 
 export const problemeConnexion = "Problème de connexion au serveur !";
+
+export function afficherSexe (sexe) {
+    let val;
+    switch(sexe) {
+        case 'H':
+            val = 'homme';
+            break;
+        case 'F':
+            val = 'femme';
+            break;
+        default:
+            val = 'non renseigné'
+    }
+
+    return val.toUpperCase();
+}
+
+export function afficherAge (age) {
+    if (parseInt(age) > 1)
+        return age + "ans"
+    else
+        return "non renseigné".toUpperCase()
+}
+
+export const ROLES = {
+    vendeur: "vendeur",
+    major: "major",
+    admin: "admin",
+    medecin: "medecin",
+}
+
+export const SEXES = {
+    h: 'H',
+    f: 'F'
+}
+
+export const styleEntete = {
+    color: 'black',
+    borderBottom: '1px dotted #000',
+    letterSpacing: '1px'
+}
+
+export const nomDns = 'http://serveur/backend-cmab/';

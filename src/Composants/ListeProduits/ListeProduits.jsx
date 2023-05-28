@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import './ListeProduits.css'
 import AfficherListe from './AfficherListe/AfficherListe';
 import RechercherProd from '../RechercherProd/RechercherProd';
-
+import { nomDns } from '../../shared/Globals';
 
 export default function ListeProduits() {
 
@@ -25,7 +25,7 @@ export default function ListeProduits() {
     const [msgErreur, setMsgErreur] = useState('')
 
     useEffect(() => {
-        fetch('http://serveur/backend-cmab/liste_produits_par_classe.php')
+        fetch(`${nomDns}liste_produits_par_classe.php`)
         .then(response => response.json())
         .then(data => {
             

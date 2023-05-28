@@ -3,6 +3,7 @@ import './Comptes.css';
 import Modal from 'react-modal';
 import { ContextChargement } from '../../Context/Chargement';
 import { useSpring, animated } from 'react-spring';
+import { ROLES, nomDns } from '../../shared/Globals';
 
 const customStyles1 = {
     content: {
@@ -30,6 +31,7 @@ const customStyles2 = {
 
 const utilisateur = {
     nom: '',
+    pseudo: '',
     mdp: '',
     confirmation: ''
 }
@@ -53,13 +55,13 @@ export default function Comptes(props) {
     const [reussi, setReussi] = useState('supp');
     const [messageErreur, setMessageErreur] = useState('');
 
-    const { nom, mdp, confirmation } = nvCompte;
+    const { nom, pseudo, mdp, confirmation } = nvCompte;
 
     useEffect(() => {
         // Récupération des comptes
 
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/recuperer_comptes.php');
+        req.open('GET', `${nomDns}recuperer_comptes.php`);
 
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {
@@ -96,6 +98,10 @@ export default function Comptes(props) {
                         <input style={{color: `${darkLight ? '#fff' : '#18202e'}`}} type="text" name="nom" value={nom} onChange={handleChange} autoComplete="off" />
                     </p>
                     <p className="input-zone">
+                        <label htmlFor="">Identifiant</label>
+                        <input style={{color: `${darkLight ? '#fff' : '#18202e'}`}} type="text" name="pseudo" value={pseudo} onChange={handleChange} autoComplete="off" />
+                    </p>
+                    <p className="input-zone">
                         <label htmlFor="">Mot de passe</label>
                         <input style={{color: `${darkLight ? '#fff' : '#18202e'}`}} type="password" name="mdp" value={mdp} onChange={handleChange} autoComplete="off" />
                     </p>
@@ -106,10 +112,10 @@ export default function Comptes(props) {
                     <p className="input-zone">
                         <label htmlFor="">Rôle : </label>
                         <select name="role">
-                            <option value="admin">admin</option>
-                            <option value="major">major</option>
-                            <option value="vendeur">vendeur</option>
-                            <option value="medecin">medecin</option>
+                            <option value={ROLES.vendeur}>{ROLES.vendeur}</option>
+                            <option value={ROLES.admin}>{ROLES.admin}</option>
+                            <option value={ROLES.major}>{ROLES.major}</option>
+                            <option value={ROLES.medecin}>{ROLES.medecin}</option>
                         </select>
                     </p>
                 </div>
@@ -131,29 +137,35 @@ export default function Comptes(props) {
         // Enregistrement du nouveau compte dans la base de données
         if (mdp !== confirmation) {
             setMsgErreur('Le mot de passe et le mot passe de confirmation doivent être identique');
+        } else if (pseudo.includes(' ')) {
+            setMsgErreur("l'identifiant ne doit pas contenir d'espace");
+        } else if (pseudo.length < 2 || pseudo.length > 6) {
+            setMsgErreur("l'identifiant doit être compris entre 2 et 6 caractères");
         } else if (nom.length === 0) {
             setMsgErreur('le champ nom ne doit pas être vide');
-        } else if (mdp.length < 4 || mdp.length > 8) {
-            setMsgErreur('le mot de passe doit être compris entre 4 et 8 caractères');
+        } else if (mdp.length < 3 || mdp.length > 8) {
+            setMsgErreur('le mot de passe doit être compris entre 3 et 8 caractères');
         } else {
             setMsgErreur('');
     
             const data = new FormData();
-            data.append('nom', nom);
-            data.append('mdp', mdp);
+            data.append('nom', nom.trim().toUpperCase());
+            data.append('pseudo', pseudo.trim().toUpperCase());
+            data.append('mdp', mdp.trim().toUpperCase());
             data.append('role', document.querySelector('form').role.value);
     
             const req = new XMLHttpRequest();
-            req.open('POST', 'http://serveur/backend-cmab/enregistrer_compte.php');
+            req.open('POST', `${nomDns}enregistrer_compte.php`);
     
             req.addEventListener('load', () => {
-                if (req.response.length === 0) {
+                if (req.response.toLowerCase() == "cet identifiant est déjà utilisé. choisissez en un autre".toLowerCase()) {
+                    setMsgErreur(req.response);
+                } else {
+                    console.log(req.response);
                     setNvCompte(utilisateur);
                     fermerModalConfirmation();
                     setReussi('');
                     setModalReussi(true);
-                } else {
-                    setMsgErreur(req.response);
                 }
             })
     
@@ -186,7 +198,7 @@ export default function Comptes(props) {
         // Suppression d'un compte
         if (compteSelectionne.length > 0) {
             const req = new XMLHttpRequest();
-            req.open('GET', `http://serveur/backend-cmab/supprimer_vendeur.php?compte=${compteSelectionne[0].nom_user}`);
+            req.open('GET', `${nomDns}supprimer_vendeur.php?compte=${compteSelectionne[0].nom_user}`);
 
             req.addEventListener('load', () => {
                 if(req.status >= 200 && req.status < 400) {
