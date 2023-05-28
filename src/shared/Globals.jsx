@@ -122,6 +122,15 @@ export function filtrerListe(prop, val, liste) {
     return liste.filter(item => (item[prop].toLowerCase().includes(val.toLowerCase())));
 }
 
+
+export const genres = {
+    "": "non répertorié",
+    sp: "spécialité",
+    generique: "générique",
+}
+
+export const problemeConnexion = "Problème de connexion au serveur !";
+
 export function afficherSexe (sexe) {
     let val;
     switch(sexe) {
@@ -139,7 +148,7 @@ export function afficherSexe (sexe) {
 }
 
 export function afficherAge (age) {
-    if (parseInt(age) > 1) 
+    if (parseInt(age) > 1)
         return age + "ans"
     else
         return "non renseigné".toUpperCase()
@@ -155,11 +164,6 @@ export const ROLES = {
 export const SEXES = {
     h: 'H',
     f: 'F'
-}
-
-export const genres = {
-    generique: "generique",
-    specialite: "sp"
 }
 
 export const styleEntete = {

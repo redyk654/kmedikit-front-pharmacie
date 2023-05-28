@@ -71,10 +71,10 @@
     /* width: 22vw; */
 }
 
-.modif-produit .details-prod .box .item p:last-child {
+/* .modif-produit .details-prod .box .item p:last-child {
     font-weight: 700;
     color: #0c5f16;
-}
+} */
 
 .modif-produit .buttons {
     display: flex;

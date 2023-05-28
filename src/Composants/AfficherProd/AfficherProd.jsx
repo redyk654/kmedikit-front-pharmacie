@@ -1,17 +1,11 @@
 import React, { Fragment, useContext } from 'react';
 import { ContextChargement } from '../../Context/Chargement';
+import { genres } from '../../shared/Globals';
 import { CContainer, CRow, CCol } from '@coreui/react';
 
 export default function AfficherProd(props) {
 
-    const genres = {
-        "": "non répertorié",
-        sp: "spécialité",
-        generique: "générique",
-    }
-
     const {darkLight, role} = useContext(ContextChargement)
-
 
     return (
         <CContainer>
@@ -43,12 +37,13 @@ export default function AfficherProd(props) {
                     <p>{props.conditionnement}</p> 
                 </CCol>
             </CRow>
-            <CRow className="box" style={{display: `${role === "admin" ? 'flex' : 'none'}`}}>
+            <CRow className={`box`}>
+
                 <CCol className="item">
                     <p>Classe</p>
                     <p>{props.classe}</p>
                 </CCol>
-                <CCol className="item">
+                <CCol className={`item d-${role.toUpperCase() !== "admin".toUpperCase() && 'none'}`}>
                     <p>Prix d'achat</p>
                     <p>{props.pu_achat}</p>
                 </CCol>

@@ -11,6 +11,10 @@
   letter-spacing: 1px;
 }
 
+a {
+  text-decoration: none;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
