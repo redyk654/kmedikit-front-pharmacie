@@ -121,3 +121,13 @@ export function genererId() {
 export function filtrerListe(prop, val, liste) {
     return liste.filter(item => (item[prop].toLowerCase().includes(val.toLowerCase())));
 }
+
+export const nomDns = "http://serveur/backend-cmab/";
+
+export const genres = {
+    "": "non répertorié",
+    sp: "spécialité",
+    generique: "générique",
+}
+
+export const problemeConnexion = "Problème de connexion au serveur !";

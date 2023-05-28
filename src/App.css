@@ -10,6 +10,10 @@
   font-family: poppins, Impact;
 }
 
+a {
+  text-decoration: none;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }

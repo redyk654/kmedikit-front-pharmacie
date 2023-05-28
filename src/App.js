@@ -113,7 +113,7 @@ function App() {
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
-            <div className="onglets-blocs" style={{width: '75%'}}>
+            <div className="onglets-blocs" style={{width: '85%', fontSize: '12px'}}>
               <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(1)}}>
                 <FaStore size={22} />
                 &nbsp;
@@ -129,6 +129,11 @@ function App() {
                 &nbsp;
                 Etats
               </div>
+            <div className={`tab ${onglet === 8 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(8)}}>
+                <FaReceipt size={22} />
+                &nbsp;
+                Factures Manuelles
+            </div>
             </div>
             <div className="onglets-contenu">
                 {contenu}
