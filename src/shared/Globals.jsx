@@ -124,3 +124,9 @@ export function filtrerListe(prop, val, liste) {
 
 export const tipHeureDebut = "Pour les recettes du jour, choisissez l'heure de début à 6h (sauf si vous avez commencé le service avant) et pour les recettes de la nuit, choisissez l'heure de début à 15h (sauf si vous avez commencé le service avant)"
 export const tipHeureFin = "Pour les recettes du jour, choisissez l'heure de fin à 18h (sauf si vous avez terminé le service après) et pour les recettes de la nuit, choisissez l'heure de fin à 8h (sauf si vous avez terminé le service après)"
+
+export const genres = {
+    "": "non répertorié",
+    sp: "spécialité",
+    generique: "générique",
+}
