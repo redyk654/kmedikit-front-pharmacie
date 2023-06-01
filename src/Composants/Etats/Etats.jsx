@@ -5,7 +5,8 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import ReactToPrint from 'react-to-print';
 import ImprimerEtat from './ImprimerEtat';
 import { useSpring, animated } from 'react-spring';
-import { CFormSwitch, CFormSelect } from '@coreui/react';
+import { CFormSwitch, CFormSelect, CTooltip } from '@coreui/react';
+import { tipHeureDebut, tipHeureFin } from "../../shared/Globals";
 
 import { genres, nomDns } from '../../shared/Globals';
 
@@ -246,12 +247,24 @@ export default function Etats(props) {
                                 <p>
                                     <label htmlFor="">Du : </label>
                                     <input type="date" ref={date_select1} />
-                                    <input type="time" ref={heure_select1} />
+                                    <CTooltip
+                                        content={`${tipHeureDebut}`}
+                                        placement="top"
+                                        trigger={['hover', 'focus']}
+                                    >
+                                        <input type="time" ref={heure_select1} />
+                                    </CTooltip>
                                 </p>
                                 <p>
                                     <label htmlFor="">Au : </label>
                                     <input type="date" ref={date_select2} />
-                                    <input type="time" ref={heure_select2} />
+                                    <CTooltip
+                                        content={`${tipHeureFin}`}
+                                        placement="top"
+                                        trigger={['hover', 'focus']}
+                                    >
+                                        <input type="time" ref={heure_select2} />
+                                    </CTooltip>
                                 </p>
                                 <p>
                                     {
