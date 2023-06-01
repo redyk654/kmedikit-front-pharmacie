@@ -14,14 +14,10 @@ import { FaChartBar, FaClipboardList, FaLayerGroup, FaReceipt, FaStore, FaUsers 
 import { ContextChargement } from './Context/Chargement';
 import ListeProduits from './Composants/ListeProduits/ListeProduits';
 import FactureManuelle from './Composants/FactureManuelle/FactureManuelle';
+import { ROLES } from "./shared/Globals";
 
 
 function App() {
-
-  const admin = "admin";
-  const major = "major";
-  const vendeur = "vendeur";
-  const medecin = "medecin";
 
   const {darkLight, role, setRole} = useContext(ContextChargement)
 
@@ -30,7 +26,7 @@ function App() {
   const [nomConnecte, setNomConnecte] = useState('');
 
   useEffect(() => {
-    if(role === admin) {
+    if(role === ROLES.admin) {
       setOnglet(6);
     } else {
       setOnglet(1);
@@ -70,7 +66,7 @@ function App() {
   }
 
   if (connecter) {
-    if(role === admin) {
+    if(role === ROLES.admin) {
       return (
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
@@ -108,12 +104,12 @@ function App() {
           </section>
         </main>
       );
-    } else if (role === major) {
+    } else if (role === ROLES.major) {
       return (
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
-            <div className="onglets-blocs" style={{width: '75%'}}>
+            <div className="onglets-blocs" style={{width: '85%', fontSize: '12px'}}>
               <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(1)}}>
                 <FaStore size={22} />
                 &nbsp;
@@ -129,6 +125,11 @@ function App() {
                 &nbsp;
                 Etats
               </div>
+            <div className={`tab ${onglet === 8 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(8)}}>
+                <FaReceipt size={22} />
+                &nbsp;
+                Factures Manuelles
+            </div>
             </div>
             <div className="onglets-contenu">
                 {contenu}
@@ -136,7 +137,7 @@ function App() {
           </section>
         </main>
       );
-    } else if (role === vendeur) {
+    } else if (role === ROLES.vendeur) {
       return (
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
@@ -164,7 +165,7 @@ function App() {
           </section>
         </main>
       );
-    } else if (role === medecin) {
+    } else if (role === ROLES.medecin) {
       return (
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />

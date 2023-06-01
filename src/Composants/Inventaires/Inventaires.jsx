@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import '../Bordereau/Bordereau.css';
 import { useSpring, animated } from 'react-spring';
 import { ContextChargement } from '../../Context/Chargement';
-import { filtrerListe, mois } from '../../shared/Globals';
+import { filtrerListe, mois, nomDns } from '../../shared/Globals';
 import UseMsgErreur from '../../Customs/UseMsgErreur';
 import AfficherInventaire from '../../shared/AfficherInventaire';
 import TitleH2 from '../../shared/TitleH2';
@@ -30,7 +30,7 @@ export default function Inventaires(props) {
     const vueInfosInventaire = filtrerListe(propSearchDesignation, searchProd, infosInventaire);
 
     useEffect(() => {
-      fetch('http://serveur/backend-cmab/sauvegarder_inventaire.php?liste')
+      fetch(`${nomDns}sauvegarder_inventaire.php?liste`)
       .then(response => response.json())
       .then(data => {
         setMsgErreur('');
@@ -40,7 +40,7 @@ export default function Inventaires(props) {
     }, [])
 
     const afficherInventaire = (e) => {
-      fetch(`http://serveur/backend-cmab/sauvegarder_inventaire.php?id_inventaire=${e.target.id}`)
+      fetch(`${nomDns}sauvegarder_inventaire.php?id_inventaire=${e.target.id}`)
       .then(response => response.json())
       .then(data => {
         setMsgErreur('');

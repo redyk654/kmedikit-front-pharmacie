@@ -8,6 +8,11 @@
   margin: 0;
   padding: 0;
   font-family: poppins, Impact;
+  letter-spacing: 1px;
+}
+
+a {
+  text-decoration: none;
 }
 
 ::-webkit-scrollbar {
@@ -121,4 +126,12 @@ table thead tr td:first-child {
 
 table thead tr td:last-child {
   border-radius: 0px 8px 8px 0px;
+}
+
+.logo-minsante {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 10%;
+  left: 45%;
 }

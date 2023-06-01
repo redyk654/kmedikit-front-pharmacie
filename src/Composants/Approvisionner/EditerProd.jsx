@@ -1,11 +1,31 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { nomDns, problemeConnexion } from '../../shared/Globals';
+import UseMsgErreur from '../../Customs/UseMsgErreur';
+
 
 export default function EditerProd(props) {
+
+    const [listeDesClasses, setListeDesClasses] = useState([]);
+    const [msgErreur, setMsgErreur] = useState('');
 
     const handleChange = (e) => {
         if (props.nvProd || e.target.name === "stock_ajoute") {
             props.handleChange(e);
         }
+    }
+
+    useEffect(() => {
+        recupererClasses();
+    }, [])
+
+    const recupererClasses = () => {
+        fetch(`${nomDns}ajouter_classes_produits.php?liste_classes`)
+        .then(res => res.json())
+        .then(data => {
+            setMsgErreur('');
+            setListeDesClasses(data);
+        })
+        .catch(err => setMsgErreur(problemeConnexion));
     }
 
   return (
@@ -74,16 +94,11 @@ export default function EditerProd(props) {
                 <div className="detail-item">
                     <label htmlFor="">Classe</label>
                     <select name="classe" id="classe" onChange={handleChange} value={props.classe}>
-                        <option value="antibiotiques">antibiotiques</option>
-                        <option value="antipaludiques">antipaludiques</option>
-                        <option value="antiinflammatoiresetantalgiques">anti-inflammatoires et antalgiques</option>
-                        <option value="antispamodiques">antispamodiques</option>
-                        <option value="antigrippaux">antigrippaux</option>
-                        <option value="antihistaminiqueh1">anti histaminique h1</option>
-                        <option value="antiulcereuxetantiacide">anti ulcereux et anti acides</option>
-                        <option value="vermifuges">vermifuges</option>
-                        <option value="vitaminesetelectrolytes">vitamines et electrolytes</option>
-                        <option value="antianemiques">anti anemiques</option>
+                        {
+                            listeDesClasses.map(classe => {
+                                return <option key={classe.id} value={classe.designation}>{classe.designation}</option>
+                            })
+                        }
                     </select>
                 </div>
             </div>

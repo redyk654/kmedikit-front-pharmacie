@@ -5,6 +5,7 @@ import ReactToPrint from 'react-to-print';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import ImprimerStats from './ImprimerStats';
 import { useSpring, animated } from 'react-spring';
+import { nomDns } from '../../shared/Globals';
 
 export default function Stats(props) {
 
@@ -43,7 +44,7 @@ export default function Stats(props) {
             data.append('mois', moisActu);
 
             const req = new XMLHttpRequest();
-            req.open('POST', `http://serveur/backend-cmab/stats.php`);
+            req.open('POST', `${nomDns}stats.php`);
             
             req.addEventListener('load', () => {
                 const result = JSON.parse(req.responseText);

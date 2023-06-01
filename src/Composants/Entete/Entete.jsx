@@ -3,6 +3,7 @@ import './Entete.css';
 import Modal from 'react-modal';
 import { FaMoon, FaSignOutAlt, FaSun } from 'react-icons/fa';
 import { ContextChargement } from '../../Context/Chargement';
+import { nomDns } from '../../shared/Globals';
 
 const customStyles1 = {
     content: {
@@ -65,7 +66,7 @@ export default function Entete(props) {
             data.append('nouveau', nouveau);
 
             const req = new XMLHttpRequest();
-            req.open('POST', 'http://serveur/backend-cmab/modif_password.php');
+            req.open('POST', `${nomDns}modif_password.php`);
 
             req.addEventListener('load', () => {
                 if (req.status >= 200 && req.status < 400) {

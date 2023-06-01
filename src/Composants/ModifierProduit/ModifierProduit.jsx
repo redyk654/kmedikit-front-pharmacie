@@ -6,6 +6,8 @@ import { useSpring, animated } from 'react-spring';
 import { ContextChargement } from '../../Context/Chargement';
 import { Toaster, toast } from "react-hot-toast";
 import EditerProd from '../Approvisionner/EditerProd';
+import GererClasses from '../GererClasses/GererClasses';
+import { nomDns } from '../../shared/Globals';
 
 const customStyles1 = {
     content: {
@@ -22,13 +24,15 @@ const customStyles1 = {
 
 const customStyles2 = {
     content: {
-        top: '50%',
+        top: '45%',
         left: '50%',
         right: 'auto',
         bottom: 'auto',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
-        background: '#0e771a',
+        borderRadius: '10px',
+        width: '60vw',
+        height: '70vh',
     },
 };
 
@@ -60,19 +64,18 @@ export default function ModifierProduit() {
     const [infosMedoc, setInfosMedoc] = useState(medocs);
     const [modalConfirmation, setModalConfirmation] = useState(false);
     const [modalModifPrix, setModalModifPrix] = useState(false)
-    const [modalReussi, setModalReussi] = useState(false);
+    const [modalGererClasses, setModalGererClasses] = useState(false);
     const [messageReussi, setMessageReussi] = useState('');
     const [refecth, setRefetch] = useState(false)
     const [modif, setModif] = useState(false)
     const [msgErreur, setMsgErreur] = useState('');
-
 
     const {code, designation, classe, pu_achat, pu_vente, conditionnement, stock_ajoute, min_rec, categorie, date_peremption, montant_commande, genre} = infosMedoc;
 
     useEffect(() => {
         // Récupération de la liste de produits via Ajax
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/recuperer_medoc.php');
+        req.open('GET', `${nomDns}recuperer_medoc.php`);
 
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {
@@ -114,14 +117,14 @@ export default function ModifierProduit() {
             data.append('id', produitSelectionne[0].id);
 
             const req = new XMLHttpRequest();
-            req.open('POST', 'http://serveur/backend-cmab/supprimer_produit.php');
+            req.open('POST', `${nomDns}supprimer_produit.php`);
 
             req.addEventListener('load', () => {
                 if (req.status >= 200 && req.status < 400) {
                     setMessageReussi('Le produit a bien été supprimé');
                     setRefetch(!refecth);
                     setproduitSelectionne([]);
-                    setModalReussi(true);
+                    setModalGererClasses(true);
                     setModalConfirmation(false);
                 }
             });
@@ -142,7 +145,7 @@ export default function ModifierProduit() {
             data.append('produit', JSON.stringify(infosMedoc));
             
             const req = new XMLHttpRequest();
-            req.open('POST', 'http://serveur/backend-cmab/modif_prod.php');
+            req.open('POST', `${nomDns}modif_prod.php`);
             
             req.addEventListener('load', () => {
                 if (req.status >= 200 && req.status < 400) {
@@ -161,7 +164,7 @@ export default function ModifierProduit() {
 
     const supprimerProduitEpuise = () => {
         const req = new XMLHttpRequest();
-        req.open('POST', 'http://serveur/backend-cmab/vider.php?stock=0');
+        req.open('POST', `${nomDns}vider.php?stock=0`);
         
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
@@ -177,12 +180,11 @@ export default function ModifierProduit() {
     }
   
     const fermerModalReussi = () => {
-        setModalReussi(false);
+        setModalGererClasses(false);
     }
     
-    const fermerModalModifPrix = () => {
-        setModalModifPrix(false);
-        setnvprix('');
+    const ouvriModalReussi = () => {
+        setModalGererClasses(true);
     }
 
     const afterModal = () => {
@@ -205,7 +207,7 @@ export default function ModifierProduit() {
     return (
         <animated.div style={props1}>
             <div><Toaster/></div>
-            <section className="modif-produit">
+            <section className="modif-produit border border-black">
                 <Modal
                     isOpen={modalConfirmation}
                     onRequestClose={setModalConfirmation}
@@ -219,33 +221,20 @@ export default function ModifierProduit() {
                     </div>
                 </Modal>
                 <Modal
-                    isOpen={modalModifPrix}
-                    onRequestClose={fermerModalModifPrix}
-                    style={customStyles1}
-                    contentLabel="modif prix"
-                >
-                    <h2>Entrez le nouveau prix</h2>
-                    <div style={{textAlign: 'center'}}>
-                        <input style={{marginBottom: '10px', outline: 'none'}} value={nvprix} type="text" onChange={handleChange} />
-                        <div>
-                            <button className='bootstrap-btn annuler' style={{width: '40%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalModifPrix}>Annuler</button>
-                            <button className='bootstrap-btn' style={{width: '40%', height: '5vh', cursor: 'pointer'}} onClick={modifierProd}>Confirmer</button>
-                        </div>
-                    </div>
-                </Modal>
-                <Modal
-                    isOpen={modalReussi}
+                    isOpen={modalGererClasses}
                     onRequestClose={fermerModalReussi}
                     style={customStyles2}
                     contentLabel="réussi"
                 >
-                    <h2 style={{color: '#fff'}}>{messageReussi}!</h2>
-                    <button style={{width: '10%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalReussi}>OK</button>
+                    <GererClasses />
                 </Modal>
                 <div className="col-1">
                     <p className="search-zone">
                         <input type="text" placeholder="recherchez un produit" onChange={filtrerListe} />
                     </p>
+                    <div className='m-2'>
+                        <a role="button" class="text-dark fw-bold" onClick={ouvriModalReussi}>Gerer les classes</a>
+                    </div>
                     <h1>Produits en stock</h1>
                     {/* <button onClick={supprimerProduitEpuise}>Vider</button> */}
                     <ul>
@@ -276,7 +265,7 @@ export default function ModifierProduit() {
                             />
                         </>
                     ) : (
-                        <div className="details-prod">
+                        <div className="infos-medoc">
                             {produitSelectionne.length > 0 && produitSelectionne.map(item => (
                                 <AfficherProd
                                 key={item.id}

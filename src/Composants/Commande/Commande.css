@@ -93,7 +93,7 @@
 }
 
 .commande .right-side .infos-medoc {
-    display: flex;
+    /* display: flex; */
     border: 1px solid #03ca7e;
     margin: 0px 5px;
 }
@@ -108,19 +108,19 @@
 
 
 .commande .right-side .infos-medoc .box {
-    display: flex;
+    /* display: flex;
     justify-content: space-around;
     align-items: flex-start;
-    flex-direction: column;
+    flex-direction: column; */
     width: 100%;
     margin-top: 10px;
 }
 
 .commande .right-side .infos-medoc .box p {
-    width: 22vw;
+    /* width: 22vw; */
 }
 
-.commande .right-side .infos-medoc .box .item p:last-child {
+.infos-medoc .box .item p:last-child {
     font-weight: 700;
     color: #038654;
 }
@@ -250,4 +250,32 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.detail-item-patient {
+    display: flex;
+    justify-content: space-between;
+    /* border: 1px solid #fff; */
+    padding-top: 15px;
+}
+
+.detail-item-patient li {
+    color: #038654;
+    font-weight: 600;
+}
+
+.detail-item-patient li:hover {
+    color: #fff;
+    background: #038654;
+    cursor: pointer;
+}
+
+.a-link {
+    display: block;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.a-link:hover {
+    font-weight: bold;
 }

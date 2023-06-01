@@ -3,7 +3,7 @@ import AfficherBordereau from './AfficherBordereau';
 import './Bordereau.css';
 import { useSpring, animated } from 'react-spring';
 import { ContextChargement } from '../../Context/Chargement';
-import { mois } from '../../shared/Globals';
+import { mois, nomDns } from '../../shared/Globals';
 
 export default function Bordereau() {
 
@@ -19,7 +19,7 @@ export default function Bordereau() {
 
     useEffect(() => {
         const req = new XMLHttpRequest();
-        req.open('GET', `http://serveur/backend-cmab/recuperer_commandes.php?`);
+        req.open('GET', `${nomDns}recuperer_commandes.php?`);
 
         req.addEventListener('load', () => {
             const result = JSON.parse(req.responseText);
@@ -43,7 +43,7 @@ export default function Bordereau() {
 
         const req = new XMLHttpRequest();
 
-        req.open('POST', 'http://serveur/backend-cmab/recuperer_commandes.php');
+        req.open('POST', `${nomDns}recuperer_commandes.php`);
 
         req.addEventListener('load', () => {
             const result = JSON.parse(req.responseText);
