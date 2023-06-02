@@ -6,29 +6,23 @@ export default function AfficherBordereau(props) {
             <table>
                 <thead>
                     <tr>
-                        <td>Code</td>
-                        <td>Des</td>
-                        <td>Cat</td>
-                        <td>Condi</td>
-                        <td>Qté commandés</td>
+                        <td>Désignation</td>
+                        <td>Forme</td>
+                        <td>Qté entrées</td>
                         <td>Pu achat</td>
                         <td>Pu vente</td>
                         <td>Date exp</td>
-                        <td>Stock min</td>
                     </tr>
                 </thead>
                 <tbody>
                     {props.commandesSelectionne.length > 0 ? props.commandesSelectionne.map(item => (
                         <tr>
-                            <td>{item.code}</td>
                             <td>{item.designation}</td>
                             <td>{item.categorie}</td>
-                            <td>{item.conditionnement}</td>
                             <td>{item.stock_commande}</td>
                             <td>{item.pu_achat}</td>
                             <td>{item.pu_vente}</td>
                             <td>{item.date_peremption}</td>
-                            <td>{item.min_rec}</td>
                         </tr>
                     )) : null}
                 </tbody>
