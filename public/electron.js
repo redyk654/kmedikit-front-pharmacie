@@ -32,7 +32,7 @@ app.whenReady().then(() => {
   autoUpdater.setFeedURL({
     provider: 'github',
     owner: 'redyk654',
-    repo: 'https://github.com/redyk654/kmedikit-front-pharmacie/tree/mbanga',
+    repo: 'https://github.com/redyk654/kmedikit-front-pharmacie/tree/bepanda',
     releaseType: 'release',
     url: 'https://github.com/redyk654/kmedikit-front-pharmacie/releases/latest',
     
