@@ -24,7 +24,6 @@ function createWindow () {
 }
 
 
-
 const NOTIFICATION_TITLE = 'Basic Notification'
 const NOTIFICATION_BODY = 'Notification from the Main process'
 
