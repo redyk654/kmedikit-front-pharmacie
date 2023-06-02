@@ -2,7 +2,7 @@
   "name": "KMD-Pharmacie",
   "author": "Chrisppo Youmbissi Kamdem",
   "copyright": "Copyright © 2021 Chrisppo Youmbissi",
-  "version": "2.0.9",
+  "version": "3.0.0",
   "main": "public/electron.js",
   "homepage": "./",
   "build": {
