@@ -19,34 +19,28 @@ function createWindow () {
       isDev ? 'http:localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
     )
 
-    // win.setMenuBarVisibility(false)
-    // win.removeMenu()
+    win.setMenuBarVisibility(false)
+    win.removeMenu()
 }
 
-
-const NOTIFICATION_TITLE = 'Basic Notification'
-const NOTIFICATION_BODY = 'Notification from the Main process'
-
-function showNotification () {
-  new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
-}
-
-app.whenReady().then( async () => {
-  await createWindow()
-  // showNotification();
+app.whenReady().then(() => {
+  createWindow()
 
   autoUpdater.autoDownload = false;
 
+  // information sur la mise à jour
   autoUpdater.setFeedURL({
     provider: 'github',
     owner: 'redyk654',
-    repo: 'https://github.com/redyk654/pharmacie-cmab/tree/bepanda',
+    repo: 'https://github.com/redyk654/kmedikit-front-pharmacie/tree/bepanda',
     releaseType: 'release',
-    url: 'https://github.com/redyk654/pharmacie-cmab/releases/latest',
+    url: 'https://github.com/redyk654/kmedikit-front-pharmacie/releases/latest',
     
   });
 
   autoUpdater.checkForUpdates();
+
+  // une mise à jour est disponible
   autoUpdater.on('update-available', () => {
     dialog.showMessageBox({
       type: 'question',
@@ -59,13 +53,11 @@ app.whenReady().then( async () => {
     })
   })
 
-  autoUpdater.on('update-not-available', () => {
-    dialog.showMessageBox({
-      type: 'info',
-      message: 'Une mise à jour est disponible, télécharger maintenant ou plus tard ?',
-      buttons: ['OK']
-    })
-  })
+  autoUpdater.on('update-downloaded', () => {
+    // La mise à jour a été téléchargée et va être installée
+    autoUpdater.quitAndInstall();
+    // showNotification();
+  });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -73,91 +65,3 @@ app.whenReady().then( async () => {
     }
   })
 })
-
-
-// app.whenReady().then(createWindow).then(showNotification)
-
-// autoUpdater.on('update-available', info => {
-//   // Une nouvelle version est disponible
-//   autoUpdater.checkForUpdates();
-//   showNotification();
-// });
-
-// autoUpdater.on('update-not-available', () => {
-//   // Il n'y a pas de nouvelle version
-//   showNotification();
-
-// });
-
-// autoUpdater.on('download-progress', progressObj => {
-//   // Afficher la progression du téléchargement
-//   // showNotification();
-// });
-
-// autoUpdater.on('update-downloaded', () => {
-//   // La mise à jour a été téléchargée et va être installée
-//   autoUpdater.quitAndInstall();
-//   // showNotification();
-// });
-
-// function verifUpdates () {
-//   console.log("ok");
-//   autoUpdater.autoDownload = false;
-//   autoUpdater.setFeedURL({
-//   provider: 'github',
-//   owner: 'redyk654',
-//   repo: 'https://github.com/redyk654/pharmacie-cmab',
-//   // La valeur de la propriété `private` doit être `true` si votre référentiel Github est privé.
-//   private: false
-//   });
-
-//   const feedUrlReader = net.request(autoUpdater.getFeedURL(), {
-//   method: 'GET'
-//   });
-
-//   feedUrlReader.on('response', response => {
-//   let errorMessage;
-//   if (response.statusCode === 200) {
-//     response.on('error', error => {
-//       errorMessage = error;
-//     });
-
-//     response.on('data', data => {
-//       const json = JSON.parse(data);
-//       autoUpdater.setFeedURL(json.url);
-//       autoUpdater.checkForUpdates();
-//     });
-//   } else {
-//     errorMessage = ('Cannot find releases on Github.');
-//   }
-//   if (errorMessage) {
-//     console.error(errorMessage);
-//   }
-//   });
-
-//   feedUrlReader.on('error', error => {
-//     console.error('Unable to connect to Github.');
-//   });
-
-//   autoUpdater.on('update-available', info => {
-//     // Une nouvelle version est disponible
-//     autoUpdater.checkForUpdates();
-//     console.log('available');
-//   });
-  
-//   autoUpdater.on('update-not-available', () => {
-//     // Il n'y a pas de nouvelle version
-//     console.log('not-available');
-//   });
-  
-//   autoUpdater.on('download-progress', progressObj => {
-//     // Afficher la progression du téléchargement
-//     console.log('download-in-progress');
-//   });
-  
-//   autoUpdater.on('update-downloaded', () => {
-//     // La mise à jour a été téléchargée et va être installée
-//     console.log("update-downloaded");
-//     autoUpdater.quitAndInstall();
-//   });
-// }

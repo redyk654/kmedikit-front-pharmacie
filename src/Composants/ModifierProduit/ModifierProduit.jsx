@@ -276,7 +276,7 @@ export default function ModifierProduit() {
                             />
                         </>
                     ) : (
-                        <div className="details-prod">
+                        <div className="infos-medoc">
                             {produitSelectionne.length > 0 && produitSelectionne.map(item => (
                                 <AfficherProd
                                 key={item.id}

@@ -9,7 +9,7 @@
 }
 
 .modif-produit .col-2 {
-    width: 100%;
+    width: 68%;
 }
 
 .modif-produit h1 {
@@ -60,25 +60,21 @@
 }
 
 .modif-produit .details-prod .box {
-    display: flex;
+    /* display: flex;
     justify-content: space-around;
     align-items: flex-start;
     width: 100%;
-    margin-top: 10px;
+    margin-top: 10px; */
 }
 
 .modif-produit .details-prod .box p {
-    width: 22vw;
+    /* width: 22vw; */
 }
 
-.modif-produit .details-prod .box .item p:first-child {
-    color: #03ca7e;
-}
-
-.modif-produit .details-prod .box .item p:last-child {
+/* .modif-produit .details-prod .box .item p:last-child {
     font-weight: 700;
     color: #0c5f16;
-}
+} */
 
 .modif-produit .buttons {
     display: flex;
