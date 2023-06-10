@@ -15,6 +15,7 @@ import { ContextChargement } from './Context/Chargement';
 import ListeProduits from './Composants/ListeProduits/ListeProduits';
 import FactureManuelle from './Composants/FactureManuelle/FactureManuelle';
 import { ROLES } from "./shared/Globals";
+import Magasin from './Composants/Magasin/Magasin';
 
 
 function App() {
@@ -42,7 +43,7 @@ function App() {
       contenu = <Historique nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
       break;
     case 3:
-      contenu = <Maj nomConnecte={nomConnecte} />
+      contenu = <Magasin nomConnecte={nomConnecte} />
       break;
     case 4:
       contenu = <Comptes nomConnecte={nomConnecte} />
@@ -71,7 +72,7 @@ function App() {
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
-            <div className="onglets-blocs" style={{width: '97%', fontSize: '12px'}}>
+            <div className="onglets-blocs" style={{width: '97%', fontSize: '11px'}}>
               <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(6)}}>
                 <FaReceipt size={18} />
                 &nbsp;
@@ -80,12 +81,12 @@ function App() {
               <div className={`tab ${onglet === 2 ? 'active' : ''}  ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(2)}}>
                 <FaClipboardList size={19} />
                 &nbsp;
-                Inventaires
+                Fiches des stocks
               </div>
               <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(3)}}>
                 <FaLayerGroup size={18} />
                 &nbsp;
-                Gestion des stocks
+                Magasin
               </div>
               <div className={`tab ${onglet === 4 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(4)}}>
                 <FaUsers size={20} />
@@ -109,7 +110,7 @@ function App() {
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
-            <div className="onglets-blocs" style={{width: '85%', fontSize: '12px'}}>
+            <div className="onglets-blocs" style={{width: '85%', fontSize: '10px'}}>
               <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(1)}}>
                 <FaStore size={22} />
                 &nbsp;
@@ -142,7 +143,7 @@ function App() {
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
-            <div className="onglets-blocs" style={{width: '65%', fontSize: '13px'}}>
+            <div className="onglets-blocs" style={{width: '65%', fontSize: '11px'}}>
               <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(1)}}>
                 <FaStore size={22} />
                 &nbsp;

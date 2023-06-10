@@ -231,6 +231,7 @@ export default function Etats(props) {
     }
 
     const rechercherHistorique = () => {
+        // console.log(heure_select1.current.value);
         setSearch(!search);
         setdateDepart(date_select1.current.value + ' ' + heure_select1.current.value + ':00');
         setdateFin(date_select2.current.value + ' ' + heure_select2.current.value + ':59');
@@ -247,24 +248,24 @@ export default function Etats(props) {
                                 <p>
                                     <label htmlFor="">Du : </label>
                                     <input type="date" ref={date_select1} />
-                                    <CTooltip
+                                    {/* <CTooltip
                                         content={`${tipHeureDebut}`}
                                         placement="top"
                                         trigger={['hover', 'focus']}
                                     >
+                                    </CTooltip> */}
                                         <input type="time" ref={heure_select1} />
-                                    </CTooltip>
                                 </p>
                                 <p>
                                     <label htmlFor="">Au : </label>
                                     <input type="date" ref={date_select2} />
-                                    <CTooltip
+                                    {/* <CTooltip
                                         content={`${tipHeureFin}`}
                                         placement="top"
                                         trigger={['hover', 'focus']}
                                     >
+                                    </CTooltip> */}
                                         <input type="time" ref={heure_select2} />
-                                    </CTooltip>
                                 </p>
                                 <p>
                                     {

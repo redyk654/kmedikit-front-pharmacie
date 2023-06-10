@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import './Approvisionner.css';
+import '../Approvisionner/Approvisionner.css';
 import Modal from 'react-modal';
 import { useSpring, animated } from 'react-spring';
-import EditerProd from './EditerProd';
+import EditerProd from '../Approvisionner/EditerProd';
 import { Toaster, toast } from "react-hot-toast";
 import Loader from "react-loader-spinner";
 import { ContextChargement } from '../../Context/Chargement';
@@ -88,7 +88,7 @@ const customStyles3 = {
 };
 
 
-export default function Approvisionner(props) {
+export default function Entrees(props) {
 
     const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
 
@@ -120,7 +120,7 @@ export default function Approvisionner(props) {
     useEffect(() => {
         // Récupération de la liste de produits via Ajax
         const req = new XMLHttpRequest();
-        req.open('GET', `${nomDns}recuperer_medoc.php?stock=filtre`);
+        req.open('GET', `${nomDns}recuperer_medoc_magasin.php?stock=filtre`);
 
         req.addEventListener('load', () => {
             const result = JSON.parse(req.responseText);
@@ -134,19 +134,19 @@ export default function Approvisionner(props) {
     }, [refecth]);
 
 
-    useEffect(() => {
-        // Récupération de la des fournisseurs
-        const req = new XMLHttpRequest();
-        req.open('GET', `${nomDns}recuperer_fournisseurs.php`);
+    // useEffect(() => {
+    //     // Récupération de la des fournisseurs
+    //     const req = new XMLHttpRequest();
+    //     req.open('GET', `${nomDns}recuperer_fournisseurs.php`);
 
-        req.addEventListener('load', () => {
-            const result = JSON.parse(req.responseText);
-            setListeFournisseurs(result);
-        });
+    //     req.addEventListener('load', () => {
+    //         const result = JSON.parse(req.responseText);
+    //         setListeFournisseurs(result);
+    //     });
 
-        req.send();
+    //     req.send();
 
-    }, []);
+    // }, []);
 
     const filtrerListe = (e) => {
         const medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.trim().toLowerCase()) !== -1));
@@ -224,7 +224,7 @@ export default function Approvisionner(props) {
         if (isNaN(parseInt(pu_vente)) || isNaN(parseInt(min_rec)) || isNaN(parseInt(pu_achat))) {
             setMsgErreur("Le prix de vente, le prix d'achat et le stock minimum doivent être des nombres");
         } else if (designation.length === 0) {
-            setMsgErreur('Le produit doit avoir une designation')
+            setMsgErreur('Le produit doit avoir une désignation')
         } else if (classe.length === 0) {
             setMsgErreur('le champ classe ne peut pas être vide')
         } else if (parseInt(pu_vente) === 0) {
@@ -266,7 +266,7 @@ export default function Approvisionner(props) {
             data.append('produit', JSON.stringify(item));
             
             const req = new XMLHttpRequest();
-            req.open('POST', `${nomDns}gestion_stock.php?remarque=livraison`);
+            req.open('POST', `${nomDns}gestion_stock_magasin.php?remarque=livraison`);
             
             req.addEventListener('load', () => {
                 i++
@@ -294,7 +294,7 @@ export default function Approvisionner(props) {
         data.append('produit', JSON.stringify(produitsCommandes));
 
         const req = new XMLHttpRequest();
-        req.open('POST', `${nomDns}approvisionnement.php`);
+        req.open('POST', `${nomDns}approvisionnement_magasin.php`);
         
         req.addEventListener('load', () => {
             mettreAjourStock();
@@ -317,18 +317,18 @@ export default function Approvisionner(props) {
         elt2.current.disabled = true;
 
         const idCommande = genererId();
-        // const fournisseur = document.getElementById('fournisseur').value;
+        const fournisseur = '';
 
         const data = new FormData();
         
         // Données relatives aux informations de la commande
         data.append('id_commande', idCommande);
-        data.append('fournisseur', '');
+        data.append('fournisseur', fournisseur);
         data.append('vendeur', props.nomConnecte);
         data.append('montant', montantCommande);
         
         const req = new XMLHttpRequest();
-        req.open('POST', `${nomDns}approvisionnement.php`);
+        req.open('POST', `${nomDns}approvisionnement_magasin.php`);
         
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {
@@ -451,18 +451,18 @@ export default function Approvisionner(props) {
                         ajouterMedoc={ajouterNouveauProduit}
                         nvProd={nvProd}
                     />
-                    <div style={{color: 'red', backgroundColor: '#fff'}}>{msgErreur}</div>
+                    <div className='fw-bold text-danger' style={{backgroundColor: '#fff'}}>{msgErreur}</div>
                 </Modal>
                 <div className="infos-approv">
-                    <h1>Fournisseurs et montant</h1>
-                    <div>
+                    <h1>Montant</h1>
+                    {/* <div>
                         <label htmlFor="">Choisissez un fournisseur : </label>
                         <select name="fournisseur" id="fournisseur">
                             {listeFournisseurs.length > 0 && listeFournisseurs.map(item => (
                                 <option value={item.nom_fournisseur}>{item.nom_fournisseur}</option>
                             ))}
                         </select>
-                    </div>
+                    </div> */}
                     <div className="montant-commande">
                         <label htmlFor="">montant de la commande : </label>
                         <input type="number" name="montant_commande" value={montantCommande} />

@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import './Activites.css';
+import '../Activites/Activites.css';
 import { ContextChargement } from '../../Context/Chargement';
 import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns } from "../../shared/Globals";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import { useSpring, animated } from 'react-spring';
 import { CBadge } from "@coreui/react";
 import AfficherListeProdInventaires from '../../shared/AfficherListeProdInventaires';
@@ -39,7 +39,7 @@ const customStyles1 = {
     },
 };
 
-export default function Activites(props) {
+export default function ActivitesMag(props) {
 
     const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
     const {chargement, stopChargement, startChargement, darkLight} = useContext(ContextChargement);
@@ -47,7 +47,7 @@ export default function Activites(props) {
 
     let date_filtre = useRef();
     let btnModifStock = useRef();
-    const date_e = new Date('2023-12-15');
+    const date_e = new Date('2024-03-15');
     const date_j = new Date();
 
     const [listeHistorique, setListeHistorique] = useState([]);
@@ -77,7 +77,7 @@ export default function Activites(props) {
         if (date_j.getTime() <= date_e.getTime()) {
             // Récupération de la liste de produits
             const req = new XMLHttpRequest();
-            req.open('GET', `${nomDns}recuperer_historique.php`);
+            req.open('GET', `${nomDns}recuperer_historique_magasin.php`);
 
             req.addEventListener('load', () => {
                 const result = JSON.parse(req.responseText);
@@ -115,7 +115,7 @@ export default function Activites(props) {
             data.append('pu_vente', puVente);
 
             const req = new XMLHttpRequest();
-            req.open('POST', `${nomDns}gestion_stock.php?rem=inventaire`);
+            req.open('POST', `${nomDns}gestion_stock_magasin.php?rem=inventaire`);
     
             req.addEventListener('load', () => {
                 fermerModalConfirmation();
@@ -185,7 +185,7 @@ export default function Activites(props) {
         setDatePeremtion(medocSelectionne.date_peremption);
 
         const req1 = new XMLHttpRequest();
-        req1.open('POST', `${nomDns}gestion_stock.php?id=${medocSelectionne.id}`);
+        req1.open('POST', `${nomDns}gestion_stock_magasin.php?id=${medocSelectionne.id}`);
         req1.addEventListener('load', () => {
             if (req1.status >= 200 && req1.status < 400) {
                 const result = JSON.parse(req1.responseText);
@@ -253,7 +253,7 @@ export default function Activites(props) {
 
         const req = new XMLHttpRequest();
 
-        req.open('POST', `${nomDns}sauvegarder_inventaire.php`);
+        req.open('POST', `${nomDns}sauvegarder_inventaire_magasin.php`);
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
                 sauvegarderProduitsInventaire(idInventaire)
@@ -287,13 +287,14 @@ export default function Activites(props) {
 
             const req = new XMLHttpRequest();
     
-            req.open('POST', `${nomDns}sauvegarder_inventaire.php`);
+            req.open('POST', `${nomDns}sauvegarder_inventaire_magasin.php`);
             req.addEventListener('load', () => {
                 if (req.status >= 200 && req.status < 400) {
                     i++;
                     if (i === listeSauvegarde.length) {
                         setEnCours(false);
                         fermerModalInventaire();
+                        toast.success('Inventaire sauvegardé avec succès');
                     }
                 }
             });
@@ -349,7 +350,7 @@ export default function Activites(props) {
                     </div>
                 </div>
             </Modal>
-            <h1 >Fiches des stocks du dispensaire</h1>
+            <h1 >Fiches des stocks du magasin</h1>
             <div className='erreur-message'>{messageErreur}</div>
             <div className="container-historique">
                 <div className="medocs-sortis">

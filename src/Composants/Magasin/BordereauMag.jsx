@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
-import AfficherBordereau from './AfficherBordereau';
-import './Bordereau.css';
+import AfficherBordereau from '../Bordereau/AfficherBordereau';
+import '../Bordereau/Bordereau.css';
 import { useSpring, animated } from 'react-spring';
 import { ContextChargement } from '../../Context/Chargement';
 import { mois, nomDns } from '../../shared/Globals';
 
-export default function Bordereau() {
+export default function BordereauMag() {
 
     const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
 
@@ -19,7 +19,7 @@ export default function Bordereau() {
 
     useEffect(() => {
         const req = new XMLHttpRequest();
-        req.open('GET', `${nomDns}recuperer_commandes.php?`);
+        req.open('GET', `${nomDns}recuperer_commandes_magasin.php?`);
 
         req.addEventListener('load', () => {
             const result = JSON.parse(req.responseText);
@@ -43,7 +43,7 @@ export default function Bordereau() {
 
         const req = new XMLHttpRequest();
 
-        req.open('POST', `${nomDns}recuperer_commandes.php`);
+        req.open('POST', `${nomDns}recuperer_commandes_magasin.php`);
 
         req.addEventListener('load', () => {
             const result = JSON.parse(req.responseText);
