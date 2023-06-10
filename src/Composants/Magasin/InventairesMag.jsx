@@ -62,7 +62,7 @@ export default function InventairesMag(props) {
         <animated.div style={props1}>
             <section className="container-bordereaux">
                 <div className="box-liste">
-                    <TitleH1 val="Liste des commandes"/>
+                    {/* <TitleH1 val="Liste des commandes"/> */}
                     <SearchInput
                       placeholder="entrez une date"
                       searchTerm={searchTerm}

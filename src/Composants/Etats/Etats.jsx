@@ -244,7 +244,7 @@ export default function Etats(props) {
                 <div className="container-historique">
                     <div className="table-commandes">
                         <div className="entete-historique">
-                            <div>
+                            <div style={{fontSize: '14px'}}>
                                 <p>
                                     <label htmlFor="">Du : </label>
                                     <input type="date" ref={date_select1} />

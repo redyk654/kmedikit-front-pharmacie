@@ -70,7 +70,7 @@ export default function BordereauMag() {
                     </ul>
                 </div>
                 <div className="box-bordereau">
-                    <h1>Bordereau d'approvisionnement</h1>
+                    <h1>Bordereau d'approvisionnement du magasin</h1>
                     {/* <div className="entete-bordereau">Fournisseur : &nbsp;<span className="span-entete" style={{color: `${darkLight ? '#fff' : '#000'}`}}>{infosCommande.fournisseur && infosCommande.fournisseur}</span></div> */}
                     <div className="entete-bordereau text-dark">Effectué par : &nbsp;<span className="span-entete" style={{color: `${darkLight ? '#fff' : '#000'}`}}>{infosCommande.vendeur && infosCommande.vendeur}</span></div>
                     <div className="entete-bordereau text-dark">Le : &nbsp;<span className="span-entete" style={{color: `${darkLight ? '#fff' : '#000'}`}}>{infosCommande.date_commande && mois(infosCommande.date_commande.substr(0, 10))}</span></div>

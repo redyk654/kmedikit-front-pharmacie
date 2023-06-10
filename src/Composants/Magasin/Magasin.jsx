@@ -5,9 +5,10 @@ import Operations from './Operations';
 import '../Maj/Maj.css';
 import { FaList, FaPen, FaClipboardList } from 'react-icons/fa';
 import CIcon from '@coreui/icons-react';
-import { cilSwapVertical } from '@coreui/icons';
+import { cilSwapVertical, cilSpreadsheet, cilNotes } from '@coreui/icons';
 import FicheStockMag from './FicheStockMag';
 import BordereauMag from './BordereauMag';
+import Recap from './Recap';
 
 export default function Magasin(props) {
 
@@ -29,13 +30,16 @@ export default function Magasin(props) {
         case 4:
             contenu = <FicheStockMag nomConnecte={props.nomConnecte} />
             break;
+        case 5:
+            contenu = <Recap nomConnecte={props.nomConnecte} />
+            break;
         default:
             break;
       }
 
   return (
     <section className="conteneur-sous-onglets">
-        <div className="onglets-blocs" style={{width: '70%', fontSize: '11px'}}>
+        <div className="onglets-blocs" style={{width: '70%', fontSize: '10px'}}>
             <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(1)}}>
                 <CIcon content={cilSwapVertical} size={'lg'} />
                 &nbsp;
@@ -55,6 +59,11 @@ export default function Magasin(props) {
                 <FaPen size={14} />
                 &nbsp;
                 Modifier infos
+            </div>
+            <div className={`tab ${onglet === 5 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(5)}}>
+                <CIcon content={cilNotes} size={'lg'} />
+                &nbsp;
+                Récap
             </div>
         </div>
         <div className="onglets-contenu">
