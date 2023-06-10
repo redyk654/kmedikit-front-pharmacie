@@ -8,7 +8,7 @@ export default function AfficherInventaire(props) {
             <thead>
                 <tr>
                     <td>Designation</td>
-                    <td>Dispo</td>
+                    <td>Stock</td>
                 </tr>
             </thead>
             <tbody>

@@ -403,7 +403,7 @@ export default function Sorties(props) {
             >
                 <h2 style={{color: `${darkLight ? '#fff' : '#18202e'}`, textAlign: 'center', marginBottom: '30px'}}>Confirmation</h2>
                 <p style={{fontWeight: '600', textAlign: 'center', opacity: '.8'}}>
-                    Vous allez valider la vente. Etes-vous sûr ?
+                    Vous allez valider la sortie. Etes-vous sûr ?
                 </p>
                 <div style={{textAlign: 'center', marginTop: '12px'}} className=''>
                     {enCours ? 

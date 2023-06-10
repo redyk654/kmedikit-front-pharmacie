@@ -4,8 +4,6 @@ import '@coreui/coreui/dist/css/coreui.min.css'
 import Entete from './Composants/Entete/Entete';
 import Connexion from './Composants/Connexion/Connexion';
 import Commande from './Composants/Commande/Commande';
-import Historique from './Composants/Historique/Historique';
-import Maj from './Composants/Maj/Maj';
 import Comptes from './Composants/Comptes/Comptes';
 import GestionFactures from './Composants/GestionFactures/GestionFactures';
 import Etats from './Composants/Etats/Etats';
@@ -16,6 +14,9 @@ import ListeProduits from './Composants/ListeProduits/ListeProduits';
 import FactureManuelle from './Composants/FactureManuelle/FactureManuelle';
 import { ROLES } from "./shared/Globals";
 import Magasin from './Composants/Magasin/Magasin';
+import Dispensaire from './Composants/Dispensaire/Dispensaire';
+import CIcon from '@coreui/icons-react';
+import { cilMedicalCross } from '@coreui/icons';
 
 
 function App() {
@@ -40,7 +41,7 @@ function App() {
       contenu = <Commande nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
       break;
     case 2:
-      contenu = <Historique nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
+      contenu = <Dispensaire nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
       break;
     case 3:
       contenu = <Magasin nomConnecte={nomConnecte} />
@@ -79,9 +80,9 @@ function App() {
                 Etats
               </div>
               <div className={`tab ${onglet === 2 ? 'active' : ''}  ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(2)}}>
-                <FaClipboardList size={19} />
+                <CIcon content={cilMedicalCross} size={'lg'} />
                 &nbsp;
-                Fiches des stocks
+                Dispensaire
               </div>
               <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(3)}}>
                 <FaLayerGroup size={18} />
@@ -116,11 +117,11 @@ function App() {
                 &nbsp;
                 Ventes
               </div>
-              <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(3)}}>
+              {/* <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(3)}}>
                 <FaLayerGroup size={22} />
                 &nbsp;
                 Gestion des stocks
-              </div>
+              </div> */}
               <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(6)}}>
                 <FaReceipt size={22} />
                 &nbsp;
@@ -143,7 +144,7 @@ function App() {
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
-            <div className="onglets-blocs" style={{width: '65%', fontSize: '11px'}}>
+            <div className="onglets-blocs" style={{width: '65%', fontSize: '10px'}}>
               <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(1)}}>
                 <FaStore size={22} />
                 &nbsp;

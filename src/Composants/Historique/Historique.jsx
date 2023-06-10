@@ -25,14 +25,14 @@ export default function Historique(props) {
 
     return (
         <section className="conteneur-sous-onglets">
-          <div className="onglets-blocs" style={{width: '40%', fontSize: '11px'}}>
+          <div className="onglets-blocs" style={{width: '40%', fontSize: '9px'}}>
             <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(1)}}>
-              <TbActivity size={23} />
+              <TbActivity size={20} />
               &nbsp;
               Activites
             </div>
             <div className={`tab ${onglet === 2 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(2)}}>
-              <AiFillSave size={21} />
+              <AiFillSave size={19} />
               &nbsp;
               Sauvegardes
             </div>

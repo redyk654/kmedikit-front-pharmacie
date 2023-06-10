@@ -115,7 +115,7 @@ export default function ActivitesMag(props) {
             data.append('pu_vente', puVente);
 
             const req = new XMLHttpRequest();
-            req.open('POST', `${nomDns}gestion_stock_magasin.php?rem=inventaire`);
+            req.open('POST', `${nomDns}gestion_stock_magasin.php?rem=correction`);
     
             req.addEventListener('load', () => {
                 fermerModalConfirmation();
@@ -124,6 +124,7 @@ export default function ActivitesMag(props) {
                 setDesignation('');
                 setDatePeremtion(false);
                 setStockRestant(false);
+                toast.success('Stock corrigé avec succès !');
             });
 
             req.addEventListener("error", function () {
@@ -381,7 +382,7 @@ export default function ActivitesMag(props) {
                         <input type="checkbox" id="filtre" checked={non_paye} onChange={(e) => setNonPaye(!non_paye)} />
                     </div>
                     <div className="entete-historique">
-                        <button className='bootstrap-btn' onClick={() => {setModalConfirmation(true); afterModal();}}>Modifier</button>
+                        <button className='bootstrap-btn' onClick={() => {setModalConfirmation(true); afterModal();}}>Corriger</button>
                     </div>
                     <div className="entete-historique" style={{display: `${non_paye ? 'block' : 'none'}`}}>
                         <label htmlFor="">Date : </label>
@@ -405,7 +406,7 @@ export default function ActivitesMag(props) {
                             <tr>
                                 <td>Le</td>
                                 <td>À</td>
-                                <td>Par</td>
+                                <td>Auteur</td>
                                 <td>Entrée</td>
                                 <td>Sortie</td>
                                 <td>Dispo</td>

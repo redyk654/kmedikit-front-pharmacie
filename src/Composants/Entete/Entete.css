@@ -33,3 +33,7 @@
 .entete .box-entete {
     width: 100%;
 }
+
+.icon-deconnexion {
+    transform: rotate(180deg);
+}

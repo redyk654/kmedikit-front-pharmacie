@@ -113,7 +113,7 @@ export default function Recap(props) {
     return (
         <animated.div style={props1}>
             <section className="etats">
-                <h1>Historique des ventes</h1>
+                <h1 className='fw-bold'>Récapitulatif des sorties du magasin</h1>
                 <div className="container-historique">
                     <div className="table-commandes">
                         <div className="entete-historique">
