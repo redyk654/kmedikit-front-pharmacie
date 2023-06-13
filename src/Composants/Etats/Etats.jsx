@@ -221,24 +221,24 @@ export default function Etats(props) {
                                 <p>
                                     <label htmlFor="">Du : </label>
                                     <input type="date" ref={date_select1} />
-                                    <CTooltip
+                                    {/* <CTooltip
                                         content={`${tipHeureDebut}`}
                                         placement="top"
                                         trigger={['hover', 'focus']}
-                                    >
+                                    > */}
                                         <input type="time" ref={heure_select1} />
-                                    </CTooltip>
+                                    {/* </CTooltip> */}
                                 </p>
                                 <p>
                                     <label htmlFor="">Au : </label>
                                     <input type="date" ref={date_select2} />
-                                    <CTooltip
+                                    {/* <CTooltip
                                         content={`${tipHeureFin}`}
                                         placement="top"
                                         trigger={['hover', 'focus']}
-                                    >
+                                    > */}
                                         <input type="time" ref={heure_select2} />
-                                    </CTooltip>
+                                    {/* </CTooltip> */}
                                 </p>
                                 <p>
                                     {
