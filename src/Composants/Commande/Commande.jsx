@@ -13,6 +13,7 @@ import Facture from '../Facture/Facture';
 import { Toaster, toast } from "react-hot-toast";
 import { FaPlusSquare } from "react-icons/fa";
 import { useSpring, animated } from 'react-spring';
+import { nomDns } from '../../shared/Globals';
 
 // Modal.defaultStyles.overlay.backgroundColor = '#18202ebe';
 
@@ -224,7 +225,7 @@ export default function Commande(props) {
     const fetchProduits = () => {
         // Récupération des médicaments dans la base via une requête Ajax
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/recuperer_medoc.php');
+        req.open('GET', `${nomDns}recuperer_medoc.php`);
         req.addEventListener("load", () => {
             if (req.status >= 200 && req.status < 400) { // Le serveur a réussi à traiter la requête
                 setMessageErreur('');
@@ -346,7 +347,7 @@ export default function Commande(props) {
 
     const sauvegarder = () => {
         const req = new XMLHttpRequest();
-        req.open('POST', 'http://serveur/backend-cmab/backup.php');
+        req.open('POST', `${nomDns}backup.php`);
         req.send();
 
         req.addEventListener('load', () => {
@@ -386,7 +387,7 @@ export default function Commande(props) {
         data.append('statu', statu);
 
         const req = new XMLHttpRequest();
-        req.open('POST', 'http://serveur/backend-cmab/factures_pharmacie.php');
+        req.open('POST', `${nomDns}factures_pharmacie.php`);
 
         req.addEventListener('load', () => {
             setMedoSelect(false);
@@ -451,7 +452,7 @@ export default function Commande(props) {
 
                 // Envoi des données
                 const req2 = new XMLHttpRequest();
-                req2.open('POST', 'http://serveur/backend-cmab/maj_historique.php');
+                req2.open('POST', `${nomDns}maj_historique.php`);
                 
                 // Une fois la requête charger on vide tout les états
                 req2.addEventListener('load', () => {
@@ -521,7 +522,7 @@ export default function Commande(props) {
         setModalPatient(true);
 
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/gestion_patients.php');
+        req.open('GET', `${nomDns}gestion_patients.php`);
 
         req.addEventListener('load', () => {
             refPatient.current.focus();
@@ -544,7 +545,7 @@ export default function Commande(props) {
 
         const req = new XMLHttpRequest();
 
-        req.open('GET', `http://serveur/backend-cmab/rechercher_patient.php?str=${e.target.value}`);
+        req.open('GET', `${nomDns}rechercher_patient.php?str=${e.target.value}`);
 
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
@@ -594,7 +595,7 @@ export default function Commande(props) {
                 data.append('type_assurance', 0);
                 
                 const req = new XMLHttpRequest();
-                req.open('POST', 'http://serveur/backend-cmab/gestion_patients.php');
+                req.open('POST', `${nomDns}gestion_patients.php`);
 
                 req.addEventListener("load", function () {
                     // La requête n'a pas réussi à atteindre le serveur

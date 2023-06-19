@@ -14,7 +14,7 @@ const toastAlerteStock = (msg, bg) => {
 }
 
 const getMsgAlerteStock = (designation, stock) => {
-    if (parseInt(stock) === 0)
+    if (parseInt(stock) === 90)
         return 'le stock de ' + designation + ' est épuisé ! Pensez à vous approvisionner';
     else
         return designation + ' bientôt en rupture de stock ! Pensez à vous approvisionner';
@@ -130,3 +130,5 @@ export const genres = {
     sp: "spécialité",
     generique: "générique",
 }
+
+export const nomDns = "http://serveur/backend-cmab/";

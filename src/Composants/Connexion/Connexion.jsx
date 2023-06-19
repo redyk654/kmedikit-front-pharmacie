@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { nomDns } from '../../shared/Globals';
 import './Connexion.css';
 
 export default function Connexion(props) {
@@ -31,7 +32,7 @@ export default function Connexion(props) {
         data.append('mdp', mdp.trim());
 
         const req = new XMLHttpRequest();
-        req.open('POST', 'http://serveur/backend-cmab/connexion.php');
+        req.open('POST', `${nomDns}connexion.php`);
 
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {

@@ -3,6 +3,7 @@ import './Comptes.css';
 import Modal from 'react-modal';
 import { ContextChargement } from '../../Context/Chargement';
 import { useSpring, animated } from 'react-spring';
+import { nomDns } from '../../shared/Globals';
 
 const customStyles1 = {
     content: {
@@ -59,7 +60,7 @@ export default function Comptes(props) {
         // Récupération des comptes
 
         const req = new XMLHttpRequest();
-        req.open('GET', 'http://serveur/backend-cmab/recuperer_comptes.php');
+        req.open('GET', `${nomDns}recuperer_comptes.php`);
 
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {
@@ -144,7 +145,7 @@ export default function Comptes(props) {
             data.append('role', document.querySelector('form').role.value);
     
             const req = new XMLHttpRequest();
-            req.open('POST', 'http://serveur/backend-cmab/enregistrer_compte.php');
+            req.open('POST', `${nomDns}enregistrer_compte.php`);
     
             req.addEventListener('load', () => {
                 if (req.response.length === 0) {
@@ -186,7 +187,7 @@ export default function Comptes(props) {
         // Suppression d'un compte
         if (compteSelectionne.length > 0) {
             const req = new XMLHttpRequest();
-            req.open('GET', `http://serveur/backend-cmab/supprimer_vendeur.php?compte=${compteSelectionne[0].nom_user}`);
+            req.open('GET', `${nomDns}supprimer_vendeur.php?compte=${compteSelectionne[0].nom_user}`);
 
             req.addEventListener('load', () => {
                 if(req.status >= 200 && req.status < 400) {
