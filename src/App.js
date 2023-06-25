@@ -80,9 +80,9 @@ function App() {
                 Etats
               </div>
               <div className={`tab ${onglet === 2 ? 'active' : ''}  ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(2)}}>
-                <CIcon content={cilMedicalCross} size={'lg'} />
+                <CIcon icon={cilMedicalCross} size={'lg'} />
                 &nbsp;
-                Dispensaire
+                Dispensation
               </div>
               <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(3)}}>
                 <FaLayerGroup size={18} />

@@ -1,8 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Historique from '../Historique/Historique';
 import '../Maj/Maj.css';
-import { AiFillSave } from 'react-icons/ai';
-import { TbActivity } from "react-icons/tb";
 import { ContextChargement } from '../../Context/Chargement';
 import Bordereau from '../Bordereau/Bordereau';
 import { FaClipboardList, FaList } from 'react-icons/fa';

@@ -360,9 +360,9 @@ export default function Activites(props) {
                     <p>
                         <button onClick={ouvrirModalInventaire} className='bootstrap-btn valider' style={{width: '40%'}}>inventaires</button>
                     </p>
-                    <p>afficher: &nbsp;
+                    <p>
                         <select name="genre" id="" onChange={trierAffichage}>
-                            <option value="tout">tout</option>
+                            <option value="tout">aucune catégorie</option>
                             <option value="generique">générique</option>
                             <option value="sp">spécialité</option>
                         </select>

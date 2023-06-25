@@ -174,4 +174,4 @@ export const styleEntete = {
     letterSpacing: '1px'
 }
 
-export const nomDns = 'http://serveur/backend-cmab/';
+export const nomDns = 'http://localhost/backend-cmab/';

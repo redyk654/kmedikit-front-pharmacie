@@ -1,8 +1,8 @@
 {
-  "name": "KMD-Pharmacie",
+  "name": "KMD Pharmacie",
   "author": "Chrisppo Youmbissi Kamdem",
   "copyright": "Copyright © 2021 Chrisppo Youmbissi",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "public/electron.js",
   "homepage": "./",
   "build": {

@@ -44,7 +44,7 @@ body {
 .app.dark {
   background: #18202e;
   color: #fff;
-  height: 145vh;
+  height: 100%;
 }
 
 .app .conteneur-onglets {
