@@ -5,16 +5,12 @@ import Btn from '../../shared/Btn'
 import TitleH1 from '../../shared/TitleH1'
 import TitleH2 from '../../shared/TitleH2'
 import { colors, currentDateString } from '../../shared/Globals'
-import { ContextChargement } from '../../Context/Chargement';
 import Loader from "react-loader-spinner";
-import { FaArrowLeft, FaCross, FaRegArrowAltCircleDown } from 'react-icons/fa'
 import { VscError } from "react-icons/vsc";
 import BtnIcon from '../../shared/BtnIcon'
 
 
 export default function SaveInventaire(props) {
-
-  const { darkLight } = useContext(ContextChargement);
 
   return (
     <div id='save-inventaire'>
@@ -33,9 +29,12 @@ export default function SaveInventaire(props) {
             <BtnIcon handleClick={props.fermerModalInventaire}>
               <VscError size={40} color={colors.danger} />
             </BtnIcon>
-            <TitleH1 val="Inventaires par dates" />
+            <TitleH1 val="Fiche Inventaire" />
             <TitleH2 val={`Inventaire du ${currentDateString()}`} />
-            <AfficherInventaire listeProds={props.listeProds} />
+            <AfficherInventaire
+              listeProds={props.listeProds}
+              corrigerStock={props.corrigerStock}
+            />
             <div style={{textAlign: 'center'}}>        
               <Btn
                   text="Sauvegarder"

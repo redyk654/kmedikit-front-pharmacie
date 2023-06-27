@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import './Activites.css';
 import { ContextChargement } from '../../Context/Chargement';
-import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns } from "../../shared/Globals";
+import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock } from "../../shared/Globals";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
 import { Toaster, toast } from "react-hot-toast";
@@ -47,11 +47,12 @@ export default function Activites(props) {
 
     let date_filtre = useRef();
     let btnModifStock = useRef();
-    const date_e = new Date('2023-12-15');
+    const date_e = new Date('2024-02-15');
     const date_j = new Date();
 
     const [listeHistorique, setListeHistorique] = useState([]);
     const [listeSauvegarde, setListeSauvegarde] = useState([]);
+    const [listeProduitsInventaires, setListeProduitsInventaires] = useState([]);
     const [idProd, setIdProd] = useState(false);
     const [puVente, setPuVente] = useState(false);
     const [medocSelectionne, setMedocSelectionne] = useState(false);
@@ -83,6 +84,7 @@ export default function Activites(props) {
                 const result = JSON.parse(req.responseText);
                 setListeHistorique(result);
                 setListeSauvegarde(result);
+                creerListeProduitsInventaires(result);
                 setTimeout(() => {
                     stopChargement();
                 }, 500);
@@ -102,6 +104,25 @@ export default function Activites(props) {
         }
 
     }, [state]);
+
+    const creerListeProduitsInventaires = (listeProduits) => {
+        let liste = [];
+        listeProduits.forEach(item => {
+            const prod = {
+                id_inventaire: '',
+                id_prod: item.id,
+                designation: item.designation,
+                stock_theorique: parseInt(item.en_stock),
+                stock_reel: parseInt(item.en_stock),
+                difference: 0,
+                pu_achat: parseInt(item.pu_achat),
+                p_total: parseInt(item.pu_achat) * parseInt(item.en_stock),
+                genre: item.genre,
+            }
+            liste.push(prod);
+        });
+        setListeProduitsInventaires(liste);
+    }
 
     useEffect(() => {
 
@@ -272,42 +293,37 @@ export default function Activites(props) {
     }
 
     const sauvegarderProduitsInventaire = (idInventaire) => {
-        let i = 0;
+        // console.log(listeProduitsInventaires);
+        const data = new FormData();
+        data.append('id_inventaire', idInventaire);
+        data.append('auteur', props.nomConnecte);
+        data.append('produits', JSON.stringify(listeProduitsInventaires));
 
-        listeSauvegarde.forEach(produit => {
-            const prod = {
-                id: idInventaire,
-                id_prod: produit.id,
-                designation: produit.designation,
-                en_stock: produit.en_stock,
-                genre: produit.genre,
+        const req = new XMLHttpRequest();
+
+        req.open('POST', `${nomDns}sauvegarder_inventaire.php`);
+        req.addEventListener('load', () => {
+            if (req.status >= 200 && req.status < 400) {
+                setEnCours(false);
+                fermerModalInventaire();
+                setMedocSelectionne(false);
+                setState(!state);
+                toast.success('Inventaire sauvegardé avec succès');
             }
-    
-            const data = new FormData();
-            data.append('prod', JSON.stringify(prod));
+        });
 
-            const req = new XMLHttpRequest();
-    
-            req.open('POST', `${nomDns}sauvegarder_inventaire.php`);
-            req.addEventListener('load', () => {
-                if (req.status >= 200 && req.status < 400) {
-                    i++;
-                    if (i === listeSauvegarde.length) {
-                        setEnCours(false);
-                        fermerModalInventaire();
-                    }
-                }
-            });
-    
-            req.addEventListener("error", function () {
-                // La requête n'a pas réussi à atteindre le serveur
-                setMessageErreur('Erreur réseau');
-            });
-    
-            req.send(data);
-        })
+        req.addEventListener("error", function () {
+            // La requête n'a pas réussi à atteindre le serveur
+            setMessageErreur('Erreur réseau');
+        });
 
-    } 
+        req.send(data);
+
+    }
+
+    const callCorrigerStock = (e) => {
+        setListeProduitsInventaires(corrigerStock(e, listeProduitsInventaires));
+    }
 
     return (
         <animated.div style={props1}>
@@ -319,10 +335,11 @@ export default function Activites(props) {
                 // onRequestClose={fermerModalInventaire}
             >
                 <SaveInventaire
-                    listeProds={listeSauvegarde}
+                    listeProds={listeProduitsInventaires}
                     handleClick={sauvegarderInfosInventaire}
                     enCours={enCours}
                     fermerModalInventaire={fermerModalInventaire}
+                    corrigerStock={callCorrigerStock}
                 />
             </Modal>
             <Modal
@@ -380,9 +397,9 @@ export default function Activites(props) {
                         <label htmlFor="filtre">Filtrer : </label>
                         <input type="checkbox" id="filtre" checked={non_paye} onChange={(e) => setNonPaye(!non_paye)} />
                     </div>
-                    <div className="entete-historique">
+                    {/* <div className="entete-historique">
                         <button className='bootstrap-btn' onClick={() => {setModalConfirmation(true); afterModal();}}>Corriger</button>
-                    </div>
+                    </div> */}
                     <div className="entete-historique" style={{display: `${non_paye ? 'block' : 'none'}`}}>
                         <label htmlFor="">Date : </label>
                         <input type="date" id="" ref={date_filtre} onChange={(e) => setDateApprov(e.target.value)} />

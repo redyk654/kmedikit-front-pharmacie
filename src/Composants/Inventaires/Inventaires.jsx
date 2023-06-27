@@ -1,23 +1,25 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import '../Bordereau/Bordereau.css';
 import { useSpring, animated } from 'react-spring';
 import { ContextChargement } from '../../Context/Chargement';
-import { filtrerListe, mois, nomDns } from '../../shared/Globals';
+import { filtrerListe, formaterNombre, mois, nomDns } from '../../shared/Globals';
 import UseMsgErreur from '../../Customs/UseMsgErreur';
-import AfficherInventaire from '../../shared/AfficherInventaire';
 import TitleH2 from '../../shared/TitleH2';
 import SearchInput from '../../shared/SearchInput';
 import TitleH1 from '../../shared/TitleH1';
 import AfficherListe from '../../shared/AfficherListe';
+import AfficherInventairesSauvegardes from '../../shared/AfficherInventairesSauvegardes';
+import ImprimerInventaire from '../../shared/ImprimerInventaire';
+import ReactToPrint from 'react-to-print';
 
 export default function Inventaires(props) {
 
     const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
 
     const {darkLight} = useContext(ContextChargement)
+    const componentRef = useRef();
 
     const [listeInventaires, setListeInventaires] = useState([]);
-    // const [listeCommandesSauvegardes, setListeCommandesSauvegardes] = useState([]);
     const [inventaireSelectionne, setInventaireSelectionne] = useState([]);
     const [infosInventaire, setInfosInventaire] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -48,6 +50,11 @@ export default function Inventaires(props) {
         setInventaireSelectionne(listeInventaires.filter(item => item.id_inventaire === e.target.id)[0]);
       })
       .catch(error => setMsgErreur('Erreur réseau'));
+    }
+
+    const calculerMontantTotal = () => {
+      const montant = infosInventaire.reduce((acc, curr) => acc + parseInt(curr?.prix_total), 0);
+      return parseInt(montant);
     }
 
     const handleChange = (e) => {
@@ -83,6 +90,12 @@ export default function Inventaires(props) {
                     <TitleH1 val="Information sur l'inventaire"/>
                     <div className="entete-bordereau">Auteur : &nbsp;<span className="span-entete" style={{color: `${darkLight ? '#fff' : '#000'}`}}>{inventaireSelectionne.auteur && inventaireSelectionne.auteur}</span></div>
                     <div className="entete-bordereau">Le : &nbsp;<span className="span-entete" style={{color: `${darkLight ? '#fff' : '#000'}`}}>{inventaireSelectionne.date_effectue && mois(inventaireSelectionne.date_effectue.substr(0, 10))}</span></div>
+                    <div className="entete-bordereau">
+                      Montant total : &nbsp;
+                      <span className="span-entete" style={{color: `${darkLight ? '#fff' : '#000'}`}}>
+                        {formaterNombre(calculerMontantTotal())}
+                      </span>
+                    </div>
                     <TitleH2 val="Liste des produits" />
                     <SearchInput
                       placeholder="rechercher un produit"
@@ -91,12 +104,26 @@ export default function Inventaires(props) {
                       styles1={{textAlign: 'center'}}
                       styles2={{width: '20%'}}
                     />
-                    <AfficherInventaire
+                    <AfficherInventairesSauvegardes
                       listeProds={vueInfosInventaire}
                     />
                 </div>
-
             </section>
+            <div className='w-100 text-center p-3'>
+              <ReactToPrint
+              trigger={() => <button className='bootstrap-btn'>imprimer</button>}
+              content={() => componentRef.current}
+              />
+            </div>
+            <div className='d-none'>
+              <ImprimerInventaire
+                ref={componentRef}
+                inventaireSelectionne={inventaireSelectionne}
+                listeProds={infosInventaire}
+                calculerMontantTotal={calculerMontantTotal}
+                nomDuService="du point de dispensation"
+              />
+            </div>
         </animated.div>
     )
 }

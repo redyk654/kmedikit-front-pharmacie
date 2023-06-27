@@ -1,8 +1,8 @@
 import React from 'react';
 import "./AfficherInventaire.css"
-import { CFormInput } from '@coreui/react';
+import { formaterNombre } from './Globals';
 
-export default function AfficherInventaire(props) {
+export default function AfficherInventairesSauvegardes(props) {
   return (
     <div className='modal-inventaire' style={{width: '100%', height: '60vh', overflowY: 'scroll'}}>
         <table style={{width: '100%'}} cellSpacing={0}>
@@ -20,13 +20,11 @@ export default function AfficherInventaire(props) {
                 {props.listeProds ? props.listeProds.map(item => (
                     <tr key={item.id_table}>
                         <td>{item.designation.toLowerCase()}</td>
-                        <td>{item.stock_theorique}</td>
-                        <td>
-                            <CFormInput id={item.id_prod} value={item.stock_reel} onChange={props.corrigerStock} type="text" autoComplete='off' />
-                        </td>
-                        <td>{parseInt(item.difference) > 0 ? '+' + item.difference : item.difference}</td>
-                        <td>{item.pu_achat + 'f'}</td>
-                        <td>{item.p_total + 'f'}</td>
+                        <td>{item.stock_theoric}</td>
+                        <td>{item.stock_reel}</td>
+                        <td>{parseInt(item.ecart_stocks) > 0 ? '+' + item.ecart_stocks : item.ecart_stocks}</td>
+                        <td>{formaterNombre(item.pu_achat)}</td>
+                        <td>{formaterNombre(item.prix_total)}</td>
                     </tr>
                 )) : null}
             </tbody>
