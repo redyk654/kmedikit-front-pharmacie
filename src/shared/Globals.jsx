@@ -204,4 +204,4 @@ export const formaterNombre = (nombre) => {
     return nombre.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 }
 
-export const nomDns = 'http://localhost/backend-cmab/';
+export const nomDns = 'http://serveur/hdmbanga/';
