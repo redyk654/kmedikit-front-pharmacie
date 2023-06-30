@@ -5,8 +5,7 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import ReactToPrint from 'react-to-print';
 import ImprimerEtat from './ImprimerEtat';
 import { useSpring, animated } from 'react-spring';
-import { CFormSwitch, CFormSelect, CTooltip } from '@coreui/react';
-import { tipHeureDebut, tipHeureFin } from "../../shared/Globals";
+import { CFormSwitch, CFormSelect } from '@coreui/react';
 
 import { genres, nomDns } from '../../shared/Globals';
 
@@ -246,26 +245,24 @@ export default function Etats(props) {
                         <div className="entete-historique">
                             <div style={{fontSize: '14px'}}>
                                 <p>
-                                    <label htmlFor="">Du : </label>
+                                    Du :
                                     <input type="date" ref={date_select1} />
-                                    {/* <CTooltip
-                                        content={`${tipHeureDebut}`}
-                                        placement="top"
-                                        trigger={['hover', 'focus']}
+                                    {/* <CFormSelect 
+                                        className='w-5' 
+                                        name="periode" 
+                                        id="periode" 
+                                        onChange={(e) => setCaissier(e.target.value)}
                                     >
-                                    </CTooltip> */}
-                                        <input type="time" ref={heure_select1} />
+                                        <option value="">période</option>
+                                        <option value="jour">jour</option>
+                                        <option value="nuit">nuit</option>
+                                    </CFormSelect> */}
+                                    <input type="time" ref={heure_select1} />
                                 </p>
                                 <p>
                                     <label htmlFor="">Au : </label>
                                     <input type="date" ref={date_select2} />
-                                    {/* <CTooltip
-                                        content={`${tipHeureFin}`}
-                                        placement="top"
-                                        trigger={['hover', 'focus']}
-                                    >
-                                    </CTooltip> */}
-                                        <input type="time" ref={heure_select2} />
+                                    <input type="time" ref={heure_select2} />
                                 </p>
                                 <p>
                                     {
@@ -287,7 +284,12 @@ export default function Etats(props) {
                                     <input type="checkbox" id="non_paye" checked={non_paye} onChange={(e) => setNonPaye(!non_paye)} />
                                 </p>
                                 <label htmlFor="">Vendeur : </label>
-                                    <CFormSelect className='w-10' name="caissier" id="caissier" onChange={(e) => setCaissier(e.target.value)}>
+                                    <CFormSelect 
+                                        className='w-10' 
+                                        name="caissier" 
+                                        id="caissier" 
+                                        onChange={(e) => setCaissier(e.target.value)}
+                                    >
                                         {props.role !== admin ? 
                                             <option value={props.nomConnecte}>{props.nomConnecte.toUpperCase()}</option> 
                                         :
@@ -301,7 +303,7 @@ export default function Etats(props) {
                             <div>Génériques : <span style={{fontWeight: '700'}}>{total ? recetteGenerique + ' Fcfa' : '0 Fcfa'}</span></div>
                             <div>Spécialités : <span style={{fontWeight: '700'}}>{total ? recetteSp + ' Fcfa' : '0 Fcfa'}</span></div>
                             <div>Total : <span style={{fontWeight: '700'}}>{total ? total + ' Fcfa' : '0 Fcfa'}</span></div>
-                            <div>Recette : <span style={{fontWeight: '700'}}>{total ? recetteReel + ' Fcfa' : '0 Fcfa'}</span></div>
+                            {/* <div>Recette : <span style={{fontWeight: '700'}}>{total ? recetteReel + ' Fcfa' : '0 Fcfa'}</span></div> */}
                         </div>
                         <div className='erreur-message'>{messageErreur}</div>
 

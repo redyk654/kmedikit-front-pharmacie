@@ -8,6 +8,7 @@ import { colors, currentDateString } from '../../shared/Globals'
 import Loader from "react-loader-spinner";
 import { VscError } from "react-icons/vsc";
 import BtnIcon from '../../shared/BtnIcon'
+import SearchInput from '../../shared/SearchInput'
 
 
 export default function SaveInventaire(props) {
@@ -31,6 +32,13 @@ export default function SaveInventaire(props) {
             </BtnIcon>
             <TitleH1 val="Fiche Inventaire" />
             <TitleH2 val={`Inventaire du ${currentDateString()}`} />
+            <SearchInput
+              placeholder="rechercher un produit"
+              searchTerm={props.searchProd}
+              handleChange={props.handleChangeProd}
+              styles1={{textAlign: 'center'}}
+              styles2={{width: '20%'}}
+            />
             <AfficherInventaire
               listeProds={props.listeProds}
               corrigerStock={props.corrigerStock}

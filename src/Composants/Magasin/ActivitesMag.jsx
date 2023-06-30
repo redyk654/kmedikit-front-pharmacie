@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import '../Activites/Activites.css';
 import { ContextChargement } from '../../Context/Chargement';
-import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock } from "../../shared/Globals";
+import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock, filtrerListe } from "../../shared/Globals";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
 import { Toaster, toast } from "react-hot-toast";
@@ -72,6 +72,14 @@ export default function ActivitesMag(props) {
     const [state, setState] = useState(false);
     const [messageErreur, setMessageErreur] = useState('');
     const [enCours, setEnCours] = useState(false);
+    const [searchProd, setSearchProd] = useState('');
+
+    const propSearchDesignation = "designation";
+    const vueListeProduitsInventaires = filtrerListe(propSearchDesignation, searchProd, listeProduitsInventaires)
+
+    const handleChangeProd = (e) => {
+        setSearchProd(e.target.value);
+    }  
 
     useEffect(() => {
         startChargement();
@@ -185,7 +193,7 @@ export default function ActivitesMag(props) {
         }
     }, [medocSelectionne]);
 
-    const filtrerListe = (e) => {
+    const filtrerListe2 = (e) => {
         const medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1));
         setListeHistorique(medocFilter);
     }
@@ -335,8 +343,10 @@ export default function ActivitesMag(props) {
                 // onRequestClose={fermerModalInventaire}
             >
                 <SaveInventaire
-                    listeProds={listeProduitsInventaires}
+                    listeProds={vueListeProduitsInventaires}
                     handleClick={sauvegarderInfosInventaire}
+                    searchProd={searchProd}
+                    handleChangeProd={handleChangeProd}
                     enCours={enCours}
                     fermerModalInventaire={fermerModalInventaire}
                     corrigerStock={callCorrigerStock}
@@ -372,7 +382,7 @@ export default function ActivitesMag(props) {
             <div className="container-historique">
                 <div className="medocs-sortis">
                     <p className="search-zone">
-                        <input type="text" placeholder="recherchez un produit" onChange={filtrerListe} />
+                        <input type="text" placeholder="recherchez un produit" onChange={filtrerListe2} />
                     </p>
                     <p>
                         <button onClick={ouvrirModalInventaire} className='bootstrap-btn valider' style={{width: '40%'}}>inventaires</button>

@@ -127,8 +127,8 @@ export const tipHeureFin = "Pour les recettes du jour, choisissez l'heure de fin
 
 export const genres = {
     "": "non répertorié",
-    sp: "spécialité",
-    generique: "générique",
+    specialite: "sp",
+    generique: "generique",
 }
 
 export const problemeConnexion = "Problème de connexion au serveur !";
@@ -204,4 +204,4 @@ export const formaterNombre = (nombre) => {
     return nombre.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 }
 
-export const nomDns = 'http://serveur/hdmbanga/';
+export const nomDns = 'http://localhost/backend-cmab/';

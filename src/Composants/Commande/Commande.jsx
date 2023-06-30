@@ -15,6 +15,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { FaPlusSquare } from "react-icons/fa";
 import { useSpring, animated } from 'react-spring';
 import { io } from 'socket.io-client';
+import { CCloseButton } from '@coreui/react';
 
 const socket = io.connect('http://serveur:3010');
 
@@ -74,7 +75,7 @@ const customStyles4 = {
       transform: 'translate(-50%, -50%)',
       background: '#04a567',
       width: '80%',
-      height: '85vh',
+      height: '95vh',
       borderRadius: '10px'
     }, 
 };
@@ -456,6 +457,7 @@ export default function Commande(props) {
     const contenuModal = () => {
         return (
             <Fragment>
+                <CCloseButton onClick={fermerModalPatient} white />
                 <h2 style={{color: '#fff', textAlign: 'center'}}>informations du patient</h2>
                 <div className="detail-item-patient">
                     <>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { mois, mois2, styleEntete } from "../../shared/Globals";
 import logo from '../../images/logo-minsante.png';
+import EnteteHopital from '../../shared/EnteteHopital';
 
 const styles = {
     // display: 'flex',
@@ -39,23 +40,7 @@ export default class ImprimerEtat extends Component {
     render() {
         return (
             <div style={{backgroundColor: '#f1f1f1', height: '100vh', marginTop: '70px'}}>
-                <div className='logo-minsante'>
-                    <img src={logo} alt="" width={80} height={80} />
-                </div>
-                <div style={{textTransform: 'uppercase', padding: '15px 135px', fontSize: 7, marginBottom: '12px', width: '100%', display: 'flex', justifyContent: 'space-between'}}>
-                    <div style={{ lineHeight: '20px'}}>
-                        <div style={styleEntete}><strong>Republique du Cameroun <br/><em style={{textTransform: 'capitalize'}}>Paix-Travail-Patrie</em></strong></div>
-                        <div style={styleEntete}><strong>Ministere de la sante publique</strong></div>
-                        <div style={styleEntete}><strong>Delegation regionale du Littoral</strong></div>
-                        <div style={styleEntete}><strong>District sante de Mbanga</strong></div>
-                    </div>
-                    <div style={{ lineHeight: '20px'}}>
-                        <div style={styleEntete}><strong>Republic of Cameroon <br/><em style={{textTransform: 'capitalize'}}>Peace-Work-Fatherland</em></strong></div>
-                        <div style={styleEntete}><strong>Minister of Public Health</strong></div>
-                        <div style={styleEntete}><strong>Littoral regional delegation</strong></div>
-                        <div style={styleEntete}><strong>Mbanga Health District</strong></div>
-                    </div>
-                </div>
+                <EnteteHopital />
                 <div style={{fontSize: 9, display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '10px',}}>
                     <div style={{textAlign: 'center', width: '410px'}}>
                         <p className='text-center h4'>Fiche des recettes de la pharmacie</p>
@@ -90,7 +75,7 @@ export default class ImprimerEtat extends Component {
                         <div style={{marginTop: 15}}>Génériques : <strong>{this.props.total ? this.props.recetteGenerique + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
                         <div style={{marginTop: 15}}>Specialités : <strong>{this.props.total ? this.props.recetteSp + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
                         <div style={{marginTop: 15}}>Total : <strong>{this.props.total ? this.props.total + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
-                        <div style={{marginTop: 15}}>Recette : <strong>{this.props.total ? this.props.recetteReel + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
+                        {/* <div style={{marginTop: 15}}>Recette : <strong>{this.props.total ? this.props.recetteReel + ' Fcfa' : 0 + ' Fcfa'}</strong></div> */}
                     </div>
                 </div>
             </div>
