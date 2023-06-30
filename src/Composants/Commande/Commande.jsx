@@ -75,7 +75,7 @@ const customStyles4 = {
       transform: 'translate(-50%, -50%)',
       background: '#04a567',
       width: '80%',
-      height: '95vh',
+      height: '97vh',
       borderRadius: '10px'
     }, 
 };
