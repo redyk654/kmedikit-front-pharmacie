@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import "./AfficherInventaire.css"
 import { CFormInput } from '@coreui/react';
+import { ContextChargement } from '../Context/Chargement';
+import { ROLES } from './Globals';
+
 
 export default function AfficherInventaire(props) {
+
+    const { role } = useContext(ContextChargement);
+
   return (
     <div className='modal-inventaire' style={{width: '100%', height: '60vh', overflowY: 'scroll'}}>
         <table style={{width: '100%'}} cellSpacing={0}>
@@ -12,8 +18,8 @@ export default function AfficherInventaire(props) {
                     <td>Stock théorique</td>
                     <td>Stock réel</td>
                     <td>Différence</td>
-                    <td>Pu achat</td>
-                    <td>P Total</td>
+                    <td style={{visibility: `${role.toLowerCase() === ROLES.admin.toLowerCase() ? 'visible' : 'hidden'}`}}>Pu achat</td>
+                    <td style={{visibility: `${role.toLowerCase() === ROLES.admin.toLowerCase() ? 'visible' : 'hidden'}`}}>P Total</td>
                 </tr>
             </thead>
             <tbody style={{lineHeight: 2.9}}>
@@ -25,8 +31,8 @@ export default function AfficherInventaire(props) {
                             <CFormInput id={item.id_prod} value={item.stock_reel} onChange={props.corrigerStock} type="text" autoComplete='off' />
                         </td>
                         <td>{parseInt(item.difference) > 0 ? '+' + item.difference : item.difference}</td>
-                        <td>{item.pu_achat + 'f'}</td>
-                        <td>{item.p_total + 'f'}</td>
+                        <td style={{visibility: `${role.toLowerCase() === ROLES.admin.toLowerCase() ? 'visible' : 'hidden'}`}}>{item.pu_achat + 'f'}</td>
+                        <td style={{visibility: `${role.toLowerCase() === ROLES.admin.toLowerCase() ? 'visible' : 'hidden'}`}}>{item.p_total + 'f'}</td>
                     </tr>
                 )) : null}
             </tbody>

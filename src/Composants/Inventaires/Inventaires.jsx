@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import '../Bordereau/Bordereau.css';
 import { useSpring, animated } from 'react-spring';
 import { ContextChargement } from '../../Context/Chargement';
-import { filtrerListe, formaterNombre, mois, nomDns } from '../../shared/Globals';
+import { ROLES, filtrerListe, formaterNombre, mois, nomDns } from '../../shared/Globals';
 import UseMsgErreur from '../../Customs/UseMsgErreur';
 import TitleH2 from '../../shared/TitleH2';
 import SearchInput from '../../shared/SearchInput';
@@ -16,7 +16,7 @@ export default function Inventaires(props) {
 
     const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
 
-    const {darkLight} = useContext(ContextChargement)
+    const { darkLight, role } = useContext(ContextChargement)
     const componentRef = useRef();
 
     const [listeInventaires, setListeInventaires] = useState([]);
@@ -90,7 +90,7 @@ export default function Inventaires(props) {
                     <TitleH1 val="Information sur l'inventaire"/>
                     <div className="entete-bordereau">Auteur : &nbsp;<span className="span-entete" style={{color: `${darkLight ? '#fff' : '#000'}`}}>{inventaireSelectionne.auteur && inventaireSelectionne.auteur}</span></div>
                     <div className="entete-bordereau">Le : &nbsp;<span className="span-entete" style={{color: `${darkLight ? '#fff' : '#000'}`}}>{inventaireSelectionne.date_effectue && mois(inventaireSelectionne.date_effectue.substr(0, 10))}</span></div>
-                    <div className="entete-bordereau">
+                    <div style={{visibility: `${role.toLowerCase() === ROLES.admin.toLowerCase() ? 'visible' : 'hidden'}`}} className="entete-bordereau">
                       Montant total : &nbsp;
                       <span className="span-entete" style={{color: `${darkLight ? '#fff' : '#000'}`}}>
                         {formaterNombre(calculerMontantTotal())}
@@ -122,6 +122,7 @@ export default function Inventaires(props) {
                 listeProds={infosInventaire}
                 calculerMontantTotal={calculerMontantTotal}
                 nomDuService="du point de dispensation"
+                role={role}
               />
             </div>
         </animated.div>

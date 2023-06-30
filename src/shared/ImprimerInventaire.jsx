@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { CTable } from '@coreui/react';
-import { formaterNombre, mois } from './Globals';
+import { ROLES, formaterNombre, mois } from './Globals';
 import EnteteHopital from './EnteteHopital';
 
-const colonnes = [
+const colonnesAdmin = [
     {
       key: 'designation',
       label: 'designation',
@@ -36,6 +36,29 @@ const colonnes = [
     },
 ];
 
+const colonnesVendeur = [
+    {
+      key: 'designation',
+      label: 'designation',
+      _props: { scope: 'col' },
+    },
+    {
+        key: 'stock_theoric',
+        label: 'St théorique',
+        _props: { scope: 'col' },
+    },
+    {
+        key: 'stock_reel',
+        label: 'St réel',
+        _props: { scope: 'col' },
+    },
+    {
+        key: 'ecart_stocks',
+        label: 'diff',
+        _props: { scope: 'col' },
+    },
+];
+
 export default class ImprimerInventaire extends Component {
 
     render() {
@@ -59,10 +82,15 @@ export default class ImprimerInventaire extends Component {
                                 {this.props.inventaireSelectionne.auteur && this.props.inventaireSelectionne.auteur.toUpperCase()}
                             </span>
                         </div>
-                        <div className='' style={{width: '90vw'}}>                        
-                            <CTable columns={colonnes} items={this.props.listeProds} />
+                        <div className='' style={{width: '90vw'}}>
+                            {
+                                this.props.role.toUpperCase() === ROLES.admin.toUpperCase() ?
+                                <CTable columns={colonnesAdmin} items={this.props.listeProds} /> :
+                                <CTable columns={colonnesVendeur} items={this.props.listeProds} />
+                            }
+                            
                         </div>
-                        <div style={{marginTop: '15px', borderTop: '1px dotted #000', paddingTop: '10px'}}>
+                        <div style={{ visibility: `${this.props.role.toLowerCase() === ROLES.admin.toLowerCase() ? 'visible' : 'hidden'}`, marginTop: '15px', borderTop: '1px dotted #000', paddingTop: '10px'}}>
                             Montant total : {formaterNombre(this.props.calculerMontantTotal())}
                         </div>
                     </div>

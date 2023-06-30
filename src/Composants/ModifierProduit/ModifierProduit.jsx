@@ -268,18 +268,18 @@ export default function ModifierProduit() {
                         <div className="infos-medoc">
                             {produitSelectionne.length > 0 && produitSelectionne.map(item => (
                                 <AfficherProd
-                                key={item.id}
-                                code={item.code}
-                                designation={item.designation}
-                                pu_achat={item.pu_achat}
-                                pu_vente={item.pu_vente}
-                                en_stock={item.en_stock}
-                                min_rec={item.min_rec}
-                                categorie={item.categorie}
-                                conditionnement={item.conditionnement}
-                                date_peremption={item.date_peremption}
-                                classe={item.classe}
-                                genre={item.genre}
+                                    key={item.id}
+                                    code={item.code}
+                                    designation={item.designation}
+                                    pu_achat={item.pu_achat}
+                                    pu_vente={item.pu_vente}
+                                    en_stock={item.en_stock}
+                                    min_rec={item.min_rec}
+                                    categorie={item.categorie}
+                                    conditionnement={item.conditionnement}
+                                    date_peremption={item.date_peremption}
+                                    classe={item.classe}
+                                    genre={item.genre}
                                 />
                             ))}
                         </div>

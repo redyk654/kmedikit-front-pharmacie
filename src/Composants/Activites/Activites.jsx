@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import './Activites.css';
 import { ContextChargement } from '../../Context/Chargement';
-import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock, filtrerListe } from "../../shared/Globals";
+import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock, filtrerListe, ROLES } from "../../shared/Globals";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
 import { Toaster, toast } from "react-hot-toast";
@@ -42,7 +42,7 @@ const customStyles1 = {
 export default function Activites(props) {
 
     const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
-    const {chargement, stopChargement, startChargement, darkLight} = useContext(ContextChargement);
+    const { stopChargement, startChargement, darkLight, role} = useContext(ContextChargement);
     Modal.defaultStyles.overlay.backgroundColor = '#18202ed3';
 
     let date_filtre = useRef();
@@ -235,7 +235,9 @@ export default function Activites(props) {
             setMessageErreur('Erreur réseau');
         });
 
-        req1.send();
+        if (role.toUpperCase() === ROLES.admin.toUpperCase()) {
+            req1.send();
+        }
     }
 
     const handleChange = (e) => {

@@ -10,9 +10,7 @@ import { VscError } from "react-icons/vsc";
 import BtnIcon from '../../shared/BtnIcon'
 import SearchInput from '../../shared/SearchInput'
 
-
 export default function SaveInventaire(props) {
-
   return (
     <div id='save-inventaire'>
       {/* <ModalConfirmation

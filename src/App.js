@@ -17,6 +17,7 @@ import Magasin from './Composants/Magasin/Magasin';
 import Dispensaire from './Composants/Dispensaire/Dispensaire';
 import CIcon from '@coreui/icons-react';
 import { cilMedicalCross } from '@coreui/icons';
+import Historique from './Composants/Historique/Historique';
 
 
 function App() {
@@ -60,6 +61,9 @@ function App() {
       break;
     case 8:
       contenu = <FactureManuelle nomConnecte={nomConnecte} />
+      break;
+    case 9:
+      contenu = <Historique nomConnecte={nomConnecte} />
       break;
   }
 
@@ -111,7 +115,7 @@ function App() {
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
-            <div className="onglets-blocs" style={{width: '85%', fontSize: '10px'}}>
+            <div className="onglets-blocs" style={{width: '90%', fontSize: '10px'}}>
               <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(1)}}>
                 <FaStore size={22} />
                 &nbsp;
@@ -136,6 +140,11 @@ function App() {
             <div className="onglets-contenu">
                 {contenu}
             </div>
+            <div className={`tab ${onglet === 9 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(9)}}>
+              <FaClipboardList size={18} />
+              &nbsp;
+              Fiche des stocks
+            </div>
           </section>
         </main>
       );
@@ -144,7 +153,7 @@ function App() {
         <main className={`app ${darkLight ? 'dark' : ''}`}>
           <Entete nomConnecte={nomConnecte} setConnecter={setConnecter} setOnglet={setOnglet} />
           <section className="conteneur-onglets">
-            <div className="onglets-blocs" style={{width: '65%', fontSize: '10px'}}>
+            <div className="onglets-blocs" style={{width: '85%', fontSize: '10px'}}>
               <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(1)}}>
                 <FaStore size={22} />
                 &nbsp;
@@ -159,6 +168,11 @@ function App() {
                 <FaReceipt size={22} />
                 &nbsp;
                 Factures Manuelles
+              </div>
+              <div className={`tab ${onglet === 9 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(9)}}>
+                <FaClipboardList size={18} />
+                &nbsp;
+                Fiche des stocks
               </div>
             </div>
             <div className="onglets-contenu">

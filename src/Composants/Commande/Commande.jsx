@@ -593,14 +593,16 @@ export default function Commande(props) {
         const req = new XMLHttpRequest();
         const data = new FormData();
 
-        data.append('code', creerCodePatient());
+        const nouveauCodePatient = creerCodePatient()
+
+        data.append('code', nouveauCodePatient);
         data.append('nouveau_patient', JSON.stringify(nouveauPatient))
 
         req.open('POST', `${nomDns}index.php`);
 
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
-                setPatientChoisi(nouveauPatient);
+                setPatientChoisi({...nouveauPatient, code: nouveauCodePatient});
                 fermerEditerPatient();
                 resetInfosDuPatient();
             }
@@ -745,9 +747,14 @@ export default function Commande(props) {
                         <button className='btn-patient' onClick={infosPatient}>Infos du patient</button>
                     </div>
                     <div style={{textAlign: 'center'}}>
-                    {patientChoisi.nom.length > 0 ? (
+                        {patientChoisi.nom.length > 0 ? (
                             <div>
                                 Patient: <span style={{color: `${darkLight ? '#fff' : '#000'}`, fontWeight: '700'}}>{patientChoisi.nom.toUpperCase()}</span>
+                            </div>
+                        ) : null}
+                        {patientChoisi.nom.length > 0 ? (
+                            <div>
+                                Code patient: <span style={{color: '#0e771a', fontWeight: '700'}}>{patientChoisi.code.toUpperCase()}</span>
                             </div>
                         ) : null}
                         {patientChoisi.assurance.toUpperCase() !== assuranceDefaut.toUpperCase() ? (
