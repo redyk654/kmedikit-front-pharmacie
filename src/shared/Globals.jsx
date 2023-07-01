@@ -204,4 +204,10 @@ export const formaterNombre = (nombre) => {
     return nombre.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 }
 
+export const recupererDateJour = (idElement) => {
+    var today = new Date();
+
+    document.querySelector(`#${idElement}`).value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+}
+
 export const nomDns = 'http://serveur/hdmbanga/';

@@ -7,7 +7,7 @@ import ImprimerEtat from './ImprimerEtat';
 import { useSpring, animated } from 'react-spring';
 import { CFormSwitch, CFormSelect } from '@coreui/react';
 
-import { genres, nomDns } from '../../shared/Globals';
+import { genres, nomDns, recupererDateJour } from '../../shared/Globals';
 
 export default function Etats(props) {
 
@@ -43,6 +43,8 @@ export default function Etats(props) {
     useEffect(() => {
         startChargement();
         // Récupération des médicaments dans la base via une requête Ajax
+        recupererDateJour('date-d-etats');
+        recupererDateJour('date-f-etats');
         if (date_j.getTime() <= date_e.getTime()) {
 
         } else {
@@ -246,22 +248,12 @@ export default function Etats(props) {
                             <div style={{fontSize: '14px'}}>
                                 <p>
                                     Du :
-                                    <input type="date" ref={date_select1} />
-                                    {/* <CFormSelect 
-                                        className='w-5' 
-                                        name="periode" 
-                                        id="periode" 
-                                        onChange={(e) => setCaissier(e.target.value)}
-                                    >
-                                        <option value="">période</option>
-                                        <option value="jour">jour</option>
-                                        <option value="nuit">nuit</option>
-                                    </CFormSelect> */}
+                                    <input id='date-d-etats' type="date" ref={date_select1} />
                                     <input type="time" ref={heure_select1} />
                                 </p>
                                 <p>
                                     <label htmlFor="">Au : </label>
-                                    <input type="date" ref={date_select2} />
+                                    <input id='date-f-etats' type="date" ref={date_select2} />
                                     <input type="time" ref={heure_select2} />
                                 </p>
                                 <p>
