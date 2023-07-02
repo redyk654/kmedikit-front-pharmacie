@@ -7,7 +7,7 @@ import ImprimerEtat from './ImprimerEtat';
 import { useSpring, animated } from 'react-spring';
 import { CFormSwitch, CFormSelect } from '@coreui/react';
 
-import { genres, nomDns, recupererDateJour } from '../../shared/Globals';
+import { genres, nomDns, recupererDateJour, recupererHeureJour } from '../../shared/Globals';
 
 export default function Etats(props) {
 
@@ -45,6 +45,7 @@ export default function Etats(props) {
         // Récupération des médicaments dans la base via une requête Ajax
         recupererDateJour('date-d-etats');
         recupererDateJour('date-f-etats');
+        recupererHeureJour('heure-f-etats')
         if (date_j.getTime() <= date_e.getTime()) {
 
         } else {
@@ -254,7 +255,7 @@ export default function Etats(props) {
                                 <p>
                                     <label htmlFor="">Au : </label>
                                     <input id='date-f-etats' type="date" ref={date_select2} />
-                                    <input type="time" ref={heure_select2} />
+                                    <input id='heure-f-etats' type="time" ref={heure_select2} />
                                 </p>
                                 <p>
                                     {

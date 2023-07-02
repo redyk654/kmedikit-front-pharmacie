@@ -205,9 +205,15 @@ export const formaterNombre = (nombre) => {
 }
 
 export const recupererDateJour = (idElement) => {
-    var today = new Date();
+    let today = new Date();
 
     document.querySelector(`#${idElement}`).value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
 }
 
-export const nomDns = 'http://serveur/hdmbanga/';
+export const recupererHeureJour = (idElement) => {
+    let today = new Date();
+
+    document.querySelector(`#${idElement}`).value = ('0' + (today.getHours())).slice(-2) +  ":" + ('0' + (today.getMinutes())).slice(-2);
+}
+
+export const nomDns = 'http://localhost/backend-cmab/';
