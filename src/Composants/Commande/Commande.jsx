@@ -5,7 +5,7 @@ import { ContextChargement } from '../../Context/Chargement';
 import AfficherPatient from '../Patients/AfficherPatient';
 import EditerPatient from '../Patients/EditerPatient';
 import ModalPatient from '../Patients/ModalPatient';
-import { nomDns } from '../../shared/Globals';
+import { nomDns, nomServeur } from '../../shared/Globals';
 
 // Importation des librairies installées
 import Modal from 'react-modal';
@@ -16,8 +16,9 @@ import { FaPlusSquare } from "react-icons/fa";
 import { useSpring, animated } from 'react-spring';
 import { io } from 'socket.io-client';
 import { CCloseButton } from '@coreui/react';
+import EditerProd from '../Approvisionner/EditerProd';
 
-const socket = io.connect('http://serveur:3010');
+const socket = io.connect(`http://${nomServeur}:3010`);
 
 // Styles pour las fenêtres modales
 const customStyles1 = {
@@ -104,6 +105,29 @@ const stylePatient = {
     backgroundColor: '#fff'
 }
 
+const customStylesNvProd = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        background: '#18202e',
+        color: '#fff',
+        // fontSize: 'medium',
+        height: '70vh',
+        width: '78vw',
+        // display: 'flex',
+        // flexDirection: 'column',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        borderRadius: '30px',
+        lineHeight: '28px',
+        border: '1px solid lightgray'
+    },
+};
+
 const detailsDuPatient = {
     code: '',
     nom: '',
@@ -112,6 +136,21 @@ const detailsDuPatient = {
     quartier: '',
     assurance: 'aucune',
     type_assurance: '0',
+}
+
+const medocs = {
+    code_prod: '',
+    designation: '',
+    classe: 'antibiotiques',
+    pu_achat: '0',
+    pu_vente: '',
+    conditionnement: '',
+    stock_ajoute: '',
+    min_rec: '0',
+    categorie: '',
+    date_peremption: '',
+    montant_commande: '',
+    genre: 'generique',
 }
 
 export default function Commande(props) {
@@ -134,6 +173,7 @@ export default function Commande(props) {
     const [listeMedoc, setListeMedoc] = useState([]);
     const [listeMedocSauvegarde, setListeMedocSauvegarde] = useState([]);
     const [qteDesire, setQteDesire] = useState('');
+    const [infosMedoc, setInfosMedoc] = useState(medocs);
     const [medocSelect, setMedoSelect] = useState(false);
     const [medocCommandes, setMedocCommandes] = useState([]);
     const [messageErreur, setMessageErreur] = useState('');
@@ -149,8 +189,12 @@ export default function Commande(props) {
     const [statu, setStatu] = useState('pending');
     const [rafraichir, setRafraichir] = useState(false);
     const [enCours, setEncours] = useState(false);
+    const [modalNouveauProduit, setModalNouveauProduit] = useState(false);
+    const [msgErreur, setMsgErreur] = useState('');
 
     const { code, nom, age, sexe, quartier, assurance, type_assurance } = nouveauPatient;
+    const {code_prod, designation, classe, pu_achat, pu_vente, conditionnement, stock_ajoute, min_rec, categorie, date_peremption, montant_commande, genre} = infosMedoc;
+
 
     useEffect(() => {
         startChargement();
@@ -262,6 +306,7 @@ export default function Commande(props) {
     const afficherInfos = (e) => {
         const medocSelectionne = listeMedoc.filter(item => (item.id == e.target.value));
         setMedoSelect(medocSelectionne);
+        document.querySelector('#qte_desire').focus();
         if (parseInt(medocSelectionne[0].en_stock) === 0) {
             var msgAlerteStock = 'le stock de ' + medocSelectionne[0].designation + ' est épuisé ! Pensez à vous approvisionner';
             toastAlerteStock(msgAlerteStock, '#dd4c47');
@@ -536,13 +581,6 @@ export default function Commande(props) {
       setModalConfirmation(false);
     }
 
-    const fermerModalReussi = () => {
-        setModalReussi(false);
-        sauvegarder();
-        setMedocCommandes([]);
-        annulerCommande();
-    }
-
     const fermModalAlerte = () => {
         setModalAlerte(false);
     }
@@ -629,10 +667,133 @@ export default function Commande(props) {
         setModalPatient(true);
     }
 
+    const fermerModalNouveauProd = () => {
+        setModalNouveauProduit(false);
+    }
+
+    const ouvrirModalNouveauProd = () => {
+        setModalNouveauProduit(true);
+        setInfosMedoc(medocs);
+    }
+
+    const ajouterNouveauProduit = (e) => {
+        e.preventDefault();
+
+        if (isNaN(parseInt(pu_vente)) || isNaN(parseInt(min_rec)) || isNaN(parseInt(pu_achat))) {
+            setMsgErreur("Le prix de vente, le prix d'achat et le stock minimum doivent être des nombres");
+        } else if (designation.length === 0) {
+            setMsgErreur('Le produit doit avoir une désignation')
+        } else if (classe.length === 0) {
+            setMsgErreur('le champ classe ne peut pas être vide')
+        } else if (parseInt(pu_vente) === 0) {
+            setMsgErreur('Le prix unitaire de vente doit supérieur à 0')
+        } else {
+            setMsgErreur('');
+            const data = new FormData();
+            data.append('produit', JSON.stringify(infosMedoc));
+    
+            const req = new XMLHttpRequest();
+    
+            req.open('POST', `${nomDns}ajouter_produit.php`);
+                
+            req.addEventListener('load', () => {
+                setInfosMedoc(medocs);
+                setRafraichir(!rafraichir);
+                fermerModalNouveauProd();
+                toastProduitEnregistrer();
+            });
+            req.send(data);
+        }
+    }
+
+    const toastProduitEnregistrer = () => {
+        toast.success("Produit ajouté !", {
+            style: {
+                fontWeight: 'bold',
+                fontSize: '18px',
+                backgroundColor: '#fff',
+                letterSpacing: '1px'
+            },
+            
+        });
+    }
+
+    const handleChangeNvProd = (e) => {
+        if (e.target.name === "code") {
+            setInfosMedoc({...infosMedoc, [e.target.name]: e.target.value.toUpperCase()});
+        } else {
+            setInfosMedoc({...infosMedoc, [e.target.name]: e.target.value});
+        }
+    }
+
+    const ouvrirChangerPrix = () => {
+        setModalReussi(true);
+    }
+
+    const fermerChangerPrix = () => {
+        setModalReussi(false);
+    }
+
+    const changerPrixProd = () => {
+        const nvPrix = document.querySelector('#modifier-prix').value;
+        if (medocSelect) {
+            if (medocSelect.length > 0 && nvPrix.length > 0) {
+                const data = new FormData()
+
+                data.append('id_prod', medocSelect[0].id);
+                data.append('pu', nvPrix)
+
+                const req = new XMLHttpRequest()
+
+                req.open('POST', `${nomDns}changer_prix_prod.php`);
+                
+                req.addEventListener('load', () => {
+                    setMedoSelect(false);
+                    setRafraichir(!rafraichir);
+                    fermerChangerPrix();
+                    toast.success("Prix modifié avec succès !", {
+                        style: {
+                            fontWeight: 'bold',
+                            fontSize: '18px',
+                            backgroundColor: '#fff',
+                            letterSpacing: '1px'
+                        },
+                        
+                    });
+                });
+                req.send(data);
+            }
+        }
+    }
+
     return (
         <animated.div style={props1}>
         <div><Toaster/></div>
         <section className="commande">
+            <Modal
+                isOpen={modalNouveauProduit}
+                onRequestClose={fermerModalNouveauProd}
+                style={customStylesNvProd}
+            >
+                <h1 style={{textAlign: 'center'}}>Nouveau Produit</h1>
+                <EditerProd
+                    code={code}
+                    min_rec={min_rec}
+                    designation={designation}
+                    classe={classe}
+                    categorie={categorie}
+                    pu_vente={pu_vente}
+                    conditionnement={conditionnement}
+                    date_peremption={date_peremption}
+                    stock_ajoute={stock_ajoute}
+                    pu_achat={pu_achat}
+                    genre={genre}
+                    handleChange={handleChangeNvProd}
+                    ajouterMedoc={ajouterNouveauProduit}
+                    nvProd={true}
+                />
+                <div className='fw-bold text-danger' style={{backgroundColor: '#fff'}}>{msgErreur}</div>
+            </Modal>
             <Modal
                 isOpen={modalEditerPatient}
                 style={customStyles5}
@@ -693,10 +854,11 @@ export default function Commande(props) {
                 isOpen={modalReussi}
                 style={customStyles2}
                 contentLabel="Commande réussie"
-                onRequestClose={fermerModalReussi}
+                onRequestClose={fermerChangerPrix}
             >
-                <h2 style={{color: '#fff'}}>La vente a bien été enregistré !</h2>
-                <button style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={fermerModalReussi}>Fermer</button>
+                <h2 style={{color: '#fff'}}>modifier le prix de {medocSelect[0]?.designation}</h2>
+                <input id='modifier-prix' type="number" />
+                <button style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={changerPrixProd}>valider</button>
             </Modal>
             <div className="left-side">
 
@@ -706,6 +868,9 @@ export default function Commande(props) {
                 <p>
                     {/* <button className="rafraichir" onClick={() => {setRafraichir(!rafraichir)}}>rafraichir</button> */}
                 </p>
+                <div>
+                    <a className='link-primary' onClick={ouvrirChangerPrix} role='button'>changer prix</a>
+                </div>
                 <div className="liste-medoc">
                     <h1>Liste de produits</h1>
                     <ul>
@@ -713,12 +878,14 @@ export default function Commande(props) {
                             <li value={item.id} key={item.id} onClick={afficherInfos} style={{color: `${parseInt(item.en_stock) < parseInt(item.min_rec) || parseInt(item.en_stock) === 0 ? '#ec4641' : ''}`}}>{item.designation.toLowerCase()}</li>
                         ))}
                     </ul>
+                    <div>
+                        <button className='bootstrap-btn w-75' onClick={ouvrirModalNouveauProd}>nouveau produit</button>
+                    </div>
                 </div>
             </div>
 
             <div className="right-side">
                 <h1>{medocSelect ? "Détails du produit" : "Selectionnez un produit pour voir les détails"}</h1>
-
                 <div className="infos-medoc">
                     {medocSelect && medocSelect.map(item => (
                     <AfficherProd
@@ -737,7 +904,7 @@ export default function Commande(props) {
                 </div>
                 <div className="box">
                     <div className="detail-item">
-                        <input type="text" name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
+                        <input type="text" id='qte_desire' name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
                         {/* <button onClick={ajouterMedoc}>ajouter</button> */}
                         <div onClick={ajouterMedoc} style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
                             <FaPlusSquare color='#00BCD4' size={35} />

@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { nomDns, problemeConnexion } from '../../shared/Globals';
+import React, { useState, useEffect, useContext } from 'react';
+import { ROLES, nomDns, problemeConnexion } from '../../shared/Globals';
 import UseMsgErreur from '../../Customs/UseMsgErreur';
 import { CContainer, CRow, CCol } from '@coreui/react';
+import { ContextChargement } from '../../Context/Chargement';
 
 export default function EditerProd(props) {
 
+    const { role } = useContext(ContextChargement);
+
     const [listeDesClasses, setListeDesClasses] = useState([]);
     const [msgErreur, setMsgErreur] = useState('');
+
 
     const handleChange = (e) => {
         if (props.nvProd || e.target.name === "stock_ajoute") {
@@ -62,7 +66,9 @@ export default function EditerProd(props) {
                 <input type="text" name="date_peremption" placeholder="mm-aa" value={props.date_peremption} onChange={handleChange} autoComplete="off" />
             </CCol>
         </CRow>
-        <CRow className="box">
+        <CRow 
+            // style={{visibility: `${role.toUpperCase() === ROLES.vendeur.toUpperCase() && 'invisible'}`}} 
+            className={`box ${role.toUpperCase() === ROLES.vendeur.toUpperCase() && 'd-none'}`}>
             <CCol className="d-flex flex-column">
                 <label htmlFor="">Prix d'achat</label>
                 <input type="text" name="pu_achat" value={props.pu_achat} onChange={handleChange} autoComplete="off" />
