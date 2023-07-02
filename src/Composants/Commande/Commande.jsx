@@ -18,7 +18,7 @@ import { io } from 'socket.io-client';
 import { CCloseButton } from '@coreui/react';
 import EditerProd from '../Approvisionner/EditerProd';
 
-const socket = io.connect(`http://${nomServeur}:3010`);
+const socket = io.connect(`${nomServeur}`);
 
 // Styles pour las fenêtres modales
 const customStyles1 = {

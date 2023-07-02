@@ -217,4 +217,4 @@ export const recupererHeureJour = (idElement) => {
 }
 
 export const nomDns = 'http://serveur/hdmbanga/';
-export const nomServeur = 'localhost';
+export const nomServeur = 'http://serveur:3010';
