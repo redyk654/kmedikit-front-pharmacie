@@ -370,7 +370,6 @@ export default function Commande(props) {
 
     }, [socket])
     
-
     const majListeProduits = (data) => {
         socket.emit('enreg_facture', data);
     }
@@ -378,7 +377,6 @@ export default function Commande(props) {
     const enregisterFacture = (id) => {
 
         // Enregistrement de la facture
-
 
         const data = new FormData();
 

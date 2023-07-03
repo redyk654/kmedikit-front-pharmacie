@@ -39,6 +39,7 @@ export default function Etats(props) {
     const [caissier, setCaissier] = useState('');
     const [filtre, setFiltre] = useState(false);
     const [non_paye, setNonPaye] = useState(false);
+    const [reload, setReload] = useState(false);
 
     useEffect(() => {
         startChargement();
@@ -46,6 +47,7 @@ export default function Etats(props) {
         recupererDateJour('date-d-etats');
         recupererDateJour('date-f-etats');
         recupererHeureJour('heure-f-etats')
+        recupererHeureDernierService();
         if (date_j.getTime() <= date_e.getTime()) {
 
         } else {
@@ -56,9 +58,9 @@ export default function Etats(props) {
         }
     }, []);
 
-    useEffect(() => {
-        !total && sethistorique([])
-    }, [total]);
+    // useEffect(() => {
+    //     !total && sethistorique([])
+    // }, [total]);
 
     useEffect(() => {
         startChargement();
@@ -96,6 +98,7 @@ export default function Etats(props) {
                     if (props.role !== admin) {
                         setFiltre(true);
                         setCaissier(props.nomConnecte);
+                        setReload(!reload)
                     } else {
                         let tab = result.filter(item => (item.status_vente === "payé"));
                         sethistorique(tab);
@@ -107,6 +110,7 @@ export default function Etats(props) {
 
                 } else {
                     setTotal(0);
+                    sethistorique([])
                 }
             });
 
@@ -185,7 +189,7 @@ export default function Etats(props) {
 
             setTotal(recette);
         }
-    }, [caissier, filtre, non_paye]);
+    }, [caissier, filtre, non_paye, reload]);
 
     useEffect(() => {
         // Récupération des comptes
@@ -233,10 +237,51 @@ export default function Etats(props) {
     }
 
     const rechercherHistorique = () => {
-        // console.log(heure_select1.current.value);
-        setSearch(!search);
         setdateDepart(date_select1.current.value + ' ' + heure_select1.current.value + ':00');
         setdateFin(date_select2.current.value + ' ' + heure_select2.current.value + ':59');
+        setSearch(!search);
+    }
+
+    const enregistrerHeureFin = () => {
+        let dateDuJour = new Date();
+        
+        let dateDuJourFormate = dateDuJour.getFullYear() + '-' + ('0' + (dateDuJour.getMonth() + 1)).slice(-2) + '-' + ('0' + dateDuJour.getDate()).slice(-2);
+        if (dateDuJourFormate === dateFin.slice(0, 10)) {
+            const req = new XMLHttpRequest();
+            req.open('GET', `${nomDns}horaire_pharmacie.php?heure_fin=${dateFin}`);
+    
+            req.addEventListener('load', () => {
+                if(req.status >= 200 && req.status < 400) {
+    
+                }
+            });
+    
+            req.addEventListener("error", function () {
+                // La requête n'a pas réussi à atteindre le serveur
+                setMessageErreur('Erreur réseau');
+            });
+    
+            req.send();
+        }
+    }
+
+    const recupererHeureDernierService = () => {
+        const req = new XMLHttpRequest();
+        req.open('GET', `${nomDns}horaire_pharmacie.php?recup_heure`);
+
+        req.addEventListener('load', () => {
+            if(req.status >= 200 && req.status < 400) {
+                const result = JSON.parse(req.response);
+                document.querySelector('#heure-d-etats').value = result.date_heure.slice(11, 16);
+            }
+        });
+
+        req.addEventListener("error", function () {
+            // La requête n'a pas réussi à atteindre le serveur
+            setMessageErreur('Erreur réseau');
+        });
+
+        req.send();
     }
 
     return (
@@ -250,7 +295,7 @@ export default function Etats(props) {
                                 <p>
                                     Du :
                                     <input id='date-d-etats' type="date" ref={date_select1} />
-                                    <input type="time" ref={heure_select1} />
+                                    <input id='heure-d-etats' type="time" ref={heure_select1} />
                                 </p>
                                 <p>
                                     <label htmlFor="">Au : </label>
@@ -331,6 +376,7 @@ export default function Etats(props) {
                         <ReactToPrint
                             trigger={() => <button className='bootstrap-btn' style={{color: '#f1f1f1', height: '5vh', width: '20%', cursor: 'pointer', fontSize: 'large', fontWeight: '600'}}>Imprimer</button>}
                             content={() => componentRef.current}
+                            onAfterPrint={enregistrerHeureFin}
                         />
                     </div>
                 </div>
