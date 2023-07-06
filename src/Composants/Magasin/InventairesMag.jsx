@@ -17,7 +17,7 @@ export default function InventairesMag(props) {
     const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
     const componentRef = useRef();
 
-    const {darkLight} = useContext(ContextChargement)
+    const { darkLight, role } = useContext(ContextChargement)
 
     const [listeInventaires, setListeInventaires] = useState([]);
     // const [listeCommandesSauvegardes, setListeCommandesSauvegardes] = useState([]);
@@ -123,6 +123,7 @@ export default function InventairesMag(props) {
                 listeProds={infosInventaire}
                 calculerMontantTotal={calculerMontantTotal}
                 nomDuService="du magasin"
+                role={role}
               />
             </div>
         </animated.div>

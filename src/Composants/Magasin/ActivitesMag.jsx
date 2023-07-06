@@ -52,6 +52,7 @@ export default function ActivitesMag(props) {
 
     const [listeHistorique, setListeHistorique] = useState([]);
     const [listeSauvegarde, setListeSauvegarde] = useState([]);
+    const [listeProduitsRecherches, setListeProduitsRecherches] = useState([]);
     const [listeProduitsInventaires, setListeProduitsInventaires] = useState([]);
     const [idProd, setIdProd] = useState(false);
     const [puVente, setPuVente] = useState(false);
@@ -78,8 +79,38 @@ export default function ActivitesMag(props) {
     const vueListeProduitsInventaires = filtrerListe(propSearchDesignation, searchProd, listeProduitsInventaires)
 
     const handleChangeProd = (e) => {
-        setSearchProd(e.target.value);
-    }  
+        if (e.target.value.length === 0) {
+            setListeProduitsRecherches([]);
+        } else {
+            const req = new XMLHttpRequest();
+            req.open('GET', `${nomDns}recuperer_produits.php?designation=${e.target.value}`);
+
+            req.addEventListener('load', () => {
+                const result = JSON.parse(req.responseText);
+                setListeProduitsRecherches(result);
+            });
+            
+            req.send();
+        }
+    }
+
+    const ajouterProduitDansInventaire = (e) => {
+        const prod = listeProduitsRecherches.filter(item => item.id == e.target.id)[0];
+        const prodInventaire = {
+            id_inventaire: '',
+            id_prod: prod.id,
+            designation: prod.designation,
+            stock_theorique: parseInt(prod.en_stock),
+            stock_reel: parseInt(prod.en_stock),
+            difference: 0,
+            pu_achat: parseInt(prod.pu_achat),
+            p_total: parseInt(prod.pu_achat) * parseInt(prod.en_stock),
+            genre: prod.genre,
+        }
+
+        const liste = [...listeProduitsInventaires, prodInventaire];
+        setListeProduitsInventaires(liste);
+    }
 
     useEffect(() => {
         startChargement();
@@ -92,7 +123,7 @@ export default function ActivitesMag(props) {
                 const result = JSON.parse(req.responseText);
                 setListeHistorique(result);
                 setListeSauvegarde(result);
-                creerListeProduitsInventaires(result);
+                // creerListeProduitsInventaires(result);
                 setTimeout(() => {
                     stopChargement();
                 }, 500);
@@ -344,12 +375,14 @@ export default function ActivitesMag(props) {
             >
                 <SaveInventaire
                     listeProds={vueListeProduitsInventaires}
+                    listeProduitsRecherches={listeProduitsRecherches}
                     handleClick={sauvegarderInfosInventaire}
                     searchProd={searchProd}
                     handleChangeProd={handleChangeProd}
                     enCours={enCours}
                     fermerModalInventaire={fermerModalInventaire}
                     corrigerStock={callCorrigerStock}
+                    ajouterProduitDansInventaire={ajouterProduitDansInventaire}
                 />
             </Modal>
             <Modal

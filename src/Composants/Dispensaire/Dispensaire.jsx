@@ -2,8 +2,8 @@ import React, { useState, useContext } from 'react';
 import Historique from '../Historique/Historique';
 import '../Maj/Maj.css';
 import { ContextChargement } from '../../Context/Chargement';
-import Bordereau from '../Bordereau/Bordereau';
 import { FaClipboardList, FaList } from 'react-icons/fa';
+import BordereauDisp from './BordereauDisp';
 
 
 export default function Dispensaire(props) {
@@ -17,7 +17,7 @@ export default function Dispensaire(props) {
         contenu = <Historique nomConnecte={props.nomConnecte} />
         break;
       case 2:
-        contenu = <Bordereau nomConnecte={props.nomConnecte} />
+        contenu = <BordereauDisp nomConnecte={props.nomConnecte} />
         break;
       default:
         break;

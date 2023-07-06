@@ -216,5 +216,5 @@ export const recupererHeureJour = (idElement) => {
     document.querySelector(`#${idElement}`).value = ('0' + (today.getHours())).slice(-2) +  ":" + ('0' + (today.getMinutes())).slice(-2);
 }
 
-export const nomDns = 'http://localhost/backend-cmab/';
-export const nomServeur = 'http://localhost:3010';
+export const nomDns = 'http://serveur/hdmbanga/';
+export const nomServeur = 'http://serveur:3010';
