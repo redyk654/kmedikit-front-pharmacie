@@ -131,4 +131,4 @@ export const genres = {
     generique: "générique",
 }
 
-export const nomDns = "http://serveur/backend-cmab/";
+export const nomDns = "http://localhost/backend-cmab/";
