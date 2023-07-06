@@ -44,7 +44,7 @@ export default function Etats(props) {
     useEffect(() => {
         startChargement();
         // Récupération des médicaments dans la base via une requête Ajax
-        recupererDateJour('date-d-etats');
+        // recupererDateJour('date-d-etats');
         recupererDateJour('date-f-etats');
         recupererHeureJour('heure-f-etats')
         recupererHeureDernierService();
@@ -272,6 +272,7 @@ export default function Etats(props) {
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {
                 const result = JSON.parse(req.response);
+                document.querySelector('#date-d-etats').value = result.date_heure.slice(0, 10);
                 document.querySelector('#heure-d-etats').value = result.date_heure.slice(11, 16);
             }
         });
