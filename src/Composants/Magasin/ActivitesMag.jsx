@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import '../Activites/Activites.css';
 import { ContextChargement } from '../../Context/Chargement';
-import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock, filtrerListe } from "../../shared/Globals";
+import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock, filtrerListe, supprimerProd } from "../../shared/Globals";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
 import { Toaster, toast } from "react-hot-toast";
@@ -83,7 +83,7 @@ export default function ActivitesMag(props) {
             setListeProduitsRecherches([]);
         } else {
             const req = new XMLHttpRequest();
-            req.open('GET', `${nomDns}recuperer_produits.php?designation=${e.target.value}`);
+            req.open('GET', `${nomDns}recuperer_produits.php?designation_magasin=${e.target.value}`);
 
             req.addEventListener('load', () => {
                 const result = JSON.parse(req.responseText);
@@ -345,6 +345,7 @@ export default function ActivitesMag(props) {
             if (req.status >= 200 && req.status < 400) {
                 setEnCours(false);
                 fermerModalInventaire();
+                setListeProduitsInventaires([]);
                 setMedocSelectionne(false);
                 setState(!state);
                 toast.success('Inventaire sauvegardé avec succès');
@@ -362,6 +363,10 @@ export default function ActivitesMag(props) {
 
     const callCorrigerStock = (e) => {
         setListeProduitsInventaires(corrigerStock(e, listeProduitsInventaires));
+    }
+
+    const supprimerProdInventaire = (e) => {
+        setListeProduitsInventaires(supprimerProd(e, listeProduitsInventaires));
     }
 
     return (
@@ -383,6 +388,7 @@ export default function ActivitesMag(props) {
                     fermerModalInventaire={fermerModalInventaire}
                     corrigerStock={callCorrigerStock}
                     ajouterProduitDansInventaire={ajouterProduitDansInventaire}
+                    supprimerProd={supprimerProdInventaire}
                 />
             </Modal>
             <Modal

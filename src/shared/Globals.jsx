@@ -216,5 +216,10 @@ export const recupererHeureJour = (idElement) => {
     document.querySelector(`#${idElement}`).value = ('0' + (today.getHours())).slice(-2) +  ":" + ('0' + (today.getMinutes())).slice(-2);
 }
 
+export const supprimerProd = (e, liste) => {
+    const listeProd = liste.filter(item => item.id_prod !== e.target.id);
+    return listeProd;
+}
+
 export const nomDns = 'http://serveur/hdmbanga/';
 export const nomServeur = 'http://serveur:3010';

@@ -2,7 +2,7 @@
   "name": "KMD-harmacie",
   "author": "Chrisppo Youmbissi Kamdem",
   "copyright": "Copyright © 2021 Chrisppo Youmbissi",
-  "version": "3.7.1",
+  "version": "3.8.0",
   "main": "public/electron.js",
   "homepage": "./",
   "build": {

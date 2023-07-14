@@ -75,7 +75,7 @@ export default function ModifierProduit() {
     useEffect(() => {
         // Récupération de la liste de produits via Ajax
         const req = new XMLHttpRequest();
-        req.open('GET', `${nomDns}recuperer_medoc.php`);
+        req.open('GET', `${nomDns}recuperer_medoc_magasin.php`);
 
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {
@@ -111,7 +111,6 @@ export default function ModifierProduit() {
 
     const supprimerProduit = () => {
         // Suppression du produit selectionné
-        document.querySelector('#confirmer').disabled = true;
         if (produitSelectionne.length > 0) {
             const data = new FormData();
             data.append('id', produitSelectionne[0].id);
@@ -121,11 +120,9 @@ export default function ModifierProduit() {
 
             req.addEventListener('load', () => {
                 if (req.status >= 200 && req.status < 400) {
-                    setMessageReussi('Le produit a bien été supprimé');
+                    toast.success('Le produit a bien été supprimé')
                     setRefetch(!refecth);
                     setproduitSelectionne([]);
-                    setModalGererClasses(true);
-                    setModalConfirmation(false);
                 }
             });
 
@@ -287,7 +284,10 @@ export default function ModifierProduit() {
                     <div style={{color: 'red', backgroundColor: `#fff`}}>{msgErreur}</div>
 
                     <div className="buttons" style={{display: `${!modif ? 'block' : 'none'}`, textAlign: 'center'}}>
-                        <button className='bootstrap-btn annuler' onClick={() => { if (produitSelectionne.length > 0) {setModif(true); afterModal();}}}>Modifier</button>
+                        <button className='bootstrap-btn' onClick={() => { if (produitSelectionne.length > 0) {setModif(true); afterModal();}}}>Modifier</button>
+                        <button style={{width: '140px'}} className='bootstrap-btn annuler' onClick={supprimerProduit}>Supprimer</button>
+                    </div>
+                    <div>
                     </div>
                 </div>
             </section>

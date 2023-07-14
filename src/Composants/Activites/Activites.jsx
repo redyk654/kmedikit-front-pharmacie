@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import './Activites.css';
 import { ContextChargement } from '../../Context/Chargement';
-import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock, filtrerListe, ROLES } from "../../shared/Globals";
+import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock, filtrerListe, ROLES, supprimerProd } from "../../shared/Globals";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
 import { Toaster, toast } from "react-hot-toast";
@@ -348,6 +348,7 @@ export default function Activites(props) {
             if (req.status >= 200 && req.status < 400) {
                 setEnCours(false);
                 fermerModalInventaire();
+                setListeProduitsInventaires([]);
                 setMedocSelectionne(false);
                 setState(!state);
                 toast.success('Inventaire sauvegardé avec succès');
@@ -365,6 +366,10 @@ export default function Activites(props) {
 
     const callCorrigerStock = (e) => {
         setListeProduitsInventaires(corrigerStock(e, listeProduitsInventaires));
+    }
+
+    const supprimerProdInventaire = (e) => {
+        setListeProduitsInventaires(supprimerProd(e, listeProduitsInventaires));
     }
 
     return (
@@ -386,6 +391,7 @@ export default function Activites(props) {
                     fermerModalInventaire={fermerModalInventaire}
                     corrigerStock={callCorrigerStock}
                     ajouterProduitDansInventaire={ajouterProduitDansInventaire}
+                    supprimerProd={supprimerProdInventaire}
                 />
             </Modal>
             <Modal

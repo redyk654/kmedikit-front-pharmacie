@@ -25,7 +25,7 @@ export default function AfficherInventaire(props) {
             <tbody style={{lineHeight: 2.9}}>
                 {props.listeProds ? props.listeProds.map(item => (
                     <tr key={item.id_table}>
-                        <td>{item.designation.toLowerCase()}</td>
+                        <td role='button' id={item.id_prod} onClick={props.supprimerProd}>{item.designation.toLowerCase()}</td>
                         <td>{item.stock_theorique}</td>
                         <td>
                             <CFormInput id={item.id_prod} value={item.stock_reel} onChange={props.corrigerStock} type="text" autoComplete='off' />

@@ -55,6 +55,7 @@ export default function SaveInventaire(props) {
             <AfficherInventaire
               listeProds={props.listeProds}
               corrigerStock={props.corrigerStock}
+              supprimerProd={props.supprimerProd}
             />
             <div style={{textAlign: 'center'}}>        
               <Btn
