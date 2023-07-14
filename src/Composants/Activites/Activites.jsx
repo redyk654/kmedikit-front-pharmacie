@@ -111,6 +111,7 @@ export default function Activites(props) {
 
         const liste = [...listeProduitsInventaires, prodInventaire];
         setListeProduitsInventaires(liste);
+        document.querySelector('#rechercher-produit').focus();
     }
 
     useEffect(() => {
