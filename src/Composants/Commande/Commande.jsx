@@ -288,6 +288,7 @@ export default function Commande(props) {
                 setListeMedoc(result);
                 setListeMedocSauvegarde(result);
                 stopChargement();
+                console.log('produits récupérés');
 
             } else {
                 // Affichage des informations sur l'échec du traitement de la requête
@@ -353,22 +354,23 @@ export default function Commande(props) {
                .substring(1).toUpperCase();
     }
 
-    useEffect(() => {
-      socket.on('maj_produits', (data) => {
-        if (data.length > 0) {
-            // setListeMedoc(listeMedoc.map(item => (item.id == data[0].id ? {...item, ["en_stock"]: (parseInt(item.en_stock) - parseInt(data[0].qte_commander))} : item)));
-            // setListeMedocSauvegarde(listeMedocSauvegarde.map(item => (item.id == data[0].id ? {...item, ["en_stock"]: (parseInt(item.en_stock) - parseInt(data[0].qte_commander))} : item)));
-            
-            setListeMedoc(data);
-            setListeMedocSauvegarde(data);
-            setMedoSelect(false);
-            setMedocCommandes([]);
-        } else {
-            console.log('Aucune donnée à afficher');
-        }
-      });
+    // useEffect(() => {
+    //   socket.on('maj_produits', (data) => {
+    //     if (data.length > 0) {            
+    //         setListeMedoc(data);
+    //         setListeMedocSauvegarde(data);
+    //         setMedoSelect(false);
+    //         setMedocCommandes([]);
+    //     }
+    //   });
 
-    }, [socket])
+    //   socket.on('produit_modifie', () => {
+    //     setMedoSelect(false);
+    //     fetchProduits();
+    //     console.log('produit modifié');
+    //   })
+
+    // }, [socket])
     
     const majListeProduits = (data) => {
         socket.emit('enreg_facture', data);
@@ -395,7 +397,7 @@ export default function Commande(props) {
         req.open('POST', `${nomDns}index.php?enreg_facture_pharmacie`);
 
         req.addEventListener('load', () => {
-            majListeProduits(listeMedocSauvegarde);
+            // majListeProduits(listeMedocSauvegarde);
             setMedoSelect(false);
             setMessageErreur('');
             toastVenteEnregistrer();

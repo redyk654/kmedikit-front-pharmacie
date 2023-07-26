@@ -7,13 +7,13 @@ export default function AfficherProduitsRecherches(props) {
 
   return (
     <Fragment>
-        {produits?.length > 0 ? produits.map(item => (
-            <CListGroup>
-                <CListGroupItem id={item.id} component="button" onClick={ajouterProduitDansInventaire}>
-                    {item.designation}
-                </CListGroupItem>
-            </CListGroup>
-        )) : null}
+        <CListGroup>
+            {produits?.length > 0 ? produits.map(item => (
+                    <CListGroupItem id={item.id} component="button" onClick={ajouterProduitDansInventaire}>
+                        {item.designation}
+                    </CListGroupItem>
+            )) : null}
+        </CListGroup>
     </Fragment>
   )
 }

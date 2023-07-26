@@ -292,6 +292,7 @@ export default function Sorties(props) {
                             }
                         });
                         i++;
+                        console.log(req2.response);
                         if (i === medocCommandes.length) {
                             enregisterFacture(idFac);
                             finaliserCommande(idFac);

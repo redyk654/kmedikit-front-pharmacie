@@ -28,12 +28,12 @@ export default function Operations(props) {
     <section className="conteneur-sous-onglets">
         <div className="onglets-blocs" style={{width: '25%', fontSize: '10px'}}>
             <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(1)}}>
-                <CIcon content={cilArrowBottom} size={'sm'} />
+                <CIcon icon={cilArrowBottom} size={'sm'} />
                 &nbsp;
                 Entrées
             </div>
             <div className={`tab ${onglet === 2 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(2)}}>
-                <CIcon content={cilArrowTop} size={'sm'} />
+                <CIcon icon={cilArrowTop} size={'sm'} />
                 &nbsp;
                 Sorties
             </div>

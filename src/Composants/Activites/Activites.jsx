@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import './Activites.css';
 import { ContextChargement } from '../../Context/Chargement';
-import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock, filtrerListe, ROLES, supprimerProd } from "../../shared/Globals";
+import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock, filtrerListe, ROLES, supprimerProd, nomServeur } from "../../shared/Globals";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
 import { Toaster, toast } from "react-hot-toast";
@@ -9,6 +9,9 @@ import { useSpring, animated } from 'react-spring';
 import { CBadge } from "@coreui/react";
 import AfficherListeProdInventaires from '../../shared/AfficherListeProdInventaires';
 import SaveInventaire from '../SaveInventaire/SaveInventaire';
+import { io } from 'socket.io-client';
+
+const socket = io.connect(`${nomServeur}`);
 
 Modal.setAppElement('#root')
 
@@ -321,7 +324,8 @@ export default function Activites(props) {
         req.open('POST', `${nomDns}sauvegarder_inventaire.php`);
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
-                sauvegarderProduitsInventaire(idInventaire)
+                sauvegarderProduitsInventaire(idInventaire);
+                socket.emit('modification_produit');
             } else {
                 console.error(req.status + " " + req.statusText);
             }
