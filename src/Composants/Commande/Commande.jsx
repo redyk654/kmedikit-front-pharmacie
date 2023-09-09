@@ -195,7 +195,6 @@ export default function Commande(props) {
     const { code, nom, age, sexe, quartier, assurance, type_assurance } = nouveauPatient;
     const {code_prod, designation, classe, pu_achat, pu_vente, conditionnement, stock_ajoute, min_rec, categorie, date_peremption, montant_commande, genre} = infosMedoc;
 
-
     useEffect(() => {
         startChargement();
         // Récupération des médicaments dans la base via une requête Ajax
@@ -231,7 +230,8 @@ export default function Commande(props) {
     }
 
         // Enregistrement d'un médicament dans la commande
-    const ajouterMedoc = () => {
+    const ajouterMedoc = (e) => {
+        e.preventDefault();
         /* 
             - Mise à jour de la quantité du médicament commandé dans la liste des commandes
             - Mise à jour du prix total du médicament commandé
@@ -244,7 +244,7 @@ export default function Commande(props) {
         if (qteDesire && !isNaN(qteDesire) && medocSelect) {
 
             if (parseInt(qteDesire) > medocSelect[0].en_stock) {
-                setMessageErreur('La quantité commandé ne peut pas être supérieure au stock')
+                setMessageErreur('Stock insuffisant')
             } else if (medocSelect[0].en_stock == 0) {
                 setMessageErreur('Le stock de ' + medocSelect[0].designation + ' est épuisé')
             } else {
@@ -288,7 +288,6 @@ export default function Commande(props) {
                 setListeMedoc(result);
                 setListeMedocSauvegarde(result);
                 stopChargement();
-                console.log('produits récupérés');
 
             } else {
                 // Affichage des informations sur l'échec du traitement de la requête
@@ -354,23 +353,23 @@ export default function Commande(props) {
                .substring(1).toUpperCase();
     }
 
-    // useEffect(() => {
-    //   socket.on('maj_produits', (data) => {
-    //     if (data.length > 0) {            
-    //         setListeMedoc(data);
-    //         setListeMedocSauvegarde(data);
-    //         setMedoSelect(false);
-    //         setMedocCommandes([]);
-    //     }
-    //   });
+    useEffect(() => {
+      socket.on('maj_produits', (data) => {
+        if (data.length > 0) {            
+            setListeMedoc(data);
+            setListeMedocSauvegarde(data);
+            setMedoSelect(false);
+            setMedocCommandes([]);
+        }
+      });
 
-    //   socket.on('produit_modifie', () => {
-    //     setMedoSelect(false);
-    //     fetchProduits();
-    //     console.log('produit modifié');
-    //   })
+      socket.on('produit_modifie', () => {
+        setMedoSelect(false);
+        fetchProduits();
+        // console.log('produit modifié');
+      })
 
-    // }, [socket])
+    }, [socket])
     
     const majListeProduits = (data) => {
         socket.emit('enreg_facture', data);
@@ -397,7 +396,8 @@ export default function Commande(props) {
         req.open('POST', `${nomDns}index.php?enreg_facture_pharmacie`);
 
         req.addEventListener('load', () => {
-            // majListeProduits(listeMedocSauvegarde);
+            majListeProduits(listeMedocSauvegarde);
+            socket.emit('actualiser_facture_pharmacie');
             setMedoSelect(false);
             setMessageErreur('');
             toastVenteEnregistrer();
@@ -866,7 +866,7 @@ export default function Commande(props) {
                     <input type="text" placeholder="recherchez un produit" className="recherche" onChange={filtrerListe} />
                 </p>
                 <p>
-                    {/* <button className="rafraichir" onClick={() => {setRafraichir(!rafraichir)}}>rafraichir</button> */}
+                    <button className="" onClick={() => {setRafraichir(!rafraichir)}}>rafraichir</button>
                 </p>
                 <div>
                     <a className='link-primary' onClick={ouvrirChangerPrix} role='button'>changer prix</a>
@@ -904,11 +904,13 @@ export default function Commande(props) {
                 </div>
                 <div className="box">
                     <div className="detail-item">
-                        <input type="text" id='qte_desire' name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
-                        {/* <button onClick={ajouterMedoc}>ajouter</button> */}
-                        <div onClick={ajouterMedoc} style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
-                            <FaPlusSquare color='#00BCD4' size={35} />
-                        </div>
+                        <form action="" onSubmit={ajouterMedoc}>
+                            <input className=' d-inline-block w-50 h-50' type="text" id='qte_desire' name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
+                            {/* <button onClick={ajouterMedoc}>ajouter</button> */}
+                            <button type='submit' style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
+                                ajouter
+                            </button>
+                        </form>
                     </div>
                     <div style={{textAlign: 'center'}}>
                         <button className='btn-patient' onClick={infosPatient}>Infos du patient</button>
@@ -949,7 +951,7 @@ export default function Commande(props) {
                         <tbody>
                             {medocCommandes.map(item => (
                                 <tr key={item.id} style={{fontWeight: '600', color: `${darkLight ? '#fff' : '#012557'}`, cursor: 'pointer'}} onClick={(e) => retirerCommande(e, item.id)}>
-                                    <td>{item.designation}</td>
+                                    <td>{item.designation.toLowerCase()}</td>
                                     <td style={{color: `${parseInt(item.en_stock) < parseInt(item.qte_commander) ? 'red' : ''}`}}>{item.qte_commander}</td>
                                     <td>{item.pu_vente + ' Fcfa'}</td>
                                     <td>{item.prix + ' Fcfa' }</td>

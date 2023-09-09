@@ -15,7 +15,7 @@ a {
   text-decoration: none;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 6px;
 }
 
@@ -26,7 +26,7 @@ a {
 ::-webkit-scrollbar-thumb {
   background-color: #03ca7e;
   border-radius: 150px;
-}
+} */
 
 body {
   font-family: poppins, Impact;

@@ -229,7 +229,7 @@ export default function Activites(props) {
     }, [medocSelectionne]);
 
     const filtrerListe2 = (e) => {
-        const medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1));
+        const medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.toLowerCase().trim()) !== -1));
         setListeHistorique(medocFilter);
     }
 
@@ -325,7 +325,6 @@ export default function Activites(props) {
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
                 sauvegarderProduitsInventaire(idInventaire);
-                socket.emit('modification_produit');
             } else {
                 console.error(req.status + " " + req.statusText);
             }
@@ -354,8 +353,10 @@ export default function Activites(props) {
                 setEnCours(false);
                 fermerModalInventaire();
                 setListeProduitsInventaires([]);
+                setListeProduitsRecherches([]);
                 setMedocSelectionne(false);
                 setState(!state);
+                socket.emit('modification_produit');
                 toast.success('Inventaire sauvegardé avec succès');
             }
         });

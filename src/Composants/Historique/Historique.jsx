@@ -34,7 +34,7 @@ export default function Historique(props) {
             <div className={`tab ${onglet === 2 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(2)}}>
               <AiFillSave size={19} />
               &nbsp;
-              Sauvegardes
+              Sauvegardes inventaires
             </div>
           </div>
           <div className="onglets-contenu">

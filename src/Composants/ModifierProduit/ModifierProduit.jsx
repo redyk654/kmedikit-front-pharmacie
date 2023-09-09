@@ -91,7 +91,9 @@ export default function ModifierProduit() {
     }, [refecth]);
 
     const filtrerListe = (e) => {
-        const medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1))
+        const expressionReguliere = new RegExp(e.target.value, 'i');
+        const medocFilter = listeSauvegarde.filter(item => (expressionReguliere.test(item.designation)));
+        // const medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1))
         setListeProduit(medocFilter);
     }
 

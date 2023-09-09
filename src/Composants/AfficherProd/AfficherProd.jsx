@@ -12,7 +12,7 @@ export default function AfficherProd(props) {
             <CRow className="box">
                 <CCol className="item">
                     <p>Désignation</p>
-                    <p>{props.designation}</p>
+                    <p>{props.designation.toLowerCase()}</p>
                 </CCol>
                 <CCol className="item">
                     <p>Prix de vente</p>

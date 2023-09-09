@@ -284,7 +284,7 @@ export default function FactureManuelle(props) {
         if (qteDesire && !isNaN(qteDesire) && medocSelect) {
 
             if (parseInt(qteDesire) > medocSelect[0].en_stock) {
-                setMessageErreur('La quantité commandé ne peut pas être supérieure au stock')
+                setMessageErreur('Stock insuffisant')
             } else if (medocSelect[0].en_stock == 0) {
                 setMessageErreur('Le stock de ' + medocSelect[0].designation + ' est épuisé')
             } else {
@@ -835,7 +835,7 @@ export default function FactureManuelle(props) {
                           <tbody>
                               {medocCommandes.map(item => (
                                   <tr key={item.id} style={{fontWeight: '600'}}>
-                                      <td>{item.designation}</td>
+                                      <td>{item.designation.toLowerCase()}</td>
                                       <td style={{color: `${parseInt(item.en_stock) < parseInt(item.qte_commander) ? 'red' : ''}`}}>{item.qte_commander}</td>
                                       <td>{item.pu_vente + ' Fcfa'}</td>
                                       <td>{item.prix + ' Fcfa' }</td>
