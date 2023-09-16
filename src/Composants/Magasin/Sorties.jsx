@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef, Fragment } from 'react'
 import '../Commande/Commande.css';
 import AfficherProd from '../AfficherProd/AfficherProd';
 import { ContextChargement } from '../../Context/Chargement';
-import { nomDns } from '../../shared/Globals';
+import { nomDns, nomServeur } from '../../shared/Globals';
 
 // Importation des librairies installées
 import Modal from 'react-modal';
@@ -11,6 +11,9 @@ import Loader from "react-loader-spinner";
 import { Toaster, toast } from "react-hot-toast";
 import { FaPlusSquare } from "react-icons/fa";
 import { useSpring, animated } from 'react-spring';
+import { io } from 'socket.io-client';
+
+const socket = io.connect(`${nomServeur}`);
 
 // Styles pour las fenêtres modales
 const customStyles1 = {
@@ -229,6 +232,7 @@ export default function Sorties(props) {
             setModalConfirmation(false);
             setEncours(false);
             annulerCommande();
+            socket.emit('modification_produit');
         });
 
         req.addEventListener("error", function () {

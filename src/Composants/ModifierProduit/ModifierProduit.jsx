@@ -7,7 +7,10 @@ import { ContextChargement } from '../../Context/Chargement';
 import { Toaster, toast } from "react-hot-toast";
 import EditerProd from '../Approvisionner/EditerProd';
 import GererClasses from '../GererClasses/GererClasses';
-import { nomDns } from '../../shared/Globals';
+import { nomDns, nomServeur } from '../../shared/Globals';
+import { io } from 'socket.io-client';
+
+const socket = io.connect(`${nomServeur}`);
 
 const customStyles1 = {
     content: {
@@ -101,6 +104,7 @@ export default function ModifierProduit() {
         const prod = listeProduit.filter(item => (item.id == e.target.value));
         setproduitSelectionne(prod);
         setInfosMedoc(prod[0]);
+        setModif(false);
     }
 
     const handleChange = (e) => {
@@ -153,6 +157,7 @@ export default function ModifierProduit() {
                     setModif(false)
                     setRefetch(!refecth);
                     toastReussi();
+                    socket.emit('modification_produit');
                 }
             });
 

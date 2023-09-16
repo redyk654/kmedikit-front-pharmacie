@@ -221,5 +221,10 @@ export const supprimerProd = (e, liste) => {
     return listeProd;
 }
 
-export const nomDns = 'http://localhost/backend-cmab/';
-export const nomServeur = 'http://localhost:3010';
+const backendLocal = 'http://localhost/backend-cmab/';
+const hdmbanga = 'http://serveur/hdmbanga/';
+const serveurLocal = 'http://localhost:3010';
+const serveur = 'http://serveur:3010';
+
+export const nomDns = hdmbanga;
+export const nomServeur = serveur;
