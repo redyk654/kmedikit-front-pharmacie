@@ -1,4 +1,4 @@
-const { app, net, BrowserWindow, Notification, dialog, autoUpdater } = require('electron')
+const { app, net, BrowserWindow, dialog, autoUpdater } = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev')
 // const { autoUpdater } = require('electron-updater')
@@ -19,8 +19,8 @@ function createWindow () {
       isDev ? 'http:localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
     )
 
-    win.setMenuBarVisibility(false)
-    win.removeMenu()
+    // win.setMenuBarVisibility(false)
+    // win.removeMenu()
 }
 
 app.whenReady().then(() => {
