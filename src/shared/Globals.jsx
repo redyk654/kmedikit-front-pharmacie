@@ -118,8 +118,31 @@ export function genererId() {
 
 }
 
+export function cleanAccent(str) {
+    return str.normalize('NFD').replace(/\p{Dia}/gu, '');
+}
+
 export function filtrerListe(prop, val, liste) {
     return liste.filter(item => (item[prop].toLowerCase().includes(val.toLowerCase())));
+}
+
+export function regrouperParClasse(tableau) {
+    const groupes = {}; // Un objet pour stocker les groupes par classe
+  
+    // Parcourez chaque objet dans le tableau
+    tableau.forEach((objet) => {
+      const classe = objet.classe;
+  
+      // Si la classe n'existe pas dans les groupes, créez un tableau vide
+      if (!groupes[classe]) {
+        groupes[classe] = [];
+      }
+  
+      // Ajoutez l'objet au groupe correspondant
+      groupes[classe].push(objet);
+    });
+  
+    return groupes;
 }
 
 export const tipHeureDebut = "Pour les recettes du jour, choisissez l'heure de début à 6h (sauf si vous avez commencé le service avant) et pour les recettes de la nuit, choisissez l'heure de début à 15h (sauf si vous avez commencé le service avant)"
@@ -131,4 +154,6 @@ export const genres = {
     generique: "générique",
 }
 
-export const nomDns = "http://192.168.100.6/backend-cmab/";
+const ipServeur = "192.168.100.6";
+
+export const nomDns = `http://${ipServeur}/backend-cmab/`;

@@ -74,16 +74,16 @@ export default function EditerProd(props) {
                 <div className="detail-item">
                     <label htmlFor="">Classe</label>
                     <select name="classe" id="classe" onChange={handleChange} value={props.classe}>
-                        <option value="antibiotiques">antibiotiques</option>
+                        <option value="antibiotiques" selected>antibiotiques</option>
                         <option value="antipaludiques">antipaludiques</option>
                         <option value="antiinflammatoiresetantalgiques">anti-inflammatoires et antalgiques</option>
-                        <option value="antispamodiques">antispamodiques</option>
+                        <option value="antispamodiques">anti-spamodiques</option>
                         <option value="antigrippaux">antigrippaux</option>
-                        <option value="antihistaminiqueh1">anti histaminique h1</option>
-                        <option value="antiulcereuxetantiacide">anti ulcereux et anti acides</option>
+                        <option value="antihistaminiqueh1">antihistaminique h1</option>
+                        <option value="antiulcereuxetantiacide">antiulcereux et anti acides</option>
                         <option value="vermifuges">vermifuges</option>
                         <option value="vitaminesetelectrolytes">vitamines et electrolytes</option>
-                        <option value="antianemiques">anti anemiques</option>
+                        <option value="antianemiques">antianemiques</option>
                     </select>
                 </div>
             </div>

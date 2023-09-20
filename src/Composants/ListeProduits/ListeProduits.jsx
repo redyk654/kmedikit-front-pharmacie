@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import './ListeProduits.css'
 import AfficherListe from './AfficherListe/AfficherListe';
 import RechercherProd from '../RechercherProd/RechercherProd';
-import { nomDns } from '../../shared/Globals';
+import { nomDns, regrouperParClasse } from '../../shared/Globals';
 
 
 export default function ListeProduits() {
@@ -33,6 +33,8 @@ export default function ListeProduits() {
             setMsgErreur('')
             setListeProduits(data);
             setListeProduitsSauvegarde(data);
+            // console.log(regrouperParClasse(data))
+            // console.log(data);
         })
         .catch(error => {
             setMsgErreur("erreur réseau");
@@ -46,12 +48,12 @@ export default function ListeProduits() {
             setListeProduits={setListeProduits}
         />
         <p className='erreur-message'>{msgErreur}</p>
-        {listeClasses.map(classe => (
-            <AfficherListe
-                listeProduits={listeProduits}
-                classe={classe}
-            />
-        ))}
+        {/* {listeClasses.map(classe => ( */}
+        <AfficherListe
+            listeProduits={listeProduits}
+            // classe={classe}
+        />
+        {/* ))} */}
     </div>
   )
 }
