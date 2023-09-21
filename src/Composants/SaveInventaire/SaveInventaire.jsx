@@ -9,7 +9,7 @@ import Loader from "react-loader-spinner";
 import { VscError } from "react-icons/vsc";
 import BtnIcon from '../../shared/BtnIcon'
 import SearchInput from '../../shared/SearchInput'
-import { CForm, CFormInput } from '@coreui/react'
+import { CCol, CContainer, CForm, CFormInput, CRow } from '@coreui/react'
 import AfficherProduitsRecherches from '../../shared/AfficherProduitsRecherches'
 
 export default function SaveInventaire(props) {
@@ -32,31 +32,32 @@ export default function SaveInventaire(props) {
             </BtnIcon>
             <TitleH1 val="Fiche Inventaire" />
             <TitleH2 val={`Inventaire du ${currentDateString()}`} />
-            {/* <SearchInput
-              placeholder="rechercher un produit"
-              searchTerm={props.searchProd}
-              handleChange={props.handleChangeProd}
-              styles1={{textAlign: 'center'}}
-              styles2={{width: '20%'}}
-            /> */}
-            <CForm>
-              <CFormInput
-                type="text"
-                id="rechercher-produit"
-                label=""
-                placeholder="rechercher un produit"
-                onChange={props.handleChangeProd}
-              />
-            </CForm>
-            <AfficherProduitsRecherches
-              produits={props.listeProduitsRecherches}
-              ajouterProduitDansInventaire={props.ajouterProduitDansInventaire}
-            />
-            <AfficherInventaire
-              listeProds={props.listeProds}
-              corrigerStock={props.corrigerStock}
-              supprimerProd={props.supprimerProd}
-            />
+            <CContainer>
+              <CRow>
+                <CCol xs={3}>
+                  <CForm onSubmit={(e) => e.preventDefault()}>
+                    <CFormInput
+                      type="text"
+                      id="rechercher-produit"
+                      label=""
+                      placeholder="rechercher un produit"
+                      onChange={props.handleChangeProd}
+                    />
+                  </CForm>
+                  <AfficherProduitsRecherches
+                    produits={props.listeProduitsRecherches}
+                    ajouterProduitDansInventaire={props.ajouterProduitDansInventaire}
+                  />
+                </CCol>
+                <CCol>
+                  <AfficherInventaire
+                    listeProds={props.listeProds}
+                    corrigerStock={props.corrigerStock}
+                    supprimerProd={props.supprimerProd}
+                  />
+                </CCol>
+              </CRow>
+            </CContainer>
             <div style={{textAlign: 'center'}}>        
               <Btn
                   text="Sauvegarder"

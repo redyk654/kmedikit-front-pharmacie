@@ -96,6 +96,7 @@ export default function ActivitesMag(props) {
 
     const ajouterProduitDansInventaire = (e) => {
         const prod = listeProduitsRecherches.filter(item => item.id == e.target.id)[0];
+        console.log(prod, listeProduitsInventaires[0]?.id_prod);
         const prodInventaire = {
             id_inventaire: '',
             id_prod: prod.id,
@@ -108,7 +109,8 @@ export default function ActivitesMag(props) {
             genre: prod.genre,
         }
 
-        const liste = [...listeProduitsInventaires, prodInventaire];
+        const retirerDoublons = listeProduitsInventaires.filter(item => item.id_prod !== prod.id);
+        const liste = [...retirerDoublons, prodInventaire];
         setListeProduitsInventaires(liste);
         document.querySelector('#rechercher-produit').focus();
     }
@@ -289,6 +291,7 @@ export default function ActivitesMag(props) {
 
     const fermerModalInventaire = () => {
         setModalInventaire(false);
+        setListeProduitsRecherches([]);
     }
 
     const fermerModalConfirmation = () => {
@@ -303,34 +306,39 @@ export default function ActivitesMag(props) {
     }
 
     const sauvegarderInfosInventaire = () => {
-        setEnCours(true);
-        const idInventaire = genererId()
-
-        const infosInventaire = {
-            id: idInventaire,
-            auteur: props.nomConnecte,
-        }
-
-        const data = new FormData();
-        data.append('infosInv', JSON.stringify(infosInventaire));
-
-        const req = new XMLHttpRequest();
-
-        req.open('POST', `${nomDns}sauvegarder_inventaire_magasin.php`);
-        req.addEventListener('load', () => {
-            if (req.status >= 200 && req.status < 400) {
-                sauvegarderProduitsInventaire(idInventaire)
-            } else {
-                console.error(req.status + " " + req.statusText);
+        if (listeProduitsInventaires.length === 0) {
+            toast.error('Aucun produit ajouté à l\'inventaire');
+            return;
+        } else {
+            setEnCours(true);
+            const idInventaire = genererId()
+    
+            const infosInventaire = {
+                id: idInventaire,
+                auteur: props.nomConnecte,
             }
-        });
-
-        req.addEventListener("error", function () {
-            // La requête n'a pas réussi à atteindre le serveur
-            setMessageErreur('Erreur réseau');
-        });
-
-        req.send(data);
+    
+            const data = new FormData();
+            data.append('infosInv', JSON.stringify(infosInventaire));
+    
+            const req = new XMLHttpRequest();
+    
+            req.open('POST', `${nomDns}sauvegarder_inventaire_magasin.php`);
+            req.addEventListener('load', () => {
+                if (req.status >= 200 && req.status < 400) {
+                    sauvegarderProduitsInventaire(idInventaire)
+                } else {
+                    console.error(req.status + " " + req.statusText);
+                }
+            });
+    
+            req.addEventListener("error", function () {
+                // La requête n'a pas réussi à atteindre le serveur
+                setMessageErreur('Erreur réseau');
+            });
+    
+            req.send(data);
+        }
     }
 
     const sauvegarderProduitsInventaire = (idInventaire) => {

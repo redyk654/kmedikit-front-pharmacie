@@ -221,6 +221,10 @@ export const supprimerProd = (e, liste) => {
     return listeProd;
 }
 
+export function cleanAccent(str) {
+    return str.normalize('NFD').replace(/\p{Dia}/gu, '');
+}
+
 const backendLocal = 'http://localhost/backend-cmab/';
 const hdmbanga = 'http://serveur/hdmbanga/';
 const serveurLocal = 'http://localhost:3010';
