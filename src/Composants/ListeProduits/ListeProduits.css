@@ -20,7 +20,7 @@
     }
 
     .liste-prod .search-zone input {
-        outline: none;
+        /* outline: none; */
         border-radius: 5px;
         color: #038654;
         font-size: 11px;

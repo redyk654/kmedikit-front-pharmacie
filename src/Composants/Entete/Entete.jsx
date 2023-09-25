@@ -42,7 +42,7 @@ export default function Entete(props) {
     }
 
     let elt = useRef();
-    const {darkLight, toogleTheme} = useContext(ContextChargement);
+    const {darkLight, toogleTheme, role} = useContext(ContextChargement);
 
     const [recettejour, setRecetteJour] = useState({recette: ''});
     const [modalReussi, setModalReussi] = useState(false);
@@ -115,7 +115,7 @@ export default function Entete(props) {
     }
 
     return (
-        <header className="entete" style={{height: `${slide ? '18vh' : '18vh'}`}}>
+        <header className="entete" >
             <Modal
                 isOpen={modalReussi}
                 style={customStyles2}
@@ -165,7 +165,7 @@ export default function Entete(props) {
                         <FaSignOutAlt size={24} />
                     </div>
                     <div>
-                        <button style={{display: `${slide ? 'inline' : 'inline'}`}} onClick={() => {setModalConfirmation(true); afterModal();}} >Modifier</button>
+                        <button style={{display: `${role.toUpperCase() === "medecin".toUpperCase() ? 'none' : 'inline'}`}} onClick={() => {setModalConfirmation(true); afterModal();}} >Modifier</button>
                     </div>
                     <button 
                         ref={elt}

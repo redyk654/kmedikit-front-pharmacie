@@ -80,6 +80,14 @@ export function mois2(str) {
     }
 }
 
+export const ROLES = {
+    admin: "admin",
+    major: "major",
+    vendeur: "vendeur",
+    medecin: "medecin",
+    medecinAdmin: "medecin-admin"
+}
+
 export const colors = {
     danger: "#dd4c47",
     undef: '',
@@ -155,5 +163,7 @@ export const genres = {
 }
 
 const ipServeur = "192.168.100.6";
+const ipLocal = "localhost";
+const ipModem = "192.168.8.101";
 
-export const nomDns = `http://${ipServeur}/backend-cmab/`;
+export const nomDns = `http://${ipLocal}/backend-cmab/`;
