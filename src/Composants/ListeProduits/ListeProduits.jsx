@@ -3,13 +3,15 @@ import { useState, useEffect } from 'react';
 import './ListeProduits.css'
 import AfficherListe from './AfficherListe/AfficherListe';
 import RechercherProd from '../RechercherProd/RechercherProd';
-import { ROLES, nomDns, regrouperParClasse } from '../../shared/Globals';
-import { CBadge, CButton, CFormInput, CListGroup, CListGroupItem, CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
+import { ROLES, nomDns, regrouperParClasse, serveurNodeProd } from '../../shared/Globals';
+import { CBadge, CButton, CFormCheck, CFormInput, CListGroup, CListGroupItem, CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
 import { ContextChargement } from '../../Context/Chargement';
 import CIcon from '@coreui/icons-react';
 import { cilTrash } from '@coreui/icons';
 import Loader from 'react-loader-spinner';
+import { io } from 'socket.io-client';
 
+const socket = io.connect(`${serveurNodeProd}`);
 
 export default function ListeProduits() {
 
@@ -36,10 +38,23 @@ export default function ListeProduits() {
     const [ajoutEnCours, setAjoutEnCours] = useState(false);
     const [designationDci, setDesignationDci] = useState('');
     const [chargementEnCours, setChargementEnCours] = useState(true);
+    const [filtrerPar, setFiltrerPar] = useState('designation');
 
     const { darkLight, role } = useContext(ContextChargement)
 
     useEffect(() => {
+        recupererListeProduits();
+        recupererListeDci();
+    }, []);
+
+    useEffect(() => {
+        socket.on('actualiser_produits', () => {
+            recupererListeProduits();
+            console.log('actualiser_produits');
+        })
+    }, [socket])
+
+    const recupererListeProduits = () => {
         fetch(`${nomDns}liste_produits_par_classe.php`)
         .then(response => response.json())
         .then(data => {
@@ -52,9 +67,7 @@ export default function ListeProduits() {
         .catch(error => {
             setMsgErreur("erreur réseau");
         })
-
-        recupererListeDci();
-    }, []);
+    }
 
     const recupererListeDci = () => {
         fetch(`${nomDns}gerer_dci.php?liste_dci`)
@@ -65,6 +78,10 @@ export default function ListeProduits() {
         .catch(error => {
             // console.log(error.message);
         })
+    }
+
+    const modifierListeProduits = (liste) => {
+        setListeProduits(liste);
     }
 
     const ouvrirModalDci = () => {
@@ -83,9 +100,9 @@ export default function ListeProduits() {
             fetch(`${nomDns}gerer_dci.php?dci=${dci}`)
             .then()
             .then(data => {
-                setAjoutEnCours(false)
-                setDesignationDci('');
                 recupererListeDci();
+                setDesignationDci('');
+                setAjoutEnCours(false)
             })
             .catch(error => {
                 setAjoutEnCours(false)
@@ -105,30 +122,58 @@ export default function ListeProduits() {
         })
     }
 
+    const handleRadioFiltre = (e) => {
+        setFiltrerPar(e.target.id === 'filter-par-designation' ? 'designation' : 'dci');
+    }
+
   return (
     chargementEnCours ?
     <div className=' text-center pt-5'>
         <Loader type="TailSpin" color="#03ca7e" height={50} width={50}/>
         chargement...
     </div> :
+
     <div className='liste-prod'>
         <RechercherProd
             listeProduitsSauvegarde={listeProduitsSauvegarde}
             setListeProduits={setListeProduits}
+            placeholder={`rechercher par ${filtrerPar}`}
+            filtrerPar={filtrerPar}
         />
+        <div>
+            <CFormCheck
+                checked={filtrerPar === 'designation'}
+                onChange={handleRadioFiltre}
+                type='radio'
+                name='filter-par'
+                id='filter-par-designation'
+                label='par désignation'
+                defaultChecked
+            />
+            <CFormCheck
+                checked={filtrerPar === 'dci'}
+                onChange={handleRadioFiltre}
+                type='radio'
+                name='filter-par'
+                id='filter-par-dci'
+                label='par DCI'
+            />
+        </div>
         <div className={`m-2 ${role.toLowerCase() !== ROLES.medecinAdmin.toLowerCase() && 'd-none'}`}>
             <a
                 className={`${darkLight ? 'link-light' : 'link-primary'}`}
                 role='button'
                 onClick={ouvrirModalDci}
             >
-                Gérer DCI
+                Gérer D.C.I
             </a>
         </div>
         <p className='erreur-message'>{msgErreur}</p>
         {/* {listeClasses.map(classe => ( */}
         <AfficherListe
             listeProduits={listeProduits}
+            listeDesDci={listeDesDci}
+            modifierListeProduits={modifierListeProduits}
             // classe={classe}
         />
         {/* ))} */}
@@ -158,11 +203,6 @@ export default function ListeProduits() {
                     Ajouter
                 </CButton>
                 <CListGroup className=' mt-3'>
-                    {/* <CListGroupItem>
-                        Paracétamol &nbsp;
-                        <CBadge role='button' color='danger'><CIcon icon={cilTrash} /></CBadge>
-                    </CListGroupItem>
-                    <CListGroupItem>Oméprazol</CListGroupItem> */}
                     {listeDesDci.map(dci => (
                         <CListGroupItem>
                             {dci.designation} &nbsp;

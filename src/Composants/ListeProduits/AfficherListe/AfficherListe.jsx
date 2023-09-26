@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { ContextChargement } from '../../../Context/Chargement';
-import { CBadge, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import { CBadge, CListGroup, CListGroupItem, CModal, CModalBody, CModalHeader, CModalTitle, CPopover, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import { formaterNombre, nomDns } from '../../../shared/Globals';
 
 const styles1 = {
     textAlign: 'right'
@@ -11,6 +12,14 @@ export default function AfficherListe(props) {
 
     const {darkLight} = useContext(ContextChargement)
 
+    const [modalModifDci, setModalModifDci] = useState(false);
+    const [produitAModifier, setProduitAModifier] = useState({});
+
+    useEffect(() => {
+        if(produitAModifier.id) {
+            ouvrirModalModifDci();
+        }
+    }, [produitAModifier])
 
     const verifierClasse = () => {
         return props.listeProduits.filter(item => item.classe === props.classe).length > 0 ? true : false;
@@ -20,6 +29,33 @@ export default function AfficherListe(props) {
         return parseInt(stock) > 0 ?
                 <CBadge color='success'>EN STOCK</CBadge> :
                 <CBadge color='danger'>EN RUPTURE</CBadge>
+    }
+
+    const modifierDci = (e, id_dci) => {
+        const designaionDci = props.listeDesDci.filter(item => item.id === id_dci)[0].designation;
+        fetch(`${nomDns}gerer_dci.php?modifier_dci&id_produit=${produitAModifier.id}&designation_dci=${designaionDci}`)
+        .then()
+        .then(data => {
+            setModalModifDci(false);
+            const liste = props.listeProduits.map(item => {
+                if(item.id === produitAModifier.id) {
+                    item.dci = designaionDci;
+                }
+                return item;
+            })
+            props.modifierListeProduits(liste);
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+    }
+
+    const fermerModalModifDci = () => {
+        setModalModifDci(false);
+    }
+
+    const ouvrirModalModifDci = () => {
+        setModalModifDci(true);
     }
 
   return (
@@ -36,37 +72,48 @@ export default function AfficherListe(props) {
             <CTableBody>
             {props.listeProduits.map(item => (
                 <CTableRow>
-                    <CTableDataCell>{item.designation}</CTableDataCell>
+                    <CTableDataCell>
+                        <div 
+                            className=' d-flex flex-column' 
+                            onClick={() => setProduitAModifier(props.listeProduits.filter(produit => produit.id === item.id)[0])}
+                        >
+                            <div className='fw-bold'>
+                                {item.designation.toLowerCase()}
+                            </div>
+                            <div>
+                                {item.dci.toLowerCase()}
+                            </div>
+                        </div>
+                    </CTableDataCell>
                     <CTableDataCell>{item.categorie}</CTableDataCell>
-                    <CTableDataCell>{item.pu_vente}</CTableDataCell>
+                    <CTableDataCell>{formaterNombre(item.pu_vente) + 'f'}</CTableDataCell>
                     <CTableDataCell>{afficherStatusProduit(item.en_stock)}</CTableDataCell>
                 </CTableRow>
             ))}
             </CTableBody>
         </CTable>
-        {/* {verifierClasse() &&  (
-            <table style={{width: '98%', paddingLeft: '5px', backgroundColor: `${darkLight ? '#18202e' : '#fff'}`}}>
-                <caption style={{backgroundColor: '#323888', color: '#fff'}}>{props.classe.toUpperCase()}</caption>
-                <thead>
-                    <tr style={{backgroundColor: '#323888', color: '#fff'}}>
-                        <td>Désignation</td>
-                        <td style={styles1}>Forme</td>
-                        <td style={styles1}>Pu vente</td>
-                        <td style={styles1}>Disponibilité</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {props.listeProduits.filter(item => item.classe === props.classe).map(item => (
-                        <tr key={item.id}>
-                            <td style={{textTransform: 'capitalize'}}>{item.designation}</td>
-                            <td style={styles1}>{item.categorie}</td>
-                            <td style={styles1}>{item.pu_vente}</td>
-                            <td style={{...styles1, backgroundColor: `${parseInt(item.en_stock)>0 ? '#03ca7e' : '#dd4c47'}`, color: '#fff'}}>{parseInt(item.en_stock)>0 ? 'EN STOCK' : 'EN RUPTURE' }</td>
-                        </tr>
+        <CModal
+            visible={modalModifDci}
+            onClose={fermerModalModifDci}
+            backdrop="static"
+            size='sm'
+        >
+            <CModalHeader onClose={fermerModalModifDci}>
+                <CModalTitle>Modifer dci de <strong>{produitAModifier?.designation}</strong></CModalTitle>
+            </CModalHeader>
+            <CModalBody>
+                <CListGroup className=' mt-3'>
+                    {props.listeDesDci.map(dci => (
+                        <CListGroupItem
+                            key={dci.id}
+                            component={'button'}
+                            onClick={(e) => modifierDci(e, dci.id)}>
+                            {dci.designation}
+                        </CListGroupItem>
                     ))}
-                </tbody>
-            </table>
-        )} */}
+                </CListGroup>
+            </CModalBody>
+        </CModal>
     </>
   )
 }

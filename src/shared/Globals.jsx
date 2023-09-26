@@ -130,6 +130,10 @@ export function cleanAccent(str) {
     return str.normalize('NFD').replace(/\p{Dia}/gu, '');
 }
 
+export const formaterNombre = (nombre) => {
+    return nombre.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+}
+
 export function filtrerListe(prop, val, liste) {
     return liste.filter(item => (item[prop].toLowerCase().includes(val.toLowerCase())));
 }
@@ -166,4 +170,5 @@ const ipServeur = "192.168.100.6";
 const ipLocal = "localhost";
 const ipModem = "192.168.8.101";
 
-export const nomDns = `http://${ipLocal}/backend-cmab/`;
+export const serveurNodeProd = `http://${ipServeur}:3015`;
+export const nomDns = `http://${ipServeur}/backend-cmab/`;
