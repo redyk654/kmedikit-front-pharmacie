@@ -91,6 +91,7 @@ export default function FactureManuelle(props) {
     Modal.defaultStyles.overlay.backgroundColor = '#18202ed3';
 
     let date_select1 = useRef();
+    let heure_select1 = useRef();
     const componentRef = useRef();
     const elt = useRef();
     const elt2 = useRef();
@@ -347,6 +348,7 @@ export default function FactureManuelle(props) {
         setClientSelect([]);
         document.querySelector('.recherche').value = "";
         date_select1.current.value = "";
+        heure_select1.current.value = "";
     }
 
     const sauvegarder = () => {
@@ -435,8 +437,8 @@ export default function FactureManuelle(props) {
             const idFac = idUnique();
             setidFacture(idFac);
 
-            let dateVente = date_select1.current.value + " 07:00:00";
-
+            let dateVente = date_select1.current.value + ' ' + heure_select1.current.value + ':00';
+            // console.log(dateVente);
             medocCommandes.map(item => {
 
                 const data2 = new FormData();
@@ -807,6 +809,8 @@ export default function FactureManuelle(props) {
                     <div>
                         <label htmlFor="">Date : </label>
                         <input style={{width: '12vw'}} type="date" ref={date_select1} />
+                        <input style={{width: '12vw'}} type="time" ref={heure_select1} />
+
                     </div>
                 </div>
 

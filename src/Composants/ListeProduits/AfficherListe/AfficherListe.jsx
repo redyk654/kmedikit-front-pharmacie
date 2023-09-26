@@ -64,7 +64,7 @@ export default function AfficherListe(props) {
             <CTableHead>
                 <CTableRow>
                     <CTableHeaderCell scope='col'>Des</CTableHeaderCell>
-                    <CTableHeaderCell scope='col'>Forme</CTableHeaderCell>
+                    {/* <CTableHeaderCell scope='col'>Forme</CTableHeaderCell> */}
                     <CTableHeaderCell scope='col'>Pu.vente</CTableHeaderCell>
                     <CTableHeaderCell scope='col'>Status</CTableHeaderCell>
                 </CTableRow>
@@ -85,7 +85,7 @@ export default function AfficherListe(props) {
                             </div>
                         </div>
                     </CTableDataCell>
-                    <CTableDataCell>{item.categorie}</CTableDataCell>
+                    {/* <CTableDataCell>{item.categorie}</CTableDataCell> */}
                     <CTableDataCell>{formaterNombre(item.pu_vente) + 'f'}</CTableDataCell>
                     <CTableDataCell>{afficherStatusProduit(item.en_stock)}</CTableDataCell>
                 </CTableRow>
