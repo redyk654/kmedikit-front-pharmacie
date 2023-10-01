@@ -127,7 +127,7 @@ export function genererId() {
 }
 
 export function cleanAccent(str) {
-    return str.normalize('NFD').replace(/\p{Dia}/gu, '');
+    return str.trim().normalize('NFD').replace(/\p{Dia}/gu, '');
 }
 
 export const formaterNombre = (nombre) => {
@@ -143,18 +143,29 @@ export function regrouperParClasse(tableau) {
   
     // Parcourez chaque objet dans le tableau
     tableau.forEach((objet) => {
-      const classe = objet.classe;
+        let classe = objet.classe;
+
+        // Si la classe est une chaîne de caractères vide, remplacez-la par "autres"
+        if (classe === "") {
+            classe = "autres";
+        }
   
-      // Si la classe n'existe pas dans les groupes, créez un tableau vide
-      if (!groupes[classe]) {
+
+        // Si la classe n'existe pas dans les groupes, créez un tableau vide
+        if (!groupes[classe]) {
         groupes[classe] = [];
-      }
-  
-      // Ajoutez l'objet au groupe correspondant
-      groupes[classe].push(objet);
+        }
+
+        // Ajoutez l'objet au groupe correspondant
+        groupes[classe].push(objet);
+    });
+
+    // Transformez l'objet de groupes en un tableau de groupes
+    const groupesTableau = Object.keys(groupes).map((classe) => {
+        return { classe, produits: groupes[classe] };
     });
   
-    return groupes;
+    return groupesTableau;
 }
 
 export const tipHeureDebut = "Pour les recettes du jour, choisissez l'heure de début à 6h (sauf si vous avez commencé le service avant) et pour les recettes de la nuit, choisissez l'heure de début à 15h (sauf si vous avez commencé le service avant)"
@@ -170,5 +181,5 @@ const ipServeur = "192.168.100.6";
 const ipLocal = "localhost";
 const ipModem = "192.168.8.101";
 
-export const serveurNodeProd = `http://${ipServeur}:3015`;
-export const nomDns = `http://${ipServeur}/backend-cmab/`;
+export const serveurNodeProd = `http://${ipLocal}:3015`;
+export const nomDns = `http://${ipLocal}/backend-cmab/`;

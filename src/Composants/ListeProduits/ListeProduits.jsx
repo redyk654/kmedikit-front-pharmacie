@@ -63,9 +63,11 @@ export default function ListeProduits() {
             setListeProduits(data);
             setListeProduitsSauvegarde(data);
             setChargementEnCours(false);
+            // console.log(regrouperParClasse(data));
         })
         .catch(error => {
             setMsgErreur("erreur réseau");
+            console.log(error.message);
         })
     }
 
@@ -76,7 +78,7 @@ export default function ListeProduits() {
             setListeDesDci(data);
         })
         .catch(error => {
-            // console.log(error.message);
+            setMsgErreur('erreur réseau');
         })
     }
 
@@ -105,8 +107,8 @@ export default function ListeProduits() {
                 setAjoutEnCours(false)
             })
             .catch(error => {
-                setAjoutEnCours(false)
-                // console.log(error.message);
+                // setAjoutEnCours(false)
+                setMsgErreur('erreur réseau');
             })
         }
     }
@@ -118,7 +120,7 @@ export default function ListeProduits() {
             setListeDesDci(listeDesDci.filter(item => item.id !== id_dci));
         })
         .catch(error => {
-            // console.log(error.message);
+            setMsgErreur('erreur réseau');
         })
     }
 
@@ -128,16 +130,17 @@ export default function ListeProduits() {
 
   return (
     chargementEnCours ?
-    <div className=' text-center pt-5'>
+    <div className='text-center pt-5'>
         <Loader type="TailSpin" color="#03ca7e" height={50} width={50}/>
         chargement...
-    </div> :
+    </div> 
+    :
 
     <div className='liste-prod'>
         <RechercherProd
             listeProduitsSauvegarde={listeProduitsSauvegarde}
             setListeProduits={setListeProduits}
-            placeholder={`rechercher par ${filtrerPar}`}
+            placeholder={`rechercher par ${filtrerPar === 'designation' ? 'nom commercial' : 'DCI'}`}
             filtrerPar={filtrerPar}
         />
         <div>
@@ -147,7 +150,7 @@ export default function ListeProduits() {
                 type='radio'
                 name='filter-par'
                 id='filter-par-designation'
-                label='par désignation'
+                label='par nom commercial'
                 defaultChecked
             />
             <CFormCheck
