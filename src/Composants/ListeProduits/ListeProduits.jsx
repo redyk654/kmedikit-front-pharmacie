@@ -38,7 +38,7 @@ export default function ListeProduits() {
     const [ajoutEnCours, setAjoutEnCours] = useState(false);
     const [designationDci, setDesignationDci] = useState('');
     const [chargementEnCours, setChargementEnCours] = useState(true);
-    const [filtrerPar, setFiltrerPar] = useState('designation');
+    const [filtrerPar, setFiltrerPar] = useState('nom commercial');
 
     const { darkLight, role } = useContext(ContextChargement)
 
@@ -125,7 +125,14 @@ export default function ListeProduits() {
     }
 
     const handleRadioFiltre = (e) => {
-        setFiltrerPar(e.target.id === 'filter-par-designation' ? 'designation' : 'dci');
+        if (e.target.id === 'filter-par-designation') {
+            setFiltrerPar('nom commercial');
+        } else if (e.target.id === 'filter-par-dci') {
+            setFiltrerPar('dci');
+        } else if (e.target.id === 'filter-par-classe') {
+            setFiltrerPar('classe');
+        }
+        // setFiltrerPar(e.target.id === 'filter-par-designation' ? 'designation' : 'dci');
     }
 
   return (
@@ -140,12 +147,12 @@ export default function ListeProduits() {
         <RechercherProd
             listeProduitsSauvegarde={listeProduitsSauvegarde}
             setListeProduits={setListeProduits}
-            placeholder={`rechercher par ${filtrerPar === 'designation' ? 'nom commercial' : 'DCI'}`}
+            placeholder={`rechercher par ${filtrerPar}`}
             filtrerPar={filtrerPar}
         />
         <div>
             <CFormCheck
-                checked={filtrerPar === 'designation'}
+                checked={filtrerPar === 'nom commercial'}
                 onChange={handleRadioFiltre}
                 type='radio'
                 name='filter-par'
@@ -160,6 +167,14 @@ export default function ListeProduits() {
                 name='filter-par'
                 id='filter-par-dci'
                 label='par DCI'
+            />
+            <CFormCheck
+                checked={filtrerPar === 'classe'}
+                onChange={handleRadioFiltre}
+                type='radio'
+                name='filter-par'
+                id='filter-par-classe'
+                label='par classe'
             />
         </div>
         <div className={`m-2 ${role.toLowerCase() !== ROLES.medecinAdmin.toLowerCase() && 'd-none'}`}>

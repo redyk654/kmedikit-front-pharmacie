@@ -7,10 +7,12 @@ export default function RechercherProd(props) {
     const filtrerListe = (e) => {
         let str = cleanAccent(e.target.value)
         let liste;
-        if (props.filtrerPar === "designation") {
+        if (props.filtrerPar === "nom commercial") {
           liste = props.listeProduitsSauvegarde.filter(item => (cleanAccent(item.designation.toLowerCase()).indexOf(str.trim().toLowerCase()) !== -1));
-        } else {
+        } else if (props.filtrerPar === "dci") {
           liste = props.listeProduitsSauvegarde.filter(item => (cleanAccent(item.dci.toLowerCase()).indexOf(str.trim().toLowerCase()) !== -1));
+        } else if (props.filtrerPar === "classe") {
+          liste = props.listeProduitsSauvegarde.filter(item => (cleanAccent(item.classe.toLowerCase()).indexOf(str.trim().toLowerCase()) !== -1));
         }
         props.setListeProduits(liste);
     }
