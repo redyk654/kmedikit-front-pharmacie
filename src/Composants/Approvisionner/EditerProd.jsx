@@ -1,6 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { nomDns } from '../../shared/Globals';
 
 export default function EditerProd(props) {
+
+    const [listeDesClasses, setListeDesClasses] = useState([]);
+
+    useEffect(() => {
+        recupererListeDesClasses();
+    }, [])
+
+    const recupererListeDesClasses = () => {
+        fetch(`${nomDns}ajouter_classes_produits.php?liste_classes`)
+        .then(res => res.json())
+        .then(data => {
+            setListeDesClasses(data);
+        })
+        .catch(err => console.error("erreur réseau"));
+    }
 
     const handleChange = (e) => {
         if (props.nvProd || e.target.name === "stock_ajoute") {
@@ -74,16 +90,8 @@ export default function EditerProd(props) {
                 <div className="detail-item">
                     <label htmlFor="">Classe</label>
                     <select name="classe" id="classe" onChange={handleChange} value={props.classe}>
-                        <option value="antibiotiques" selected>antibiotiques</option>
-                        <option value="antipaludiques">antipaludiques</option>
-                        <option value="antiinflammatoiresetantalgiques">anti-inflammatoires et antalgiques</option>
-                        <option value="antispamodiques">anti-spamodiques</option>
-                        <option value="antigrippaux">antigrippaux</option>
-                        <option value="antihistaminiqueh1">antihistaminique h1</option>
-                        <option value="antiulcereuxetantiacide">antiulcereux et anti acides</option>
-                        <option value="vermifuges">vermifuges</option>
-                        <option value="vitaminesetelectrolytes">vitamines et electrolytes</option>
-                        <option value="antianemiques">antianemiques</option>
+                        <option value="">non classé</option>
+                        {listeDesClasses.map(classe => <option key={classe.id} value={classe.designation}>{classe.designation}</option>)}
                     </select>
                 </div>
             </div>

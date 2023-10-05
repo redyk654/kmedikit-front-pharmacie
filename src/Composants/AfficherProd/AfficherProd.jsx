@@ -41,7 +41,7 @@ export default function AfficherProd(props) {
             <CRow className={`box`}>
                 <CCol className="item">
                     <p>Classe</p>
-                    <p>{props.classe}</p>
+                    <p>{props.classe === "" ? "non classé" : props.classe}</p>
                 </CCol>
                 <CCol className={`item d-${role.toUpperCase() !== "admin".toUpperCase() && 'none'}`}>
                     <p>Prix d'achat</p>

@@ -7,6 +7,7 @@ import { ContextChargement } from '../../Context/Chargement';
 import { Toaster, toast } from "react-hot-toast";
 import EditerProd from '../Approvisionner/EditerProd';
 import { nomDns } from '../../shared/Globals';
+import GererClasses from '../GererClasses/GererClasses';
 
 const customStyles1 = {
     content: {
@@ -30,6 +31,20 @@ const customStyles2 = {
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
         background: '#0e771a',
+    },
+};
+
+const customStyles3 = {
+    content: {
+        top: '45%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        borderRadius: '10px',
+        width: '60vw',
+        height: '70vh',
     },
 };
 
@@ -63,6 +78,7 @@ export default function ModifierProduit() {
     const [modalModifPrix, setModalModifPrix] = useState(false)
     const [modalReussi, setModalReussi] = useState(false);
     const [messageReussi, setMessageReussi] = useState('');
+    const [modalGererClasses, setModalGererClasses] = useState(false);
     const [refecth, setRefetch] = useState(false)
     const [modif, setModif] = useState(false)
     const [msgErreur, setMsgErreur] = useState('');
@@ -97,6 +113,7 @@ export default function ModifierProduit() {
         const prod = listeProduit.filter(item => (item.id == e.target.value));
         setproduitSelectionne(prod);
         setInfosMedoc(prod[0]);
+        setModif(false);
     }
 
     const handleChange = (e) => {
@@ -186,6 +203,14 @@ export default function ModifierProduit() {
         setnvprix('');
     }
 
+    const fermerModalClasse = () => {
+        setModalGererClasses(false);
+    }
+    
+    const ouvriModalClasse = () => {
+        setModalGererClasses(true);
+    }
+
     const afterModal = () => {
         customStyles1.content.color = darkLight ? '#fff' : '#000';
         customStyles1.content.background = darkLight ? '#18202e' : '#fff';
@@ -243,10 +268,21 @@ export default function ModifierProduit() {
                     <h2 style={{color: '#fff'}}>{messageReussi}!</h2>
                     <button style={{width: '10%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalReussi}>OK</button>
                 </Modal>
+                <Modal
+                    isOpen={modalGererClasses}
+                    onRequestClose={fermerModalClasse}
+                    style={customStyles3}
+                    contentLabel="gerer classes"
+                >
+                    <GererClasses />
+                </Modal>
                 <div className="col-1">
                     <p className="search-zone">
                         <input type="text" placeholder="recherchez un produit" onChange={filtrerListe} />
                     </p>
+                    <div className='m-2'>
+                        <a role="button" class={`text-${darkLight ? 'light' : 'dark'} fw-bold`} onClick={ouvriModalClasse}>Gerer les classes</a>
+                    </div>
                     <h1>Produits en stock</h1>
                     {/* <button onClick={supprimerProduitEpuise}>Vider</button> */}
                     <ul>
