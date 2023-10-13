@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import { ContextChargement } from '../../../Context/Chargement';
 import { CBadge, CContainer, CHeader, CHeaderBrand, CListGroup, CListGroupItem, CModal, CModalBody, CModalHeader, CModalTitle, CPopover, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
-import { formaterNombre, nomDns, regrouperParClasse } from '../../../shared/Globals';
+import { ROLES, formaterNombre, nomDns, regrouperParClasse } from '../../../shared/Globals';
 import Loader from 'react-loader-spinner';
 
 const styles1 = {
@@ -11,14 +11,14 @@ const styles1 = {
 
 export default function AfficherListe(props) {
 
-    const {darkLight} = useContext(ContextChargement)
+    const {darkLight, role} = useContext(ContextChargement)
 
     const [modalModifDci, setModalModifDci] = useState(false);
     const [modificationEnCours, setModificationEnCours] = useState(false);
     const [produitAModifier, setProduitAModifier] = useState({});
 
     useEffect(() => {
-        if(produitAModifier.id) {
+        if(produitAModifier.id && role === ROLES.medecinAdmin) {
             ouvrirModalModifDci();
         }
     }, [produitAModifier])

@@ -421,11 +421,9 @@ export default function FactureManuelle(props) {
         
         if(medocCommandes.length === 0) {
           setMessageErreur("Aucun produit n'a été selectionné");
-        } else if (date_select1.current.value === "") {
-          setMessageErreur("La date de la vente est manquante");
+        } else if (date_select1.current.value === "" || heure_select1.current.value === "") {
+          setMessageErreur("La date ou l'heure de la vente est manquante");
         } else {
-
-
             refBtnAnnuler.current.disabled = true;
             refBtnValider.current.disabled = true;
             

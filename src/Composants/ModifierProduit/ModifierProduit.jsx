@@ -126,7 +126,7 @@ export default function ModifierProduit() {
 
     const supprimerProduit = () => {
         // Suppression du produit selectionné
-        document.querySelector('#confirmer').disabled = true;
+        document.querySelector('#btn-supperimer-prod').disabled = true;
         if (produitSelectionne.length > 0) {
             const data = new FormData();
             data.append('id', produitSelectionne[0].id);
@@ -136,7 +136,16 @@ export default function ModifierProduit() {
 
             req.addEventListener('load', () => {
                 if (req.status >= 200 && req.status < 400) {
-                    setMessageReussi('Le produit a bien été supprimé');
+                    document.querySelector('#btn-supperimer-prod').disabled = false;
+                    toast.success("Suppression éffectué !", {
+                        style: {
+                            fontWeight: 'bold',
+                            fontSize: '18px',
+                            backgroundColor: '#fff',
+                            letterSpacing: '1px'
+                        },
+                        
+                    });
                     setRefetch(!refecth);
                     setproduitSelectionne([]);
                     setModalReussi(true);
@@ -335,7 +344,8 @@ export default function ModifierProduit() {
                     <div style={{color: 'red', backgroundColor: `#fff`}}>{msgErreur}</div>
 
                     <div className="buttons" style={{display: `${!modif ? 'block' : 'none'}`, textAlign: 'center'}}>
-                        <button className='bootstrap-btn annuler' onClick={() => { if (produitSelectionne.length > 0) {setModif(true); afterModal();}}}>Modifier</button>
+                        <button className='bootstrap-btn annuler w-25' onClick={() => { if (produitSelectionne.length > 0) {setModif(true); afterModal();}}}>Modifier</button>
+                        <button id='btn-supprimer-prod' className='bootstrap-btn w-25' onClick={() => { produitSelectionne.length > 0 && supprimerProduit()}}>Supprimer</button>
                     </div>
                 </div>
             </section>

@@ -135,14 +135,7 @@ export default function Commande(props) {
     useEffect(() => {
         startChargement();
         // Récupération des médicaments dans la base via une requête Ajax
-        if (date_j.getTime() <= date_e.getTime()) {
-            fetchProduits();
-        } else {
-            setTimeout(() => {
-                props.setConnecter(false);
-                props.setOnglet(1);
-            }, 10000);
-        }
+        fetchProduits();
     }, [rafraichir]);
 
     useEffect(() => {

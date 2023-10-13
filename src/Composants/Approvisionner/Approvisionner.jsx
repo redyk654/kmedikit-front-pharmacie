@@ -292,6 +292,9 @@ export default function Approvisionner(props) {
         const data = new FormData();
         data.append('id_commande', idCommande);
         data.append('produit', JSON.stringify(produitsCommandes));
+        // produitsCommandes.forEach(item => {
+            
+        // })
 
         const req = new XMLHttpRequest();
         req.open('POST', `${nomDns}approvisionnement.php`);
