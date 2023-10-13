@@ -181,5 +181,5 @@ const ipServeur = "serveur";
 const ipLocal = "localhost";
 const ipModem = "192.168.8.101";
 
-export const serveurNodeProd = `http://${ipLocal}:3015`;
-export const nomDns = `http://${ipLocal}/backend-cmab/`;
+export const serveurNodeProd = `http://${ipServeur}:3015`;
+export const nomDns = `http://${ipServeur}/backend-cmab/`;

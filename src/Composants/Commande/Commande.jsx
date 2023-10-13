@@ -751,11 +751,19 @@ export default function Commande(props) {
                 </div>
                 <div className="box">
                     <div className="detail-item">
-                        <input type="text" name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                ajouterMedoc();
+                            }}
+                            className='w-100'
+                        >
+                            <input type="text" name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
+                            <div onClick={ajouterMedoc} style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
+                                <FaPlusSquare color='#00BCD4' size={35} />
+                            </div>
+                        </form>
                         {/* <button onClick={ajouterMedoc}>ajouter</button> */}
-                        <div onClick={ajouterMedoc} style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
-                            <FaPlusSquare color='#00BCD4' size={35} />
-                        </div>
                     </div>
                     <div style={{textAlign: 'center'}}>
                         <button className='btn-patient' onClick={infosPatient}>Infos du patient</button>
