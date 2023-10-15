@@ -177,7 +177,7 @@ export default function ListeProduits() {
                 label='par classe'
             />
         </div>
-        <div className={`m-2 ${role.toLowerCase() !== ROLES.medecinAdmin.toLowerCase() && 'd-none'}`}>
+        {/* <div className={`m-2 ${role.toLowerCase() !== ROLES.medecinAdmin.toLowerCase() && 'd-none'}`}>
             <a
                 className={`${darkLight ? 'link-light' : 'link-primary'}`}
                 role='button'
@@ -185,16 +185,13 @@ export default function ListeProduits() {
             >
                 Gérer D.C.I
             </a>
-        </div>
+        </div> */}
         <p className='erreur-message'>{msgErreur}</p>
-        {/* {listeClasses.map(classe => ( */}
         <AfficherListe
             listeProduits={listeProduits}
             listeDesDci={listeDesDci}
             modifierListeProduits={modifierListeProduits}
-            // classe={classe}
         />
-        {/* ))} */}
         <CModal
             visible={modalIsVisible}
             backdrop="static"
@@ -224,14 +221,14 @@ export default function ListeProduits() {
                     {listeDesDci.map(dci => (
                         <CListGroupItem>
                             {dci.designation} &nbsp;
-                            <CBadge 
+                            {/* <CBadge 
                                 className=' float-end'
                                 role='button'
                                 color='danger'
                                 onClick={() => supprimerDci(dci.id)}
                             >
                                 <CIcon icon={cilTrash} />
-                            </CBadge>
+                            </CBadge> */}
                         </CListGroupItem>
                     ))}
                 </CListGroup>

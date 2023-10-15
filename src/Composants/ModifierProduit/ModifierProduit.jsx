@@ -8,6 +8,10 @@ import { Toaster, toast } from "react-hot-toast";
 import EditerProd from '../Approvisionner/EditerProd';
 import { nomDns } from '../../shared/Globals';
 import GererClasses from '../GererClasses/GererClasses';
+import { CBadge, CButton, CFormInput, CListGroup, CListGroupItem, CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilTrash } from '@coreui/icons';
+import { useRef } from 'react';
 
 const customStyles1 = {
     content: {
@@ -61,12 +65,14 @@ const medocs = {
     date_peremption: '',
     montant_commande: '',
     genre: 'generique',
+    dci: '',
 };
 
 export default function ModifierProduit() {
 
     const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
     const {darkLight} = useContext(ContextChargement);
+    const refDci = useRef();
 
     const [afficherListe, setAfficherListe] = useState(false);
     const [listeProduit, setListeProduit] = useState([]);
@@ -82,9 +88,13 @@ export default function ModifierProduit() {
     const [refecth, setRefetch] = useState(false)
     const [modif, setModif] = useState(false)
     const [msgErreur, setMsgErreur] = useState('');
+    const [listeDesDci, setListeDesDci] = useState([]);
+    const [modalIsVisible, setModalIsVisible] = useState(false);
+    const [ajoutEnCours, setAjoutEnCours] = useState(false);
+    const [designationDci, setDesignationDci] = useState('');
 
 
-    const {code, designation, classe, pu_achat, pu_vente, conditionnement, stock_ajoute, min_rec, categorie, date_peremption, montant_commande, genre} = infosMedoc;
+    const {code, designation, classe, pu_achat, pu_vente, conditionnement, stock_ajoute, min_rec, categorie, date_peremption, montant_commande, genre, dci} = infosMedoc;
 
     useEffect(() => {
         // Récupération de la liste de produits via Ajax
@@ -102,7 +112,20 @@ export default function ModifierProduit() {
 
         req.send();
 
+        recupererListeDci();
+
     }, [refecth]);
+
+    const recupererListeDci = () => {
+        fetch(`${nomDns}gerer_dci.php?liste_dci`)
+        .then(response => response.json())
+        .then(data => {
+            setListeDesDci(data);
+        })
+        .catch(error => {
+            setMsgErreur('erreur réseau');
+        })
+    }
 
     const filtrerListe = (e) => {
         const medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1))
@@ -235,37 +258,47 @@ export default function ModifierProduit() {
         });
     }
 
+    const ouvrirModalDci = () => {
+        setModalIsVisible(true)
+    }
+
+    const fermerModalDci = () => {
+        setModalIsVisible(false)
+    }
+
+    const ajouterDci = () => {
+        setAjoutEnCours(true)
+        const dci = designationDci.trim().toLowerCase();
+
+        if (dci.length > 0) {
+            fetch(`${nomDns}gerer_dci.php?dci=${dci}`)
+            .then()
+            .then(data => {
+                recupererListeDci();
+                setDesignationDci('');
+                setAjoutEnCours(false)
+            })
+            .catch(error => {
+                console.log(error.message);
+            })
+        }
+    }
+
+    const supprimerDci = (id_dci) => {
+        fetch(`${nomDns}gerer_dci.php?id_dci=${id_dci}`)
+        .then()
+        .then(data => {
+            setListeDesDci(listeDesDci.filter(item => item.id !== id_dci));
+        })
+        .catch(error => {
+            setMsgErreur('erreur réseau');
+        })
+    }
+
     return (
         <animated.div style={props1}>
             <div><Toaster/></div>
             <section className="modif-produit">
-                <Modal
-                    isOpen={modalConfirmation}
-                    onRequestClose={setModalConfirmation}
-                    style={customStyles1}
-                    contentLabel="validation suppression"
-                >
-                    <h2>êtes-vous sûr de vouloir supprimer ce produit ?</h2>
-                    <div style={{textAlign: 'center'}} className='modal-button'>
-                        <button className='bootstrap-btn annuler' style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalConfirmation}>Annuler</button>
-                        <button id='confirmer' className='bootstrap-btn' style={{width: '20%', height: '5vh', cursor: 'pointer'}} onClick={supprimerProduit}>Confirmer</button>
-                    </div>
-                </Modal>
-                <Modal
-                    isOpen={modalModifPrix}
-                    onRequestClose={fermerModalModifPrix}
-                    style={customStyles1}
-                    contentLabel="modif prix"
-                >
-                    <h2>Entrez le nouveau prix</h2>
-                    <div style={{textAlign: 'center'}}>
-                        <input style={{marginBottom: '10px', outline: 'none'}} value={nvprix} type="text" onChange={handleChange} />
-                        <div>
-                            <button className='bootstrap-btn annuler' style={{width: '40%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalModifPrix}>Annuler</button>
-                            <button className='bootstrap-btn' style={{width: '40%', height: '5vh', cursor: 'pointer'}} onClick={modifierProd}>Confirmer</button>
-                        </div>
-                    </div>
-                </Modal>
                 <Modal
                     isOpen={modalReussi}
                     onRequestClose={fermerModalReussi}
@@ -290,7 +323,10 @@ export default function ModifierProduit() {
                     <div className='m-2'>
                         <a role="button" class={`text-${darkLight ? 'light' : 'dark'} fw-bold`} onClick={ouvriModalClasse}>Gerer les classes</a>
                     </div>
-                    <h1>Produits en stock</h1>
+                    <div className='m-2'>
+                        <a role="button" class={`text-${darkLight ? 'light' : 'dark'} fw-bold`} onClick={ouvrirModalDci}>Gerer les dci</a>
+                    </div>
+                    <h1>Liste des produits</h1>
                     {/* <button onClick={supprimerProduitEpuise}>Vider</button> */}
                     <ul>
                         {afficherListe ? listeProduit.map(item => (
@@ -303,6 +339,7 @@ export default function ModifierProduit() {
                     {modif ? (
                         <>
                             <EditerProd
+                                listeDesDci={listeDesDci}
                                 code={code}
                                 designation={designation}
                                 classe={classe}
@@ -314,6 +351,7 @@ export default function ModifierProduit() {
                                 date_peremption={date_peremption}
                                 stock_ajoute={stock_ajoute}
                                 genre={genre}
+                                dci={dci}
                                 nvProd={true}
                                 ajouterMedoc={modifierProd}
                                 handleChange={handleChange}
@@ -335,6 +373,7 @@ export default function ModifierProduit() {
                                 date_peremption={item.date_peremption}
                                 classe={item.classe}
                                 genre={item.genre}
+                                dci={item.dci}
                                 />
                             ))}
                         </div>
@@ -347,6 +386,49 @@ export default function ModifierProduit() {
                     </div>
                 </div>
             </section>
+
+            <CModal
+                visible={modalIsVisible}
+                backdrop="static"
+                onClose={fermerModalDci}
+                scrollable
+            >
+                <CModalHeader onClose={fermerModalDci}>
+                    <CModalTitle>Gérer DCI</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                    <CFormInput
+                        placeholder='ajouter DCI'
+                        ref={refDci}
+                        value={designationDci}
+                        onChange={(e) => setDesignationDci(e.target.value)}
+                    />
+                    <CButton 
+                        className='mt-2'
+                        color='dark'
+                        size='sm'
+                        disabled={ajoutEnCours}
+                        onClick={ajouterDci}
+                    >
+                        Ajouter
+                    </CButton>
+                    <CListGroup className=' mt-3'>
+                        {listeDesDci.map(dci => (
+                            <CListGroupItem>
+                                {dci.designation} &nbsp;
+                                {/* <CBadge 
+                                    className=' float-end'
+                                    role='button'
+                                    color='danger'
+                                    onClick={() => supprimerDci(dci.id)}
+                                >
+                                    <CIcon icon={cilTrash} />
+                                </CBadge> */}
+                            </CListGroupItem>
+                        ))}
+                    </CListGroup>
+                </CModalBody>
+            </CModal>
         </animated.div>
     )
 }

@@ -17,11 +17,11 @@ export default function AfficherListe(props) {
     const [modificationEnCours, setModificationEnCours] = useState(false);
     const [produitAModifier, setProduitAModifier] = useState({});
 
-    useEffect(() => {
-        if(produitAModifier.id && role === ROLES.medecinAdmin) {
-            ouvrirModalModifDci();
-        }
-    }, [produitAModifier])
+    // useEffect(() => {
+    //     if(produitAModifier.id && role === ROLES.medecinAdmin) {
+    //         ouvrirModalModifDci();
+    //     }
+    // }, [produitAModifier])
 
     const afficherStatusProduit = (stock) => {
         return parseInt(stock) > 0 ?

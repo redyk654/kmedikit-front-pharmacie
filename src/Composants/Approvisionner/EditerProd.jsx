@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { nomDns } from '../../shared/Globals';
+import { CRow } from '@coreui/react';
 
 export default function EditerProd(props) {
 
     const [listeDesClasses, setListeDesClasses] = useState([]);
+    const [listeDesDci, setListeDesDci] = useState([]);
 
     useEffect(() => {
         recupererListeDesClasses();
+        recupererListeDci();
     }, [])
 
     const recupererListeDesClasses = () => {
@@ -16,6 +19,17 @@ export default function EditerProd(props) {
             setListeDesClasses(data);
         })
         .catch(err => console.error("erreur réseau"));
+    }
+
+    const recupererListeDci = () => {
+        fetch(`${nomDns}gerer_dci.php?liste_dci`)
+        .then(response => response.json())
+        .then(data => {
+            setListeDesDci(data);
+        })
+        .catch(error => {
+            console.error("erreur réseau")
+        })
     }
 
     const handleChange = (e) => {
@@ -86,7 +100,7 @@ export default function EditerProd(props) {
                     </select>
                 </div>
             </div>
-            <div className='box'>
+            <CRow className='box'>
                 <div className="detail-item">
                     <label htmlFor="">Classe</label>
                     <select name="classe" id="classe" onChange={handleChange} value={props.classe}>
@@ -94,7 +108,14 @@ export default function EditerProd(props) {
                         {listeDesClasses.map(classe => <option key={classe.id} value={classe.designation}>{classe.designation}</option>)}
                     </select>
                 </div>
-            </div>
+                <div className="detail-item">
+                    <label htmlFor="">D.C.I</label>
+                    <select name="dci" id="dci" onChange={handleChange} value={props.dci}>
+                        <option value="">non défini</option>
+                        {listeDesDci.map(dci => <option key={dci.id} value={dci.designation}>{dci.designation}</option>)}
+                    </select>
+                </div>
+            </CRow>
         </div>
     </>
   )

@@ -43,10 +43,6 @@ export default function AfficherProd(props) {
                     <p>Classe</p>
                     <p>{props.classe === "" ? "non classé" : props.classe}</p>
                 </CCol>
-                <CCol className={`item d-${role.toUpperCase() !== "admin".toUpperCase() && 'none'}`}>
-                    <p>Prix d'achat</p>
-                    <p>{props.pu_achat}</p>
-                </CCol>
                 <CCol className="item">
                     <p>Date depéremption</p>
                     <p>{props.date_peremption}</p>
@@ -54,6 +50,16 @@ export default function AfficherProd(props) {
                 <CCol className="item">
                     <p>Categorie</p>
                     <p>{genres[props.genre]}</p> 
+                </CCol>
+            </CRow>
+            <CRow className="box">
+                <CCol className={`item d-${role.toUpperCase() !== "admin".toUpperCase() && 'none'}`}>
+                    <p>Prix d'achat</p>
+                    <p>{props.pu_achat}</p>
+                </CCol>
+                <CCol className={`item d-${role.toUpperCase() !== "admin".toUpperCase() && 'none'}`}>
+                    <p>D.C.I</p>
+                    <p>{props.dci === "" ? "non défini" : props.dci}</p>
                 </CCol>
             </CRow>
         </CContainer>

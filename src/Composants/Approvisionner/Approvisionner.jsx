@@ -22,6 +22,7 @@ const medocs = {
     date_peremption: '',
     montant_commande: '',
     genre: 'generique',
+    dci: ''
 }
 
 const customStyles1 = {
@@ -115,7 +116,7 @@ export default function Approvisionner(props) {
     const [enCours, setEncours] = useState(false);
 
     
-    const {code, designation, classe, pu_achat, pu_vente, conditionnement, stock_ajoute, min_rec, categorie, date_peremption, montant_commande, genre} = infosMedoc;
+    const {code, designation, classe, pu_achat, pu_vente, conditionnement, stock_ajoute, min_rec, categorie, date_peremption, montant_commande, genre, dci} = infosMedoc;
 
     useEffect(() => {
         // Récupération de la liste de produits via Ajax
@@ -450,6 +451,7 @@ export default function Approvisionner(props) {
                         stock_ajoute={stock_ajoute}
                         pu_achat={pu_achat}
                         genre={genre}
+                        dci={dci}
                         handleChange={handleChange}
                         ajouterMedoc={ajouterNouveauProduit}
                         nvProd={nvProd}
@@ -503,6 +505,7 @@ export default function Approvisionner(props) {
                             stock_ajoute={stock_ajoute}
                             pu_achat={pu_achat}
                             genre={genre}
+                            dci={dci}
                             handleChange={handleChange}
                             ajouterMedoc={ajouterMedoc}
                             nvProd={nvProd}
