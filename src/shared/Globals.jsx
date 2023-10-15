@@ -178,7 +178,7 @@ export const corrigerStock = (e, listeProduitsInventaires) => {
     let liste = [];
     if (e.target.value.trim() === '') {
         liste = listeProduitsInventaires.map(item => {
-            if (item.id_prod === e.target.id) {
+            if (parseInt(item.id_prod) === parseInt(e.target.id)) {
                 item.stock_reel = 0;
                 item.difference = parseInt(item.stock_reel) - parseInt(item.stock_theorique);
                 item.p_total = parseInt(item.pu_achat) * parseInt(item.stock_reel);
@@ -188,7 +188,7 @@ export const corrigerStock = (e, listeProduitsInventaires) => {
     } else {
 
         liste = listeProduitsInventaires.map(item => {
-            if (item.id_prod === e.target.id) {
+            if (parseInt(item.id_prod) === parseInt(e.target.id)) {
                 item.stock_reel = parseInt(e.target.value.trim());
                 item.difference = parseInt(item.stock_reel) - parseInt(item.stock_theorique);
                 item.p_total = parseInt(item.pu_achat) * parseInt(item.stock_reel);
@@ -217,7 +217,7 @@ export const recupererHeureJour = (idElement) => {
 }
 
 export const supprimerProd = (e, liste) => {
-    const listeProd = liste.filter(item => item.id_prod !== e.target.id);
+    const listeProd = liste.filter(item => parseInt(item.id_prod) !== parseInt(e.target.id));
     return listeProd;
 }
 
