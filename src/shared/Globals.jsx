@@ -171,6 +171,7 @@ export function regrouperParClasse(tableau) {
 export const corrigerStock = (e, listeProduitsInventaires) => {
     let liste = [];
     if (e.target.value.trim() === '') {
+        console.log(listeProduitsInventaires);
         liste = listeProduitsInventaires.map(item => {
             if (item.id_prod === e.target.id) {
                 item.stock_reel = 0;
@@ -180,7 +181,7 @@ export const corrigerStock = (e, listeProduitsInventaires) => {
             return item;
         });
     } else {
-        console.log(listeProduitsInventaires);
+
         liste = listeProduitsInventaires.map(item => {
             if (item.id_prod === e.target.id) {
                 item.stock_reel = parseInt(e.target.value.trim());

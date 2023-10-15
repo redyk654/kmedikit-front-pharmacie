@@ -39,7 +39,7 @@ export default function AfficherInventaire(props) {
                         </CTableDataCell>
                         <CTableDataCell>{item.stock_theorique}</CTableDataCell>
                         <CTableDataCell>
-                            <CFormInput id={item.id_prod} value={item.stock_reel} onChange={(props.corrigerStock)} type="text" autoComplete='off' />
+                            <CFormInput id={item.id_prod} value={item.stock_reel} onChange={props.corrigerStock} type="text" autoComplete='off' />
                         </CTableDataCell>
                         <CTableDataCell>{parseInt(item.difference) > 0 ? '+' + item.difference : item.difference}</CTableDataCell>
                         {/* {
