@@ -13,10 +13,10 @@ export default function AfficherInventaire(props) {
 
   return (
     <div className='modal-inventaire' style={{width: '100%', height: '60vh', overflowY: 'scroll'}}>
-        <CTable color='dark' striped className=' position-relative'>
+        <CTable color='dark' striped className='position-relative'>
             <CTableHead>
                 <CTableRow>
-                    <CTableHeaderCell>Designation</CTableHeaderCell>
+                    <CTableHeaderCell>Désignation</CTableHeaderCell>
                     <CTableHeaderCell>Stock théorique</CTableHeaderCell>
                     <CTableHeaderCell>Stock réel</CTableHeaderCell>
                     <CTableHeaderCell>Différence</CTableHeaderCell>

@@ -135,7 +135,7 @@ export const formaterNombre = (nombre) => {
 }
 
 export function filtrerListe(prop, val, liste) {
-    return liste.filter(item => (item[prop].toLowerCase().includes(val.toLowerCase())));
+    return liste.filter(item => (cleanAccent(item[prop]).toLowerCase().includes(cleanAccent(val.toLowerCase()))));
 }
 
 export function regrouperParClasse(tableau) {
@@ -194,7 +194,7 @@ export const corrigerStock = (e, listeProduitsInventaires) => {
 }
 
 export const supprimerProd = (e, liste) => {
-    const listeProd = liste.filter(item => item.id_prod !== e.target.id);
+    const listeProd = liste.filter(item => parseInt(item.id_prod) !== parseInt(e.target.id));
     return listeProd;
 }
 
@@ -205,6 +205,12 @@ export const genres = {
     "": "non répertorié",
     sp: "spécialité",
     generique: "générique",
+}
+
+export const styleEntete = {
+    color: 'black',
+    borderBottom: '1px dotted #000',
+    letterSpacing: '1px'
 }
 
 const ipServeur = "serveur";
