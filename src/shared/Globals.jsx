@@ -135,7 +135,7 @@ export const formaterNombre = (nombre) => {
 }
 
 export function filtrerListe(prop, val, liste) {
-    return liste.filter(item => (item[prop].toLowerCase().includes(val.toLowerCase())));
+    return liste.filter(item => (cleanAccent(item[prop]).toLowerCase().includes(cleanAccent(val.toLowerCase()))));
 }
 
 export function regrouperParClasse(tableau) {
@@ -168,6 +168,36 @@ export function regrouperParClasse(tableau) {
     return groupesTableau;
 }
 
+export const corrigerStock = (e, listeProduitsInventaires) => {
+    let liste = [];
+    if (e.target.value.trim() === '') {
+        liste = listeProduitsInventaires.map(item => {
+            if (parseInt(item.id_prod) === parseInt(e.target.id)) {
+                item.stock_reel = 0;
+                item.difference = parseInt(item.stock_reel) - parseInt(item.stock_theorique);
+                item.p_total = parseInt(item.pu_achat) * parseInt(item.stock_reel);
+            }
+            return item;
+        });
+    } else {
+        liste = listeProduitsInventaires.map(item => {
+            if (parseInt(item.id_prod) === parseInt(e.target.id)) {
+                item.stock_reel = parseInt(e.target.value.trim());
+                item.difference = parseInt(item.stock_reel) - parseInt(item.stock_theorique);
+                item.p_total = parseInt(item.pu_achat) * parseInt(item.stock_reel);
+            }
+            return item;
+        });
+    }
+
+    return liste;
+}
+
+export const supprimerProd = (e, liste) => {
+    const listeProd = liste.filter(item => parseInt(item.id_prod) !== parseInt(e.target.id));
+    return listeProd;
+}
+
 export const tipHeureDebut = "Pour les recettes du jour, choisissez l'heure de début à 6h (sauf si vous avez commencé le service avant) et pour les recettes de la nuit, choisissez l'heure de début à 15h (sauf si vous avez commencé le service avant)"
 export const tipHeureFin = "Pour les recettes du jour, choisissez l'heure de fin à 18h (sauf si vous avez terminé le service après) et pour les recettes de la nuit, choisissez l'heure de fin à 8h (sauf si vous avez terminé le service après)"
 
@@ -175,6 +205,12 @@ export const genres = {
     "": "non répertorié",
     sp: "spécialité",
     generique: "générique",
+}
+
+export const styleEntete = {
+    color: 'black',
+    borderBottom: '1px dotted #000',
+    letterSpacing: '1px'
 }
 
 const ipServeur = "serveur";
