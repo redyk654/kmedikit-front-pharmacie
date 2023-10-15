@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import './Activites.css';
 import { ContextChargement } from '../../Context/Chargement';
-import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns } from "../../shared/Globals";
+import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corrigerStock, filtrerListe, ROLES, supprimerProd, serveurNodeProd } from "../../shared/Globals";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import { useSpring, animated } from 'react-spring';
 import { CBadge } from "@coreui/react";
 import AfficherListeProdInventaires from '../../shared/AfficherListeProdInventaires';
 import SaveInventaire from '../SaveInventaire/SaveInventaire';
+import { io } from 'socket.io-client';
+
+const socket = io.connect(`${serveurNodeProd}`);
 
 Modal.setAppElement('#root')
 
@@ -42,16 +45,18 @@ const customStyles1 = {
 export default function Activites(props) {
 
     const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
-    const {chargement, stopChargement, startChargement, darkLight} = useContext(ContextChargement);
+    const { stopChargement, startChargement, darkLight, role} = useContext(ContextChargement);
     Modal.defaultStyles.overlay.backgroundColor = '#18202ed3';
 
     let date_filtre = useRef();
     let btnModifStock = useRef();
-    const date_e = new Date('2023-12-15');
+    const date_e = new Date('2024-02-15');
     const date_j = new Date();
 
     const [listeHistorique, setListeHistorique] = useState([]);
     const [listeSauvegarde, setListeSauvegarde] = useState([]);
+    const [listeProduitsRecherches, setListeProduitsRecherches] = useState([]);
+    const [listeProduitsInventaires, setListeProduitsInventaires] = useState([]);
     const [idProd, setIdProd] = useState(false);
     const [puVente, setPuVente] = useState(false);
     const [medocSelectionne, setMedocSelectionne] = useState(false);
@@ -71,6 +76,47 @@ export default function Activites(props) {
     const [state, setState] = useState(false);
     const [messageErreur, setMessageErreur] = useState('');
     const [enCours, setEnCours] = useState(false);
+    const [searchProd, setSearchProd] = useState('');
+
+    const propSearchDesignation = "designation";
+    const vueListeProduitsInventaires = filtrerListe(propSearchDesignation, searchProd, listeProduitsInventaires);
+
+    const handleChangeProd = (e) => {
+        if (e.target.value.length === 0) {
+            setListeProduitsRecherches([]);
+        } else {
+            const req = new XMLHttpRequest();
+            req.open('GET', `${nomDns}recuperer_produits.php?designation=${e.target.value}`);
+
+            req.addEventListener('load', () => {
+                const result = JSON.parse(req.responseText);
+                setListeProduitsRecherches(result);
+            });
+            
+            req.send();
+        }
+
+    }
+
+    const ajouterProduitDansInventaire = (e) => {
+        const prod = listeProduitsRecherches.filter(item => item.id == e.target.id)[0];
+        const prodInventaire = {
+            id_inventaire: '',
+            id_prod: prod.id,
+            designation: prod.designation,
+            stock_theorique: parseInt(prod.en_stock),
+            stock_reel: parseInt(prod.en_stock),
+            difference: 0,
+            pu_achat: parseInt(prod.pu_achat),
+            p_total: parseInt(prod.pu_achat) * parseInt(prod.en_stock),
+            genre: prod.genre,
+        }
+
+        const retirerDoublons = listeProduitsInventaires.filter(item => item.id_prod !== prod.id);
+        const liste = [...retirerDoublons, prodInventaire];
+        setListeProduitsInventaires(liste);
+        document.querySelector('#rechercher-produit').focus();
+    }
 
     useEffect(() => {
         startChargement();
@@ -83,6 +129,7 @@ export default function Activites(props) {
                 const result = JSON.parse(req.responseText);
                 setListeHistorique(result);
                 setListeSauvegarde(result);
+                // creerListeProduitsInventaires(result);
                 setTimeout(() => {
                     stopChargement();
                 }, 500);
@@ -103,6 +150,25 @@ export default function Activites(props) {
 
     }, [state]);
 
+    // const creerListeProduitsInventaires = (listeProduits) => {
+    //     let liste = [];
+    //     listeProduits.forEach(item => {
+    //         const prod = {
+    //             id_inventaire: '',
+    //             id_prod: item.id,
+    //             designation: item.designation,
+    //             stock_theorique: parseInt(item.en_stock),
+    //             stock_reel: parseInt(item.en_stock),
+    //             difference: 0,
+    //             pu_achat: parseInt(item.pu_achat),
+    //             p_total: parseInt(item.pu_achat) * parseInt(item.en_stock),
+    //             genre: item.genre,
+    //         }
+    //         liste.push(prod);
+    //     });
+    //     setListeProduitsInventaires(liste);
+    // }
+
     useEffect(() => {
 
         if (parseInt(stockPhy) > 0 && parseInt(stockPhy) !== parseInt(stockRestant)) {
@@ -115,7 +181,7 @@ export default function Activites(props) {
             data.append('pu_vente', puVente);
 
             const req = new XMLHttpRequest();
-            req.open('POST', `${nomDns}gestion_stock.php?rem=inventaire`);
+            req.open('POST', `${nomDns}gestion_stock.php?rem=correction`);
     
             req.addEventListener('load', () => {
                 fermerModalConfirmation();
@@ -124,6 +190,7 @@ export default function Activites(props) {
                 setDesignation('');
                 setDatePeremtion(false);
                 setStockRestant(false);
+                toast.success('Stock corrigé avec succès !');
             });
 
             req.addEventListener("error", function () {
@@ -162,8 +229,8 @@ export default function Activites(props) {
         }
     }, [medocSelectionne]);
 
-    const filtrerListe = (e) => {
-        const medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1));
+    const filtrerListe2 = (e) => {
+        const medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.toLowerCase().trim()) !== -1));
         setListeHistorique(medocFilter);
     }
 
@@ -205,7 +272,9 @@ export default function Activites(props) {
             setMessageErreur('Erreur réseau');
         });
 
-        req1.send();
+        if (role.toUpperCase() === ROLES.admin.toUpperCase()) {
+            req1.send();
+        }
     }
 
     const handleChange = (e) => {
@@ -226,6 +295,7 @@ export default function Activites(props) {
 
     const fermerModalInventaire = () => {
         setModalInventaire(false);
+        setListeProduitsRecherches([]);
     }
 
     const fermerModalConfirmation = () => {
@@ -240,61 +310,29 @@ export default function Activites(props) {
     }
 
     const sauvegarderInfosInventaire = () => {
-        setEnCours(true);
-        const idInventaire = genererId()
-
-        const infosInventaire = {
-            id: idInventaire,
-            auteur: props.nomConnecte,
-        }
-
-        const data = new FormData();
-        data.append('infosInv', JSON.stringify(infosInventaire));
-
-        const req = new XMLHttpRequest();
-
-        req.open('POST', `${nomDns}sauvegarder_inventaire.php`);
-        req.addEventListener('load', () => {
-            if (req.status >= 200 && req.status < 400) {
-                sauvegarderProduitsInventaire(idInventaire)
-            } else {
-                console.error(req.status + " " + req.statusText);
-            }
-        });
-
-        req.addEventListener("error", function () {
-            // La requête n'a pas réussi à atteindre le serveur
-            setMessageErreur('Erreur réseau');
-        });
-
-        req.send(data);
-    }
-
-    const sauvegarderProduitsInventaire = (idInventaire) => {
-        let i = 0;
-
-        listeSauvegarde.forEach(produit => {
-            const prod = {
+        if (listeProduitsInventaires.length === 0) {
+            toast.error('Aucun produit ajouté à l\'inventaire');
+            return;
+        } else {
+            setEnCours(true);
+            const idInventaire = genererId()
+    
+            const infosInventaire = {
                 id: idInventaire,
-                id_prod: produit.id,
-                designation: produit.designation,
-                en_stock: produit.en_stock,
-                genre: produit.genre,
+                auteur: props.nomConnecte,
             }
     
             const data = new FormData();
-            data.append('prod', JSON.stringify(prod));
-
+            data.append('infosInv', JSON.stringify(infosInventaire));
+    
             const req = new XMLHttpRequest();
     
             req.open('POST', `${nomDns}sauvegarder_inventaire.php`);
             req.addEventListener('load', () => {
                 if (req.status >= 200 && req.status < 400) {
-                    i++;
-                    if (i === listeSauvegarde.length) {
-                        setEnCours(false);
-                        fermerModalInventaire();
-                    }
+                    sauvegarderProduitsInventaire(idInventaire);
+                } else {
+                    console.error(req.status + " " + req.statusText);
                 }
             });
     
@@ -304,9 +342,49 @@ export default function Activites(props) {
             });
     
             req.send(data);
-        })
+        }
+    }
 
-    } 
+    const sauvegarderProduitsInventaire = (idInventaire) => {
+        // console.log(listeProduitsInventaires);
+        const data = new FormData();
+        data.append('id_inventaire', idInventaire);
+        data.append('auteur', props.nomConnecte);
+        data.append('produits', JSON.stringify(listeProduitsInventaires));
+
+        const req = new XMLHttpRequest();
+
+        req.open('POST', `${nomDns}sauvegarder_inventaire.php`);
+        req.addEventListener('load', () => {
+            if (req.status >= 200 && req.status < 400) {
+                setEnCours(false);
+                fermerModalInventaire();
+                setListeProduitsInventaires([]);
+                setListeProduitsRecherches([]);
+                setMedocSelectionne(false);
+                setState(!state);
+                socket.emit('modification_produit');
+                toast.success('Inventaire sauvegardé avec succès');
+            }
+        });
+
+        req.addEventListener("error", function () {
+            // La requête n'a pas réussi à atteindre le serveur
+            setMessageErreur('Erreur réseau');
+        });
+
+        req.send(data);
+
+    }
+
+    const callCorrigerStock = (e) => {
+        setListeProduitsInventaires(corrigerStock(e, listeProduitsInventaires));
+        // console.log(listeProduitsInventaires);
+    }
+
+    const supprimerProdInventaire = (e) => {
+        setListeProduitsInventaires(supprimerProd(e, listeProduitsInventaires));
+    }
 
     return (
         <animated.div style={props1}>
@@ -318,10 +396,16 @@ export default function Activites(props) {
                 // onRequestClose={fermerModalInventaire}
             >
                 <SaveInventaire
-                    listeProds={listeSauvegarde}
+                    listeProds={vueListeProduitsInventaires}
+                    listeProduitsRecherches={listeProduitsRecherches}
                     handleClick={sauvegarderInfosInventaire}
+                    searchProd={searchProd}
+                    handleChangeProd={handleChangeProd}
                     enCours={enCours}
                     fermerModalInventaire={fermerModalInventaire}
+                    corrigerStock={callCorrigerStock}
+                    ajouterProduitDansInventaire={ajouterProduitDansInventaire}
+                    supprimerProd={supprimerProdInventaire}
                 />
             </Modal>
             <Modal
@@ -349,19 +433,19 @@ export default function Activites(props) {
                     </div>
                 </div>
             </Modal>
-            <h1 >Inventaires des produits</h1>
+            <h1 >Fiches des stocks du dispensaire</h1>
             <div className='erreur-message'>{messageErreur}</div>
             <div className="container-historique">
                 <div className="medocs-sortis">
                     <p className="search-zone">
-                        <input type="text" placeholder="recherchez un produit" onChange={filtrerListe} />
+                        <input type="text" placeholder="recherchez un produit" onChange={filtrerListe2} />
                     </p>
                     <p>
                         <button onClick={ouvrirModalInventaire} className='bootstrap-btn valider' style={{width: '40%'}}>inventaires</button>
                     </p>
-                    <p>afficher: &nbsp;
+                    <p>
                         <select name="genre" id="" onChange={trierAffichage}>
-                            <option value="tout">tout</option>
+                            <option value="tout">aucune catégorie</option>
                             <option value="generique">générique</option>
                             <option value="sp">spécialité</option>
                         </select>
@@ -379,9 +463,9 @@ export default function Activites(props) {
                         <label htmlFor="filtre">Filtrer : </label>
                         <input type="checkbox" id="filtre" checked={non_paye} onChange={(e) => setNonPaye(!non_paye)} />
                     </div>
-                    <div className="entete-historique">
-                        <button className='bootstrap-btn' onClick={() => {setModalConfirmation(true); afterModal();}}>Modifier</button>
-                    </div>
+                    {/* <div className="entete-historique">
+                        <button className='bootstrap-btn' onClick={() => {setModalConfirmation(true); afterModal();}}>Corriger</button>
+                    </div> */}
                     <div className="entete-historique" style={{display: `${non_paye ? 'block' : 'none'}`}}>
                         <label htmlFor="">Date : </label>
                         <input type="date" id="" ref={date_filtre} onChange={(e) => setDateApprov(e.target.value)} />
@@ -398,13 +482,13 @@ export default function Activites(props) {
                         Total sorties : <span style={{fontWeight: '600'}}>{qteSortie}</span>
                     </div>
                     <div className="entete-historique">Stock Disponible : <span style={{fontWeight: '600'}}>{stockRestant && stockRestant}</span></div>
-                    <h1>Mouvements</h1>
+                    <h1>Fiche de stock de {designation}</h1>
                     <table>
                         <thead>
                             <tr>
                                 <td>Le</td>
                                 <td>À</td>
-                                <td>Par</td>
+                                <td>Auteur</td>
                                 <td>Entrée</td>
                                 <td>Sortie</td>
                                 <td>Dispo</td>

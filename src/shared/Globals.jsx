@@ -168,6 +168,38 @@ export function regrouperParClasse(tableau) {
     return groupesTableau;
 }
 
+export const corrigerStock = (e, listeProduitsInventaires) => {
+    let liste = [];
+    if (e.target.value.trim() === '') {
+        liste = listeProduitsInventaires.map(item => {
+            if (item.id_prod === e.target.id) {
+                item.stock_reel = 0;
+                item.difference = parseInt(item.stock_reel) - parseInt(item.stock_theorique);
+                item.p_total = parseInt(item.pu_achat) * parseInt(item.stock_reel);
+            }
+            return item;
+        });
+    } else {
+        console.log(listeProduitsInventaires);
+        liste = listeProduitsInventaires.map(item => {
+            if (item.id_prod === e.target.id) {
+                item.stock_reel = parseInt(e.target.value.trim());
+                console.log(item.stock_reel);
+                item.difference = parseInt(item.stock_reel) - parseInt(item.stock_theorique);
+                item.p_total = parseInt(item.pu_achat) * parseInt(item.stock_reel);
+            }
+            return item;
+        });
+    }
+
+    return liste;
+}
+
+export const supprimerProd = (e, liste) => {
+    const listeProd = liste.filter(item => item.id_prod !== e.target.id);
+    return listeProd;
+}
+
 export const tipHeureDebut = "Pour les recettes du jour, choisissez l'heure de début à 6h (sauf si vous avez commencé le service avant) et pour les recettes de la nuit, choisissez l'heure de début à 15h (sauf si vous avez commencé le service avant)"
 export const tipHeureFin = "Pour les recettes du jour, choisissez l'heure de fin à 18h (sauf si vous avez terminé le service après) et pour les recettes de la nuit, choisissez l'heure de fin à 8h (sauf si vous avez terminé le service après)"
 
