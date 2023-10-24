@@ -3,52 +3,6 @@ import { CTable, CTableBody, CTableHead, CTableHeaderCell, CTableRow } from '@co
 import { ROLES, formaterNombre, mois } from './Globals';
 import EnteteHopital from './EnteteHopital';
 
-const colonnesAdmin = [
-    {
-      key: 'designation',
-      label: 'designation',
-      _props: { scope: 'col' },
-    },
-    {
-        key: 'stock_theoric',
-        label: 'St théorique',
-        _props: { scope: 'col' },
-    },
-    {
-        key: 'stock_reel',
-        label: 'St réel',
-        _props: { scope: 'col' },
-    },
-    {
-        key: 'ecart_stocks',
-        label: 'diff',
-        _props: { scope: 'col' },
-    },
-];
-
-const colonnesVendeur = [
-    {
-      key: 'designation',
-      label: 'designation',
-      _props: { scope: 'col' },
-    },
-    {
-        key: 'stock_theoric',
-        label: 'St théorique',
-        _props: { scope: 'col' },
-    },
-    {
-        key: 'stock_reel',
-        label: 'St réel',
-        _props: { scope: 'col' },
-    },
-    {
-        key: 'ecart_stocks',
-        label: 'diff',
-        _props: { scope: 'col' },
-    },
-];
-
 export default class ImprimerInventaire extends Component {
 
     render() {
