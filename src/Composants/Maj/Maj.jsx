@@ -5,6 +5,7 @@ import ModifierProduit from '../ModifierProduit/ModifierProduit';
 import './Maj.css';
 import { FaList, FaPen, FaTruck } from 'react-icons/fa';
 import { ContextChargement } from '../../Context/Chargement';
+import GestionArchives from '../GestionArchives/GestionArchives';
 
 export default function Maj(props) {
 
@@ -23,25 +24,33 @@ export default function Maj(props) {
       case 3:
         contenu = <Bordereau nomConnecte={props.nomConnecte} />
         break;
+      case 4:
+        contenu = <GestionArchives nomConnecte={props.nomConnecte} />
+        break;
     }
 
     return (
         <section className="conteneur-sous-onglets">
-          <div className="onglets-blocs" style={{width: '65%'}}>
+          <div className="onglets-blocs" style={{width: '75%'}}>
             <div className={`tab ${onglet === 1 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(1)}}>
-              <FaTruck size={24} />
+              <FaTruck size={22} />
               &nbsp;
               Approvisionner
             </div>
             <div className={`tab ${onglet === 2 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(2)}}>
-              <FaPen size={20} />
+              <FaPen size={16} />
               &nbsp;
               Modifier infos
             </div>
             <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(3)}}>
-              <FaList size={22} />
+              <FaList size={19} />
               &nbsp;
               Commandes
+            </div>
+            <div className={`tab ${onglet === 4 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(4)}}>
+              {/* <FaList size={22} /> */}
+              &nbsp;
+              Archives
             </div>
           </div>
           <div className="onglets-contenu">

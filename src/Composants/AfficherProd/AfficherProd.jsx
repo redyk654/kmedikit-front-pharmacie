@@ -7,7 +7,6 @@ export default function AfficherProd(props) {
 
     const {darkLight, role} = useContext(ContextChargement)
 
-
     return (
         <CContainer>
             <CRow className="box">
@@ -17,7 +16,7 @@ export default function AfficherProd(props) {
                 </CCol>
                 <CCol className="item">
                     <p>Prix de vente</p>
-                    <p>{props.pu_vente + ' Fcfa'}</p> 
+                    <p>{props.pu_vente + ' Fcfa'}</p>
                 </CCol>
                 <CCol className="item">
                     <p>En stock</p>
