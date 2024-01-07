@@ -6,11 +6,11 @@ import UseMsgErreur from '../../Customs/UseMsgErreur';
 export default function GererClasses() {
 
     const colonnes = [
-        {
-          key: 'id',
-          label: 'num',
-          _props: { scope: 'col' },
-        },
+        // {
+        //   key: 'id',
+        //   label: 'num',
+        //   _props: { scope: 'col' },
+        // },
         {
             key: 'designation',
             label: 'classe',

@@ -6,9 +6,9 @@ import { useSpring, animated } from 'react-spring';
 import { ContextChargement } from '../../Context/Chargement';
 import { Toaster, toast } from "react-hot-toast";
 import EditerProd from '../Approvisionner/EditerProd';
-import { nomDns } from '../../shared/Globals';
+import { nomDns, type_recherche } from '../../shared/Globals';
 import GererClasses from '../GererClasses/GererClasses';
-import { CBadge, CButton, CFormInput, CListGroup, CListGroupItem, CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
+import { CBadge, CButton, CFormCheck, CFormInput, CListGroup, CListGroupItem, CModal, CModalBody, CModalHeader, CModalTitle } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilTrash } from '@coreui/icons';
 import { useRef } from 'react';
@@ -78,6 +78,7 @@ export default function ModifierProduit() {
     const [listeProduit, setListeProduit] = useState([]);
     const [listeSauvegarde, setListeSauvegarde] = useState([]);
     const [nvprix, setnvprix] = useState('');
+    const [valeurSaisi, setValeurSaisi] = useState('');
     const [produitSelectionne, setproduitSelectionne] = useState([]);
     const [infosMedoc, setInfosMedoc] = useState(medocs);
     const [modalConfirmation, setModalConfirmation] = useState(false);
@@ -92,6 +93,7 @@ export default function ModifierProduit() {
     const [modalIsVisible, setModalIsVisible] = useState(false);
     const [ajoutEnCours, setAjoutEnCours] = useState(false);
     const [designationDci, setDesignationDci] = useState('');
+    const [filtrerPar, setFiltrerPar] = useState(type_recherche.nom);
 
 
     const {code, designation, classe, pu_achat, pu_vente, conditionnement, stock_ajoute, min_rec, categorie, date_peremption, montant_commande, genre, dci} = infosMedoc;
@@ -104,7 +106,7 @@ export default function ModifierProduit() {
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {
                 const result = JSON.parse(req.responseText);
-                setListeProduit(result);
+                setListeProduit(result.filter(prod => prod.designation.toLowerCase().indexOf(valeurSaisi.toLowerCase()) !== -1));
                 setListeSauvegarde(result);
                 setAfficherListe(true);
             }
@@ -128,7 +130,19 @@ export default function ModifierProduit() {
     }
 
     const filtrerListe = (e) => {
-        const medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1))
+        setValeurSaisi(e.target.value);
+        let medocFilter;
+        switch(filtrerPar) {
+            case type_recherche.nom:
+                medocFilter = listeSauvegarde.filter(item => (item.designation.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1));
+                break;
+            case type_recherche.dci:
+                medocFilter = listeSauvegarde.filter(item => (item.dci.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1));
+                break;
+            case type_recherche.classe:
+                medocFilter = listeSauvegarde.filter(item => (item.classe.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1));
+                break;
+        }
         setListeProduit(medocFilter);
     }
 
@@ -206,33 +220,11 @@ export default function ModifierProduit() {
             setnvprix('');
         }
     }
-
-    const supprimerProduitEpuise = () => {
-        const req = new XMLHttpRequest();
-        req.open('POST', `${nomDns}vider.php?stock=0`);
-        
-        req.addEventListener('load', () => {
-            if (req.status >= 200 && req.status < 400) {
-                setRefetch(!refecth);
-            }
-        });
-
-        req.send();
-    }
-
-    const fermerModalConfirmation = () => {
-        setModalConfirmation(false);
-    }
   
     const fermerModalReussi = () => {
         setModalReussi(false);
     }
     
-    const fermerModalModifPrix = () => {
-        setModalModifPrix(false);
-        setnvprix('');
-    }
-
     const fermerModalClasse = () => {
         setModalGererClasses(false);
     }
@@ -284,15 +276,15 @@ export default function ModifierProduit() {
         }
     }
 
-    const supprimerDci = (id_dci) => {
-        fetch(`${nomDns}gerer_dci.php?id_dci=${id_dci}`)
-        .then()
-        .then(data => {
-            setListeDesDci(listeDesDci.filter(item => item.id !== id_dci));
-        })
-        .catch(error => {
-            setMsgErreur('erreur réseau');
-        })
+    const handleRadioFiltre = (e) => {
+        if (e.target.id === 'filter-par-designation') {
+            setFiltrerPar(type_recherche.nom);
+        } else if (e.target.id === 'filter-par-dci') {
+            setFiltrerPar(type_recherche.dci);
+        } else if (e.target.id === 'filter-par-classe') {
+            setFiltrerPar(type_recherche.classe);
+        }
+        // setFiltrerPar(e.target.id === 'filter-par-designation' ? 'designation' : 'dci');
     }
 
     return (
@@ -317,15 +309,40 @@ export default function ModifierProduit() {
                     <GererClasses />
                 </Modal>
                 <div className="col-1">
-                    <p className="search-zone">
-                        <input type="text" placeholder="recherchez un produit" onChange={filtrerListe} />
-                    </p>
                     <div className='m-2'>
                         <a role="button" class={`text-${darkLight ? 'light' : 'dark'} fw-bold`} onClick={ouvriModalClasse}>Gerer les classes</a>
                     </div>
                     <div className='m-2'>
                         <a role="button" class={`text-${darkLight ? 'light' : 'dark'} fw-bold`} onClick={ouvrirModalDci}>Gerer les dci</a>
                     </div>
+                    <CFormCheck
+                        checked={filtrerPar === type_recherche.nom}
+                        onChange={handleRadioFiltre}
+                        type='radio'
+                        name='filter-par'
+                        id='filter-par-designation'
+                        label='par nom commercial'
+                        defaultChecked
+                    />
+                    <CFormCheck
+                        checked={filtrerPar === type_recherche.dci}
+                        onChange={handleRadioFiltre}
+                        type='radio'
+                        name='filter-par'
+                        id='filter-par-dci'
+                        label='par DCI'
+                    />
+                    <CFormCheck
+                        checked={filtrerPar === type_recherche.classe}
+                        onChange={handleRadioFiltre}
+                        type='radio'
+                        name='filter-par'
+                        id='filter-par-classe'
+                        label='par classe'
+                    />
+                    <p className="search-zone">
+                        <input type="text" placeholder={`recherchez par ${filtrerPar}`} onChange={filtrerListe} />
+                    </p>
                     <h1>Liste des produits</h1>
                     {/* <button onClick={supprimerProduitEpuise}>Vider</button> */}
                     <ul>

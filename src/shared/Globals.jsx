@@ -143,17 +143,16 @@ export function regrouperParClasse(tableau) {
   
     // Parcourez chaque objet dans le tableau
     tableau.forEach((objet) => {
-        let classe = objet.classe;
+        let classe = objet.classe, i = 0;
 
         // Si la classe est une chaîne de caractères vide, remplacez-la par "autres"
         if (classe === "") {
             classe = "autres";
         }
-  
 
         // Si la classe n'existe pas dans les groupes, créez un tableau vide
         if (!groupes[classe]) {
-        groupes[classe] = [];
+            groupes[classe] = [];
         }
 
         // Ajoutez l'objet au groupe correspondant
@@ -207,15 +206,21 @@ export const genres = {
     generique: "générique",
 }
 
+export const type_recherche = {
+    nom: "nom commercial",
+    dci: "dci",
+    classe: "classe"
+}
+
 export const styleEntete = {
     color: 'black',
     borderBottom: '1px dotted #000',
     letterSpacing: '1px'
 }
 
-const ipServeur = "serveur";
+const dnsServeur = "serveur";
 const ipLocal = "localhost";
-const ipModem = "192.168.8.101";
+const ipServeur = "192.168.100.6";
 
 export const serveurNodeProd = `http://${ipServeur}:3015`;
 export const nomDns = `http://${ipServeur}/backend-cmab/`;
