@@ -115,7 +115,7 @@ export default function Entete(props) {
     }
 
     return (
-        <header className="entete" style={{height: `${slide ? '18vh' : '18vh'}`}}>
+        <header className="entete" style={{height: `${slide ? '23vh' : '23vh'}`}}>
             <Modal
                 isOpen={modalReussi}
                 style={customStyles2}

@@ -52,7 +52,7 @@ body {
 }
 
 .app .conteneur-onglets .onglets-blocs {
-  width: 60%;
+  width: auto;
   display: flex;
   justify-content: space-around;
   height: 5vh;
