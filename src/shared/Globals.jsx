@@ -218,9 +218,100 @@ export const styleEntete = {
     letterSpacing: '1px'
 }
 
+export const SEXES = {
+    h: 'H',
+    f: 'F'
+}
+
+export function afficherSexe (sexe) {
+    let val;
+    switch(sexe) {
+        case 'H':
+            val = 'homme';
+            break;
+        case 'F':
+            val = 'femme';
+            break;
+        default:
+            val = ''
+    }
+
+    return val.toUpperCase();
+}
+
+export function afficherStatusMatrimonial (statu) {
+    let val;
+    switch(statu) {
+        case 'C':
+            val = 'célibataire';
+            break;
+        case 'M':
+            val = 'marié(e)';
+            break;
+        case 'D':
+            val = 'divorcé(e)';
+            break;
+        case 'V':
+            val = 'veuf(ve)';
+            break;
+        default:
+            val = ''
+    }
+
+    return val.toUpperCase();
+}
+
+export function calculerAge(dateDeNaissance) {
+    if (dateDeNaissance !==  "" && !isNaN(new Date(dateDeNaissance))) {
+        const dateNaissance = new Date(dateDeNaissance);
+        const dateActuelle = new Date();
+
+        return dateActuelle.getFullYear() - dateNaissance.getFullYear();
+    }
+}
+
+
+export function afficherAge (age) {
+    if (parseInt(age) > 1) 
+        return age + "ans"
+    else
+        return "";
+}
+
+export function dateEnLettre (str) {
+
+    switch(parseInt(str.substring(5, 7))) {
+        case 1:
+            return str.substring(8, 10) + " janvier " + str.substring(0, 4);
+        case 2:
+            return str.substring(8, 10) + " fevrier " + str.substring(0, 4);
+        case 3:
+            return str.substring(8, 10) + " mars " + str.substring(0, 4);
+        case 4:
+            return str.substring(8, 10) + " avril " +  str.substring(0, 4);
+        case 5:
+            return str.substring(8, 10) + " mai " + str.substring(0, 4);
+        case 6:
+            return str.substring(8, 10) + " juin " + str.substring(0, 4);
+        case 7:
+            return str.substring(8, 10) + " juillet " + str.substring(0, 4);
+        case 8:
+            return str.substring(8, 10) + " août " + str.substring(0, 4);
+        case 9:
+            return str.substring(8, 10) + " septembre " + str.substring(0, 4);
+        case 10:
+            return str.substring(8, 10) + " octobre " + str.substring(0, 4);
+        case 11:
+            return str.substring(8, 10) + " novembre " + str.substring(0, 4);
+        case 12:
+            return str.substring(8, 10) + " décembre " + str.substring(0, 4);
+    }
+}
+
+
 const dnsServeur = "serveur";
 const ipLocal = "localhost";
 const ipServeur = "192.168.100.6";
 
-export const serveurNodeProd = `http://${ipServeur}:3015`;
-export const nomDns = `http://${ipServeur}/backend-cmab/`;
+export const serveurNodeProd = `http://${ipLocal}:3015`;
+export const nomDns = `http://${ipLocal}/backend-cmab/`;

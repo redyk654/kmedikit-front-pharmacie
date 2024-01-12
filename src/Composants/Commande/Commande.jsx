@@ -14,6 +14,8 @@ import { Toaster, toast } from "react-hot-toast";
 import { FaPlusSquare } from "react-icons/fa";
 import { useSpring, animated } from 'react-spring';
 import { nomDns } from '../../shared/Globals';
+import { CModal } from '@coreui/react';
+import ModalPatient from '../Patients/ModalPatient';
 
 // Modal.defaultStyles.overlay.backgroundColor = '#18202ebe';
 
@@ -120,11 +122,7 @@ export default function Commande(props) {
     const [modalConfirmation, setModalConfirmation] = useState(false);
     const [modalReussi, setModalReussi] = useState(false);
     const [statePourRerender, setStatePourRerender] = useState(true);
-    const [patient, setpatient] = useState('');
     const [nomPatient, setNomPatient] = useState(false);
-    const [clientSelect, setClientSelect] = useState([]);
-    const [listePatient, setlistePatient] = useState([]);
-    const [listePatientSauvegarde, setlistePatientSauvegarde] = useState([]);
     const [modalPatient, setModalPatient] = useState(false);
     const [assurance, setAssurance] = useState(assuranceDefaut);
     const [typeAssurance, setTypeAssurance] = useState(0);
@@ -334,7 +332,6 @@ export default function Commande(props) {
         setNomPatient(false);
         setAssurance(assuranceDefaut);
         setTypeAssurance(0);
-        setClientSelect([]);
         document.querySelector('.recherche').value = "";
     }
 
@@ -403,7 +400,6 @@ export default function Commande(props) {
     const validerCommande = () => {
 
         setEncours(true)
-        enregisterPatient();
 
         /* 
             Organisation des données qui seront envoyés au serveur :
@@ -476,145 +472,20 @@ export default function Commande(props) {
         }
     }
 
-    const contenuModal = () => {
-            return (
-            <Fragment>
-                <h2 style={{color: '#fff'}}>informations du patient</h2>
-                <div className="detail-item">
-                    <div style={{display: 'flex', flexDirection: 'column' , width: '100%', marginTop: 10, color: '#f1f1f1'}}>
-                        <label htmlFor="" style={{display: 'block',}}>Nom et prénom</label>
-                        <div>
-                            <input ref={refPatient} type="text" name="qteDesire" style={{width: '250px', height: '4vh'}} value={patient} onChange={filtrerPatient} autoComplete='off' />
-                            <button style={{cursor: 'pointer', width: '45px', height: '4vh', marginLeft: '5px'}} onClick={ajouterPatient}>OK</button>
-                        </div>
-                        {
-                            clientSelect.length > 0 && (
-                                <div style={{marginTop: '10px', lineHeight: '25px', display: `${clientSelect[0].nomAssurance === assuranceDefaut ? 'none' : 'block'}`}}>
-                                    <div>assurance <strong>{clientSelect[0].nomAssurance}</strong></div>
-                                    <div>pourcentage <strong>{clientSelect[0].type_assurance}</strong></div>
-                                </div>
-                            )
-                        }
-                        <div style={{marginTop: '10px'}}>
-                            <h2>Liste des patients</h2>
-                            <ul style={stylePatient}>
-                                {listePatient.length > 0 && listePatient.map(item => (
-                                    <li style={{padding: '6px', color: '#0e771a', cursor: 'pointer', fontWeight: 'bold'}} onClick={(e) => selectionnePatient(e, item.assurance, item.type_assurance)} id={item.nom}>{item.nom.toUpperCase()}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </Fragment>
-        )
-    }
-
-    const infosPatient = () => {
+    const ouvrirModalPatient = () => {
 
         // Affiche la fenêtre des informations du patient
         setModalPatient(true);
-
-        const req = new XMLHttpRequest();
-        req.open('GET', `${nomDns}gestion_patients.php`);
-
-        req.addEventListener('load', () => {
-            refPatient.current.focus();
-            setMessageErreur('');
-            const result = JSON.parse(req.responseText);
-            setlistePatient(result);
-            setlistePatientSauvegarde(result);
-        })
-
-        req.addEventListener("error", function () {
-            // La requête n'a pas réussi à atteindre le serveur
-            setMessageErreur('Erreur réseau');
-        });
-        req.send();
-
     }
 
-    const filtrerPatient = (e) => {
-        setpatient(e.target.value);
-
-        const req = new XMLHttpRequest();
-
-        req.open('GET', `${nomDns}rechercher_patient.php?str=${e.target.value}`);
-
-        req.addEventListener('load', () => {
-            if (req.status >= 200 && req.status < 400) {
-                const result = JSON.parse(req.responseText);
-
-                setlistePatient(result);
-                setlistePatientSauvegarde(result);
-            }
-            
-        });
-
-        req.send();
-    }
-
-    const ajouterPatient = () => {
-        setNomPatient(patient.trim());
-        setpatient('');
-
-        if(assurance.toLowerCase() !== assuranceDefaut) {
-            if(parseInt(qtePrixTotal.a_payer)) {
-                Object.defineProperty(qtePrixTotal, 'a_payer', {
-                    value: (parseInt(qtePrixTotal.prix_total) * (100 - typeAssurance)) / 100,
-                    configurable: true,
-                    enumerable: true,
-                });
-            }
-            setStatu('pending');
-        } else {
-            setStatu('done');
-        }
-
-        setStatePourRerender(!statePourRerender);
+    const ajouterPatient = (noms) => {
+        setNomPatient(noms);
         fermerModalPatient();
-        enregisterPatient();
-        setMessageErreur('');
-    }
-
-    const enregisterPatient = () => {
-        // On enregistre le patient dans la base de donnés s'il n'y est pas encore
-        if (nomPatient) {
-
-            const patient = listePatientSauvegarde.filter(item => (item.nom.toLowerCase().indexOf(nomPatient.toLowerCase()) !== -1));
-            if(patient.length === 0) {
-                const data = new FormData();
-                data.append('nom_patient', nomPatient);
-                data.append('assurance', assuranceDefaut);
-                data.append('type_assurance', 0);
-                
-                const req = new XMLHttpRequest();
-                req.open('POST', `${nomDns}gestion_patients.php`);
-
-                req.addEventListener("load", function () {
-                    // La requête n'a pas réussi à atteindre le serveur
-                    setMessageErreur('');
-                });
-
-                req.addEventListener("error", function () {
-                    // La requête n'a pas réussi à atteindre le serveur
-                    setMessageErreur('Erreur réseau');
-                });
-    
-                req.send(data);
-            }
-        }
-    }
-
-    const selectionnePatient = (e, nomAssurance, type_assurance) => {
-        setpatient(e.target.id);
-        setClientSelect([{nomAssurance: nomAssurance, type_assurance: type_assurance}])
-        setAssurance(nomAssurance);
-        setTypeAssurance(type_assurance);
     }
 
     const fermerModalPatient = () => {
+        setMessageErreur('');
         setModalPatient(false);
-        setpatient('');
     }
   
     const fermerModalConfirmation = () => {
@@ -666,15 +537,19 @@ export default function Commande(props) {
         <animated.div style={props1}>
         <div><Toaster/></div>
         <section className="commande">
-            <Modal
-                isOpen={modalPatient}
-                style={customStyles4}
-                contentLabel="information du patient"
-                ariaHideApp={false}
-                onRequestClose={fermerModalPatient}
+            <CModal
+                visible={modalPatient}
+                onClose={fermerModalPatient}
+                color="success"
+                size="xl"
+                backdrop="static"
+                scrollable={true}
             >
-                {contenuModal()}
-            </Modal>
+                <ModalPatient
+                    ajouterPatient={ajouterPatient}
+                    fermerModalPatient={fermerModalPatient}
+                />
+            </CModal>
             <Modal
                 isOpen={modalAlerte}
                 style={customStyles3}
@@ -766,7 +641,7 @@ export default function Commande(props) {
                         {/* <button onClick={ajouterMedoc}>ajouter</button> */}
                     </div>
                     <div style={{textAlign: 'center'}}>
-                        <button className='btn-patient' onClick={infosPatient}>Infos du patient</button>
+                        <button className='btn-patient' onClick={ouvrirModalPatient}>Infos du patient</button>
                     </div>
                     <div style={{textAlign: 'center'}}>
                         {nomPatient ? (
@@ -774,11 +649,11 @@ export default function Commande(props) {
                                 Patient: <span style={{color: '#0e771a', fontWeight: '700'}}>{nomPatient.toLocaleUpperCase()}</span>
                             </div>
                         ) : null}
-                        {assurance !== assuranceDefaut ? (
+                        {/* {assurance !== assuranceDefaut ? (
                             <div style={{}}>
                                 Couvert par: <span style={{color: '#0e771a', fontWeight: '700'}}>{assurance.toLocaleUpperCase()}</span>
                             </div>
-                        ) : null}
+                        ) : null} */}
                     </div>
                 </div>
 
