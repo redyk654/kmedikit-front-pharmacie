@@ -1,8 +1,8 @@
 {
-  "name": "KMD-harmacie",
+  "name": "philmedical-pharmacie",
   "author": "Chrisppo Youmbissi Kamdem",
   "copyright": "Copyright © 2021 Chrisppo Youmbissi",
-  "version": "3.9.0",
+  "version": "1.0.0",
   "main": "public/electron.js",
   "homepage": "./",
   "build": {

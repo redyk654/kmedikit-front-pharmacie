@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import EnteteHopital from '../../shared/EnteteHopital';
 
 const styles = {
     // display: 'flex',
@@ -70,25 +71,15 @@ export default class ImprimerStats extends Component {
         return (
             <div style={{backgroundColor: '#f1f1f1', height: '100vh', marginTop: '70px'}}>
                 <div style={{textTransform: 'uppercase', padding: '15px 135px', fontSize: 7, marginBottom: '12px', width: '100%', display: 'flex', justifyContent: 'space-between'}}>
-                    <div style={{ lineHeight: '20px'}}>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Republique du Cameroun <br/><em style={{textTransform: 'capitalize'}}>Paix-Travail-Patrie</em></strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Ministere de la sante publique</strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Delegation regionale du Littoral</strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>District sante de Deido</strong></div>
-                        <div style={{color: 'black',}}><strong>CMA de Bepanda</strong></div> 
-                    </div>
-                    <div style={{ lineHeight: '20px'}}>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Republic of Cameroon <br/><em style={{textTransform: 'capitalize'}}>Peace-Work-Fatherland</em></strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Minister of Public Health</strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Littoral regional delegation</strong></div>
-                        <div style={{color: 'black', borderBottom: '1px dotted #000'}}><strong>Deido Health District</strong></div>
-                        <div style={{color: 'black',}}><strong>Bepanda CMA</strong></div> 
-                    </div>
+                    <EnteteHopital />
                 </div>
                 <div style={{fontSize: 9, display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '10px',}}>
-                    <div style={{textAlign: 'center', width: '410px'}}>
-                        <div style={{marginTop: 5}}>Fiche des stats de <span style={{fontWeight: '600', marginTop: '15px'}}>{this.moisStats(this.props.moisActu)}</span></div>
-                        <div style={{textAlign: 'center', marginBottom: 15}}>
+                    <div style={{textAlign: 'center', padding: '15px'}}>
+                        <h3 style={{marginTop: 5}}>
+                            Statistiques des produits du point de dispensation du mois de &nbsp;
+                            <span style={{fontWeight: '600', marginTop: '15px'}}>{this.moisStats(this.props.moisActu)}</span>
+                        </h3>
+                        <div style={{textAlign: 'center', marginBottom: 15, padding: '40px'}}>
                             <table style={table_styles}>
                                 <thead>
                                     <th style={table_styles1}>Désignation</th>

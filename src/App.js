@@ -12,7 +12,7 @@ import { FaChartBar, FaClipboardList, FaLayerGroup, FaReceipt, FaStore, FaUsers 
 import { ContextChargement } from './Context/Chargement';
 import ListeProduits from './Composants/ListeProduits/ListeProduits';
 import FactureManuelle from './Composants/FactureManuelle/FactureManuelle';
-import { ROLES } from "./shared/Globals";
+import { ROLES, liensPhilmedical } from "./shared/Globals";
 import Magasin from './Composants/Magasin/Magasin';
 import Dispensaire from './Composants/Dispensaire/Dispensaire';
 import CIcon from '@coreui/icons-react';
@@ -189,9 +189,16 @@ function App() {
         </main>
       );
     } else {
-      <main className='app'>
-        vous n'avez pas le droit d'accéder à cette application
-      </main>
+      <main className='app text-center'>
+          <div className='float-start px-3'>
+                <a href={`${liensPhilmedical.acceuil}`} className='link-dark' role='button'>
+                    retour à l'accueil
+                </a>
+          </div>
+          <strong className='text-bg-danger text-light'>
+            Vous n'avez pas les droits pour accéder à cette page.
+          </strong>
+        </main>
     }
   } else {
     return (
