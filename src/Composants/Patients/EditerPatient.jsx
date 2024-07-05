@@ -5,7 +5,7 @@ import './EditerPatient.css'
 import { ROLES, SEXES, nomDns } from "../../shared/Globals";
 import CustomLoader from '../../shared/CustomLoader';
 
-export default function EditerPatient({ ajouterNouveauPatient, resetInfosDuPatient, handleChange, fermerEditerPatient, ouvrirModalPatient, nom, age, sexe, quartier, assurance, type_assurance }) {
+export default function EditerPatient({ ajouterNouveauPatient, resetInfosDuPatient, handleChange, fermerEditerPatient, ouvrirModalPatient, msgPatient, nom, age, sexe, quartier, assurance, type_assurance }) {
 
     const {role} = useContext(ContextChargement);
 
@@ -25,16 +25,16 @@ export default function EditerPatient({ ajouterNouveauPatient, resetInfosDuPatie
         ouvrirModalPatient();
     }
 
-    const execAjouterNouveauPatient = async (e) => {
+    const execAjouterNouveauPatient = (e) => {
         e.preventDefault();
         if (nom !== '' && (sexe.toUpperCase() === SEXES.f.toUpperCase() || sexe.toUpperCase() === SEXES.h.toUpperCase())) {
             setMessageErreur('');
             setEnCours(true)
-            await ajouterNouveauPatient(e);
-            setEnCours(false);
+            ajouterNouveauPatient(e);
         } else {
             setMessageErreur('Nom et Sexe obligatoires');
         }
+        setEnCours(false);
     }
 
   return (
@@ -78,6 +78,7 @@ export default function EditerPatient({ ajouterNouveauPatient, resetInfosDuPatie
         </div>
         <div style={{textAlign: 'center', margin: '10px', color: '#df322d'}}>
             {messageErreur}
+            {msgPatient}
         </div>
         {enCours ? 
             <CustomLoader

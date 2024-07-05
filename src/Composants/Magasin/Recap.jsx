@@ -3,14 +3,12 @@ import '../Etats/Etats.css';
 import { ContextChargement } from '../../Context/Chargement';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import ReactToPrint from 'react-to-print';
-import { useSpring, animated } from 'react-spring';
 import { CFormSwitch, CFormSelect } from '@coreui/react';
 
 import { genres, nomDns } from '../../shared/Globals';
 
 export default function Recap(props) {
 
-    const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
 
     const componentRef = useRef();
     const admin = "admin";
@@ -111,7 +109,7 @@ export default function Recap(props) {
     }
 
     return (
-        <animated.div style={props1}>
+        <>
             <section className="etats">
                 <h1 className='fw-bold'>Récapitulatif des sorties du magasin</h1>
                 <div className="container-historique">
@@ -164,6 +162,6 @@ export default function Recap(props) {
                     </div> */}
                 </div>
             </section>
-        </animated.div>
+        </>
     )
 }

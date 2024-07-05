@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useState, useContext } from 'react';
 import './Comptes.css';
 import Modal from 'react-modal';
 import { ContextChargement } from '../../Context/Chargement';
-import { useSpring, animated } from 'react-spring';
 import { ROLES, nomDns } from '../../shared/Globals';
 
 const customStyles1 = {
@@ -38,7 +37,6 @@ const utilisateur = {
 
 export default function Comptes(props) {
 
-    const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
     Modal.defaultStyles.overlay.backgroundColor = '#18202ed3';
 
     const {darkLight} = useContext(ContextChargement);
@@ -234,68 +232,68 @@ export default function Comptes(props) {
 
     return (
 
-        <animated.div style={props1}>
-        <section className="comptes">
-            <Modal
-                isOpen={modalConfirmation}
-                onRequestClose={fermerModalConfirmation}
-                style={customStyles1}
-                contentLabel=""
-            >
-                {changerContenuModal()}
-            </Modal>
-            <Modal
-                isOpen={modalReussi}
-                onRequestClose={fermerModalReussi}
-                style={customStyles2}
-                contentLabel="Commande réussie"
-            >
-                {reussi === 'supp' ?
-                (
-                    <Fragment>
-                        <h2 style={{color: '#fff'}}>Compte supprimé✔️!</h2>
-                        <button style={{width: '25%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalReussi}>Fermer</button>
-                    </Fragment>
-                ) : 
-                (
-                    <Fragment>
-                        <h2 style={{color: '#fff'}}>Compte enregistré !</h2>
-                        <button style={{width: '25%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalReussi}>Fermer</button>
-                    </Fragment>
-                )}
-            </Modal>
-            <h1>Gestions des comptes</h1>
-            <div className='erreur-message'>{messageErreur}</div>
-            <div className="container-gestion">
-                <div className="box-1">
-                    <h1>Comptes</h1>
-                    <ul>
-                        {listeComptes.length > 0 && listeComptes.map(item => (
-                        <li id={item.nom_user} onClick={afficherCompte}>{item.nom_user.toUpperCase()}</li>
-                        ))}
-                    <div className="nv-compte">
-                        <button style={{width: '30%', height: '5vh', marginBottom: '6px'}} className='bootstrap-btn' onClick={ajouterCompte}>ajouter</button>
+        <>
+            <section className="comptes">
+                <Modal
+                    isOpen={modalConfirmation}
+                    onRequestClose={fermerModalConfirmation}
+                    style={customStyles1}
+                    contentLabel=""
+                >
+                    {changerContenuModal()}
+                </Modal>
+                <Modal
+                    isOpen={modalReussi}
+                    onRequestClose={fermerModalReussi}
+                    style={customStyles2}
+                    contentLabel="Commande réussie"
+                >
+                    {reussi === 'supp' ?
+                    (
+                        <Fragment>
+                            <h2 style={{color: '#fff'}}>Compte supprimé✔️!</h2>
+                            <button style={{width: '25%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalReussi}>Fermer</button>
+                        </Fragment>
+                    ) : 
+                    (
+                        <Fragment>
+                            <h2 style={{color: '#fff'}}>Compte enregistré !</h2>
+                            <button style={{width: '25%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalReussi}>Fermer</button>
+                        </Fragment>
+                    )}
+                </Modal>
+                <h1>Gestions des comptes</h1>
+                <div className='erreur-message'>{messageErreur}</div>
+                <div className="container-gestion">
+                    <div className="box-1">
+                        <h1>Comptes</h1>
+                        <ul>
+                            {listeComptes.length > 0 && listeComptes.map(item => (
+                            <li id={item.nom_user} onClick={afficherCompte}>{item.nom_user.toUpperCase()}</li>
+                            ))}
+                        <div className="nv-compte">
+                            <button style={{width: '30%', height: '5vh', marginBottom: '6px'}} className='bootstrap-btn' onClick={ajouterCompte}>ajouter</button>
+                        </div>
+                        </ul>
                     </div>
-                    </ul>
+                    <div className="box-2">
+                    <h1>Détails Compte</h1>
+                    <div className="details-compte" style={{width: '100%', display: 'flex', justifyContent: 'space-around'}}>
+                            <div style={{width: '100%', textAlign: 'center'}}>
+                                <div style={{width: '100%'}}>Nom</div>
+                                <div style={{width: '100%', fontWeight: '600'}}>{compteSelectionne.length > 0 && compteSelectionne[0].nom_user}</div>
+                            </div>
+                            <div style={{width: '100%', textAlign: 'center'}}>
+                                <div style={{width: '100%'}}>Rôle</div>
+                                <div style={{width: '100%', fontWeight: '600'}}>{compteSelectionne.length > 0 && compteSelectionne[0].rol}</div>
+                            </div>
+                    </div>
+                    <div style={{width: '100%', textAlign: 'center',}}>   
+                            <button className='bootstrap-btn annuler' style={{width: '15%', marginTop: '30px', height: '5vh'}} onClick={supprimerCompte}>Supprimer</button>
+                    </div>
+                    </div>
                 </div>
-                <div className="box-2">
-                <h1>Détails Compte</h1>
-                   <div className="details-compte" style={{width: '100%', display: 'flex', justifyContent: 'space-around'}}>
-                        <div style={{width: '100%', textAlign: 'center'}}>
-                            <div style={{width: '100%'}}>Nom</div>
-                            <div style={{width: '100%', fontWeight: '600'}}>{compteSelectionne.length > 0 && compteSelectionne[0].nom_user}</div>
-                        </div>
-                        <div style={{width: '100%', textAlign: 'center'}}>
-                            <div style={{width: '100%'}}>Rôle</div>
-                            <div style={{width: '100%', fontWeight: '600'}}>{compteSelectionne.length > 0 && compteSelectionne[0].rol}</div>
-                        </div>
-                   </div>
-                   <div style={{width: '100%', textAlign: 'center',}}>   
-                        <button className='bootstrap-btn annuler' style={{width: '15%', marginTop: '30px', height: '5vh'}} onClick={supprimerCompte}>Supprimer</button>
-                   </div>
-                </div>
-            </div>
-        </section>
-        </animated.div>
+            </section>
+        </>
     )
 }

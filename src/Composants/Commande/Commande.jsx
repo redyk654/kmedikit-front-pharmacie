@@ -12,13 +12,11 @@ import Modal from 'react-modal';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Loader from "react-loader-spinner";
 import { Toaster, toast } from "react-hot-toast";
-import { FaPlusSquare } from "react-icons/fa";
-import { useSpring, animated } from 'react-spring';
 import { io } from 'socket.io-client';
 import { CCloseButton } from '@coreui/react';
 import EditerProd from '../Approvisionner/EditerProd';
 
-const socket = io.connect(`${nomServeur}`);
+// const socket = io.connect(`${nomServeur}`);
 
 // Styles pour las fenêtres modales
 const customStyles1 = {
@@ -155,7 +153,6 @@ const medocs = {
 
 export default function Commande(props) {
 
-    const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
     Modal.defaultStyles.overlay.backgroundColor = '#18202ed3';
 
     const componentRef = useRef();
@@ -191,6 +188,7 @@ export default function Commande(props) {
     const [enCours, setEncours] = useState(false);
     const [modalNouveauProduit, setModalNouveauProduit] = useState(false);
     const [msgErreur, setMsgErreur] = useState('');
+    const [msgPatient, setMsgPatient] = useState('');
 
     const { code, nom, age, sexe, quartier, assurance, type_assurance } = nouveauPatient;
     const {code_prod, designation, classe, pu_achat, pu_vente, conditionnement, stock_ajoute, min_rec, categorie, date_peremption, montant_commande, genre} = infosMedoc;
@@ -353,26 +351,26 @@ export default function Commande(props) {
                .substring(1).toUpperCase();
     }
 
-    useEffect(() => {
-      socket.on('maj_produits', (data) => {
-        if (data.length > 0) {            
-            setListeMedoc(data);
-            setListeMedocSauvegarde(data);
-            setMedoSelect(false);
-            setMedocCommandes([]);
-        }
-      });
+    // useEffect(() => {
+    //   socket.on('maj_produits', (data) => {
+    //     if (data.length > 0) {            
+    //         setListeMedoc(data);
+    //         setListeMedocSauvegarde(data);
+    //         setMedoSelect(false);
+    //         setMedocCommandes([]);
+    //     }
+    //   });
 
-      socket.on('produit_modifie', () => {
-        setMedoSelect(false);
-        fetchProduits();
-        // console.log('produit modifié');
-      })
+    //   socket.on('produit_modifie', () => {
+    //     setMedoSelect(false);
+    //     fetchProduits();
+    //     // console.log('produit modifié');
+    //   })
 
-    }, [socket])
+    // }, [socket])
     
     const majListeProduits = (data) => {
-        socket.emit('enreg_facture', data);
+        // socket.emit('enreg_facture', data);
     }
 
     const enregisterFacture = (id) => {
@@ -397,7 +395,7 @@ export default function Commande(props) {
 
         req.addEventListener('load', () => {
             majListeProduits(listeMedocSauvegarde);
-            socket.emit('actualiser_facture_pharmacie');
+            // socket.emit('actualiser_facture_pharmacie');
             setMedoSelect(false);
             setMessageErreur('');
             toastVenteEnregistrer();
@@ -640,9 +638,15 @@ export default function Commande(props) {
 
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
-                setPatientChoisi({...nouveauPatient, code: nouveauCodePatient});
-                fermerEditerPatient();
-                resetInfosDuPatient();
+                const result = JSON.parse(req.responseText);
+                if (result.message.toLowerCase() !== 'existe') {
+                    setPatientChoisi({...nouveauPatient, code: nouveauCodePatient});
+                    fermerEditerPatient();
+                    resetInfosDuPatient();
+                    setMsgPatient('');
+                } else {
+                    setMsgPatient('Ce patient existe déjà');
+                }
             }
         });
 
@@ -767,235 +771,236 @@ export default function Commande(props) {
     }
 
     return (
-        <animated.div style={props1}>
-        <div><Toaster/></div>
-        <section className="commande">
-            <Modal
-                isOpen={modalNouveauProduit}
-                onRequestClose={fermerModalNouveauProd}
-                style={customStylesNvProd}
-            >
-                <h1 style={{textAlign: 'center'}}>Nouveau Produit</h1>
-                <EditerProd
-                    code={code}
-                    min_rec={min_rec}
-                    designation={designation}
-                    classe={classe}
-                    categorie={categorie}
-                    pu_vente={pu_vente}
-                    conditionnement={conditionnement}
-                    date_peremption={date_peremption}
-                    stock_ajoute={stock_ajoute}
-                    pu_achat={pu_achat}
-                    genre={genre}
-                    handleChange={handleChangeNvProd}
-                    ajouterMedoc={ajouterNouveauProduit}
-                    nvProd={true}
-                />
-                <div className='fw-bold text-danger' style={{backgroundColor: '#fff'}}>{msgErreur}</div>
-            </Modal>
-            <Modal
-                isOpen={modalEditerPatient}
-                style={customStyles5}
-                contentLabel=""
-            >
-                <EditerPatient
-                    handleChange={handleChangePatient}
-                    fermerEditerPatient={fermerEditerPatient}
-                    ouvrirModalPatient={ouvrirModalPatient}
-                    resetInfosDuPatient={resetInfosDuPatient}
-                    ajouterNouveauPatient={ajouterNouveauPatient}
-                    nom={nom}
-                    age={age}
-                    sexe={sexe}
-                    quartier={quartier}
-                    assurance={assurance}
-                    type_assurance={type_assurance}
-                />
-            </Modal>
-            <Modal
-                isOpen={modalPatient}
-                style={customStyles4}
-                contentLabel="information du patient"
-                ariaHideApp={false}
-                onRequestClose={fermerModalPatient}
-            >
-                {contenuModal()}
-            </Modal>
-            <Modal
-                isOpen={modalAlerte}
-                style={customStyles3}
-                onRequestClose={fermModalAlerte}
-            >
-                <h2 style={{color: '#fff'}}>{alerteStock}</h2>
-                <button style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={fermModalAlerte}>Fermer</button>
-            </Modal>
-            <Modal
-                isOpen={modalConfirmation}
-                style={customStyles1}
-                contentLabel="validation commande"
-            >
-                <h2 style={{color: `${darkLight ? '#fff' : '#18202e'}`, textAlign: 'center', marginBottom: '30px'}}>Confirmation</h2>
-                <p style={{fontWeight: '600', textAlign: 'center', opacity: '.8'}}>
-                    Vous allez valider la vente. Etes-vous sûr ?
-                </p>
-                <div style={{textAlign: 'center', marginTop: '12px'}} className=''>
-                    {enCours ? 
-                    <Loader type="TailSpin" color="#03ca7e" height={50} width={50}/> 
-                        : 
-                    <div>
-                        <button ref={elt2} className='bootstrap-btn annuler' style={{width: '30%', height: '5vh', cursor: 'pointer', marginRight: '10px', borderRadius: '15px'}} onClick={fermerModalConfirmation}>Annuler</button>
-                        <button ref={elt} className="bootstrap-btn valider" style={{width: '30%', height: '5vh', cursor: 'pointer', borderRadius: '15px'}} onClick={validerCommande}>Confirmer</button>
-                    </div>
-                    }
-                </div>
-            </Modal>
-            <Modal
-                isOpen={modalReussi}
-                style={customStyles2}
-                contentLabel="Commande réussie"
-                onRequestClose={fermerChangerPrix}
-            >
-                <h2 style={{color: '#fff'}}>modifier le prix de {medocSelect[0]?.designation}</h2>
-                <input id='modifier-prix' type="number" />
-                <button style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={changerPrixProd}>valider</button>
-            </Modal>
-            <div className="left-side">
-
-                <p className="search-zone">
-                    <input type="text" placeholder="recherchez un produit" className="recherche" onChange={filtrerListe} />
-                </p>
-                <p>
-                    <button className="" onClick={() => {setRafraichir(!rafraichir)}}>rafraichir</button>
-                </p>
-                <div>
-                    <a className='link-primary' onClick={ouvrirChangerPrix} role='button'>changer prix</a>
-                </div>
-                <div className="liste-medoc">
-                    <h1>Liste de produits</h1>
-                    <ul>
-                        {chargement ? <div className="loader"><Loader type="TailSpin" color="#03ca7e" height={100} width={100}/></div> : listeMedoc.map(item => (
-                            <li value={item.id} key={item.id} onClick={afficherInfos} style={{color: `${parseInt(item.en_stock) < parseInt(item.min_rec) || parseInt(item.en_stock) === 0 ? '#ec4641' : ''}`}}>{item.designation.toLowerCase()}</li>
-                        ))}
-                    </ul>
-                    <div>
-                        <button className='bootstrap-btn w-75' onClick={ouvrirModalNouveauProd}>nouveau produit</button>
-                    </div>
-                </div>
-            </div>
-
-            <div className="right-side">
-                <h1>{medocSelect ? "Détails du produit" : "Selectionnez un produit pour voir les détails"}</h1>
-                <div className="infos-medoc">
-                    {medocSelect && medocSelect.map(item => (
-                    <AfficherProd
-                        key={item.id}
-                        code={item.code}
-                        designation={item.designation}
-                        pu_vente={item.pu_vente}
-                        en_stock={item.en_stock}
-                        min_rec={item.min_rec}
-                        categorie={item.categorie}
-                        conditionnement={item.conditionnement}
-                        date_peremption={item.date_peremption}
-                        genre={item.genre}
-                        />
-                    ))}
-                </div>
-                <div className="box">
-                    <div className="detail-item">
-                        <form action="" onSubmit={ajouterMedoc}>
-                            <input className=' d-inline-block w-50 h-50' type="text" id='qte_desire' name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
-                            {/* <button onClick={ajouterMedoc}>ajouter</button> */}
-                            <button type='submit' style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
-                                ajouter
-                            </button>
-                        </form>
-                    </div>
-                    <div style={{textAlign: 'center'}}>
-                        <button className='btn-patient' onClick={infosPatient}>Infos du patient</button>
-                    </div>
-                    <div style={{textAlign: 'center'}}>
-                        {patientChoisi.nom.length > 0 ? (
-                            <div>
-                                Patient: <span style={{color: `${darkLight ? '#fff' : '#000'}`, fontWeight: '700'}}>{patientChoisi.nom.toUpperCase()}</span>
-                            </div>
-                        ) : null}
-                        {patientChoisi.nom.length > 0 ? (
-                            <div>
-                                Code patient: <span style={{color: '#0e771a', fontWeight: '700'}}>{patientChoisi.code.toUpperCase()}</span>
-                            </div>
-                        ) : null}
-                        {patientChoisi.assurance.toUpperCase() !== assuranceDefaut.toUpperCase() ? (
-                            <div style={{}}>
-                                Couvert par: <span style={{color: `${darkLight ? '#fff' : '#000'}`, fontWeight: '700'}}>{patientChoisi.assurance.toLocaleUpperCase()}</span>
-                            </div>
-                        ) : null}
-                    </div>
-                </div>
-
-                <div className='erreur-message'>{messageErreur}</div>
-
-                <div className="details-commande">
-                    <h1>Facture en cours</h1>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Produits</td>
-                                <td>Quantités</td>
-                                <td>Pu</td>
-                                <td>Total</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {medocCommandes.map(item => (
-                                <tr key={item.id} style={{fontWeight: '600', color: `${darkLight ? '#fff' : '#012557'}`, cursor: 'pointer'}} onClick={(e) => retirerCommande(e, item.id)}>
-                                    <td>{item.designation.toLowerCase()}</td>
-                                    <td style={{color: `${parseInt(item.en_stock) < parseInt(item.qte_commander) ? 'red' : ''}`}}>{item.qte_commander}</td>
-                                    <td>{item.pu_vente + ' Fcfa'}</td>
-                                    <td>{item.prix + ' Fcfa' }</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-                    <div className="valider-annuler">
-
-                        <div className="totaux">
-                            Produits : <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: "600"}}>{medocCommandes.length}</span>
-                        </div>
-                        <div className="totaux">
-                            Prix total : <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: "600"}}>{calculerPrixTotal() + ' Fcfa'}</span>
-                        </div>
-                        <div style={{display: `${parseInt(patientChoisi.type_assurance) === 0 ? 'none' : 'block'}`}}>
-                            Assurance: <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: '700'}}>{patientChoisi.type_assurance + '%'}</span>
-                        </div>
+        <>
+            <div><Toaster/></div>
+            <section className="commande">
+                <Modal
+                    isOpen={modalNouveauProduit}
+                    onRequestClose={fermerModalNouveauProd}
+                    style={customStylesNvProd}
+                >
+                    <h1 style={{textAlign: 'center'}}>Nouveau Produit</h1>
+                    <EditerProd
+                        code={code}
+                        min_rec={min_rec}
+                        designation={designation}
+                        classe={classe}
+                        categorie={categorie}
+                        pu_vente={pu_vente}
+                        conditionnement={conditionnement}
+                        date_peremption={date_peremption}
+                        stock_ajoute={stock_ajoute}
+                        pu_achat={pu_achat}
+                        genre={genre}
+                        handleChange={handleChangeNvProd}
+                        ajouterMedoc={ajouterNouveauProduit}
+                        nvProd={true}
+                    />
+                    <div className='fw-bold text-danger' style={{backgroundColor: '#fff'}}>{msgErreur}</div>
+                </Modal>
+                <Modal
+                    isOpen={modalEditerPatient}
+                    style={customStyles5}
+                    contentLabel=""
+                >
+                    <EditerPatient
+                        handleChange={handleChangePatient}
+                        fermerEditerPatient={fermerEditerPatient}
+                        ouvrirModalPatient={ouvrirModalPatient}
+                        resetInfosDuPatient={resetInfosDuPatient}
+                        ajouterNouveauPatient={ajouterNouveauPatient}
+                        msgPatient={msgPatient}
+                        nom={nom}
+                        age={age}
+                        sexe={sexe}
+                        quartier={quartier}
+                        assurance={assurance}
+                        type_assurance={type_assurance}
+                    />
+                </Modal>
+                <Modal
+                    isOpen={modalPatient}
+                    style={customStyles4}
+                    contentLabel="information du patient"
+                    ariaHideApp={false}
+                    onRequestClose={fermerModalPatient}
+                >
+                    {contenuModal()}
+                </Modal>
+                <Modal
+                    isOpen={modalAlerte}
+                    style={customStyles3}
+                    onRequestClose={fermModalAlerte}
+                >
+                    <h2 style={{color: '#fff'}}>{alerteStock}</h2>
+                    <button style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={fermModalAlerte}>Fermer</button>
+                </Modal>
+                <Modal
+                    isOpen={modalConfirmation}
+                    style={customStyles1}
+                    contentLabel="validation commande"
+                >
+                    <h2 style={{color: `${darkLight ? '#fff' : '#18202e'}`, textAlign: 'center', marginBottom: '30px'}}>Confirmation</h2>
+                    <p style={{fontWeight: '600', textAlign: 'center', opacity: '.8'}}>
+                        Vous allez valider la vente. Etes-vous sûr ?
+                    </p>
+                    <div style={{textAlign: 'center', marginTop: '12px'}} className=''>
+                        {enCours ? 
+                        <Loader type="TailSpin" color="#03ca7e" height={50} width={50}/> 
+                            : 
                         <div>
-                            Net à payer : <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: "600"}}>{calculerNetAPayer() + ' Fcfa'}</span>
+                            <button ref={elt2} className='bootstrap-btn annuler' style={{width: '30%', height: '5vh', cursor: 'pointer', marginRight: '10px', borderRadius: '15px'}} onClick={fermerModalConfirmation}>Annuler</button>
+                            <button ref={elt} className="bootstrap-btn valider" style={{width: '30%', height: '5vh', cursor: 'pointer', borderRadius: '15px'}} onClick={validerCommande}>Confirmer</button>
                         </div>
-                        <button className='bootstrap-btn annuler' onClick={annulerCommande}>Annnuler</button>
-                        <button className='bootstrap-btn valider' onClick={demandeConfirmation}>Valider</button>
-
+                        }
                     </div>
-                    {/* <div>
-                        <div style={{display: 'none'}}>
-                            <Facture 
-                            ref={componentRef}
-                            medocCommandes={medocCommandes}
-                            nomConnecte={props.nomConnecte} 
-                            idFacture={idFacture}
-                            prixTotal={qtePrixTotal.prix_total}
-                            aPayer={qtePrixTotal.a_payer}
-                            montantVerse={montantVerse}
-                            relicat={relicat}
-                            resteaPayer={resteaPayer}
-                            />
+                </Modal>
+                <Modal
+                    isOpen={modalReussi}
+                    style={customStyles2}
+                    contentLabel="Commande réussie"
+                    onRequestClose={fermerChangerPrix}
+                >
+                    <h2 style={{color: '#fff'}}>modifier le prix de {medocSelect[0]?.designation}</h2>
+                    <input id='modifier-prix' type="number" />
+                    <button style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={changerPrixProd}>valider</button>
+                </Modal>
+                <div className="left-side">
+
+                    <p className="search-zone">
+                        <input type="text" placeholder="recherchez un produit" className="recherche" onChange={filtrerListe} />
+                    </p>
+                    <p>
+                        <button className="" onClick={() => {setRafraichir(!rafraichir)}}>rafraichir</button>
+                    </p>
+                    <div>
+                        <a className='link-primary' onClick={ouvrirChangerPrix} role='button'>changer prix</a>
+                    </div>
+                    <div className="liste-medoc">
+                        <h1>Liste de produits</h1>
+                        <ul>
+                            {chargement ? <div className="loader"><Loader type="TailSpin" color="#03ca7e" height={100} width={100}/></div> : listeMedoc.map(item => (
+                                <li value={item.id} key={item.id} onClick={afficherInfos} style={{color: `${parseInt(item.en_stock) < parseInt(item.min_rec) || parseInt(item.en_stock) === 0 ? '#ec4641' : ''}`}}>{item.designation.toLowerCase()}</li>
+                            ))}
+                        </ul>
+                        <div>
+                            <button className='bootstrap-btn w-75' onClick={ouvrirModalNouveauProd}>nouveau produit</button>
                         </div>
-                    </div> */}
+                    </div>
                 </div>
-            </div>
-        </section>
-        </animated.div>
+
+                <div className="right-side">
+                    <h1>{medocSelect ? "Détails du produit" : "Selectionnez un produit pour voir les détails"}</h1>
+                    <div className="infos-medoc">
+                        {medocSelect && medocSelect.map(item => (
+                        <AfficherProd
+                            key={item.id}
+                            code={item.code}
+                            designation={item.designation}
+                            pu_vente={item.pu_vente}
+                            en_stock={item.en_stock}
+                            min_rec={item.min_rec}
+                            categorie={item.categorie}
+                            conditionnement={item.conditionnement}
+                            date_peremption={item.date_peremption}
+                            genre={item.genre}
+                            />
+                        ))}
+                    </div>
+                    <div className="box">
+                        <div className="detail-item">
+                            <form action="" onSubmit={ajouterMedoc}>
+                                <input className=' d-inline-block w-50 h-50' type="text" id='qte_desire' name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
+                                {/* <button onClick={ajouterMedoc}>ajouter</button> */}
+                                <button type='submit' style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
+                                    ajouter
+                                </button>
+                            </form>
+                        </div>
+                        <div style={{textAlign: 'center'}}>
+                            <button className='btn-patient' onClick={infosPatient}>Infos du patient</button>
+                        </div>
+                        <div style={{textAlign: 'center'}}>
+                            {patientChoisi.nom.length > 0 ? (
+                                <div>
+                                    Patient: <span style={{color: `${darkLight ? '#fff' : '#000'}`, fontWeight: '700'}}>{patientChoisi.nom.toUpperCase()}</span>
+                                </div>
+                            ) : null}
+                            {patientChoisi.nom.length > 0 ? (
+                                <div>
+                                    Code patient: <span style={{color: '#0e771a', fontWeight: '700'}}>{patientChoisi.code.toUpperCase()}</span>
+                                </div>
+                            ) : null}
+                            {patientChoisi.assurance.toUpperCase() !== assuranceDefaut.toUpperCase() ? (
+                                <div style={{}}>
+                                    Couvert par: <span style={{color: `${darkLight ? '#fff' : '#000'}`, fontWeight: '700'}}>{patientChoisi.assurance.toLocaleUpperCase()}</span>
+                                </div>
+                            ) : null}
+                        </div>
+                    </div>
+
+                    <div className='erreur-message'>{messageErreur}</div>
+
+                    <div className="details-commande">
+                        <h1>Facture en cours</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Produits</td>
+                                    <td>Quantités</td>
+                                    <td>Pu</td>
+                                    <td>Total</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {medocCommandes.map(item => (
+                                    <tr key={item.id} style={{fontWeight: '600', color: `${darkLight ? '#fff' : '#012557'}`, cursor: 'pointer'}} onClick={(e) => retirerCommande(e, item.id)}>
+                                        <td>{item.designation.toLowerCase()}</td>
+                                        <td style={{color: `${parseInt(item.en_stock) < parseInt(item.qte_commander) ? 'red' : ''}`}}>{item.qte_commander}</td>
+                                        <td>{item.pu_vente + ' Fcfa'}</td>
+                                        <td>{item.prix + ' Fcfa' }</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        <div className="valider-annuler">
+
+                            <div className="totaux">
+                                Produits : <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: "600"}}>{medocCommandes.length}</span>
+                            </div>
+                            <div className="totaux">
+                                Prix total : <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: "600"}}>{calculerPrixTotal() + ' Fcfa'}</span>
+                            </div>
+                            <div style={{display: `${parseInt(patientChoisi.type_assurance) === 0 ? 'none' : 'block'}`}}>
+                                Assurance: <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: '700'}}>{patientChoisi.type_assurance + '%'}</span>
+                            </div>
+                            <div>
+                                Net à payer : <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: "600"}}>{calculerNetAPayer() + ' Fcfa'}</span>
+                            </div>
+                            <button className='bootstrap-btn annuler' onClick={annulerCommande}>Annnuler</button>
+                            <button className='bootstrap-btn valider' onClick={demandeConfirmation}>Valider</button>
+
+                        </div>
+                        {/* <div>
+                            <div style={{display: 'none'}}>
+                                <Facture 
+                                ref={componentRef}
+                                medocCommandes={medocCommandes}
+                                nomConnecte={props.nomConnecte} 
+                                idFacture={idFacture}
+                                prixTotal={qtePrixTotal.prix_total}
+                                aPayer={qtePrixTotal.a_payer}
+                                montantVerse={montantVerse}
+                                relicat={relicat}
+                                resteaPayer={resteaPayer}
+                                />
+                            </div>
+                        </div> */}
+                    </div>
+                </div>
+            </section>
+        </>
     )
 }

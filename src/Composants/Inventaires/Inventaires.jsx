@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import '../Bordereau/Bordereau.css';
-import { useSpring, animated } from 'react-spring';
 import { ContextChargement } from '../../Context/Chargement';
 import { ROLES, filtrerListe, formaterNombre, mois, nomDns } from '../../shared/Globals';
 import UseMsgErreur from '../../Customs/UseMsgErreur';
@@ -13,8 +12,6 @@ import ImprimerInventaire from '../../shared/ImprimerInventaire';
 import ReactToPrint from 'react-to-print';
 
 export default function Inventaires(props) {
-
-    const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
 
     const { darkLight, role } = useContext(ContextChargement)
     const componentRef = useRef();
@@ -66,7 +63,7 @@ export default function Inventaires(props) {
     }
 
     return (
-        <animated.div style={props1}>
+        <>
             <section className="container-bordereaux">
                 <div className="box-liste">
                     {/* <TitleH1 val="Liste des commandes"/> */}
@@ -125,6 +122,6 @@ export default function Inventaires(props) {
                 role={role}
               />
             </div>
-        </animated.div>
+        </>
     )
 }

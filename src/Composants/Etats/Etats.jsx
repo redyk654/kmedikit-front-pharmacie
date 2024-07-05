@@ -4,14 +4,11 @@ import { ContextChargement } from '../../Context/Chargement';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import ReactToPrint from 'react-to-print';
 import ImprimerEtat from './ImprimerEtat';
-import { useSpring, animated } from 'react-spring';
 import { CFormSwitch, CFormSelect } from '@coreui/react';
 
 import { genres, nomDns, recupererDateJour, recupererHeureJour } from '../../shared/Globals';
 
 export default function Etats(props) {
-
-    const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
 
     const componentRef = useRef();
     const admin = "admin";
@@ -286,7 +283,7 @@ export default function Etats(props) {
     }
 
     return (
-        <animated.div style={props1}>
+        <>
             <section className="etats">
                 <h1>Historique des ventes</h1>
                 <div className="container-historique">
@@ -396,6 +393,6 @@ export default function Etats(props) {
                     />
                 </div>
             </section>
-        </animated.div>
+        </>
     )
 }

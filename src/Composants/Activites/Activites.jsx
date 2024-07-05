@@ -5,13 +5,12 @@ import { isAlertStockShow, mois, selectProd, genererId, badges, nomDns, corriger
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Modal from 'react-modal';
 import { Toaster, toast } from "react-hot-toast";
-import { useSpring, animated } from 'react-spring';
 import { CBadge } from "@coreui/react";
 import AfficherListeProdInventaires from '../../shared/AfficherListeProdInventaires';
 import SaveInventaire from '../SaveInventaire/SaveInventaire';
 import { io } from 'socket.io-client';
 
-const socket = io.connect(`${nomServeur}`);
+// const socket = io.connect(`${nomServeur}`);
 
 Modal.setAppElement('#root')
 
@@ -44,13 +43,12 @@ const customStyles1 = {
 
 export default function Activites(props) {
 
-    const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
     const { stopChargement, startChargement, darkLight, role} = useContext(ContextChargement);
     Modal.defaultStyles.overlay.backgroundColor = '#18202ed3';
 
     let date_filtre = useRef();
     let btnModifStock = useRef();
-    const date_e = new Date('2024-02-15');
+    const date_e = new Date('2024-12-15');
     const date_j = new Date();
 
     const [listeHistorique, setListeHistorique] = useState([]);
@@ -126,13 +124,12 @@ export default function Activites(props) {
             req.open('GET', `${nomDns}recuperer_historique.php`);
 
             req.addEventListener('load', () => {
+                // console.log(req.responseText);
                 const result = JSON.parse(req.responseText);
                 setListeHistorique(result);
                 setListeSauvegarde(result);
                 // creerListeProduitsInventaires(result);
-                setTimeout(() => {
-                    stopChargement();
-                }, 500);
+                stopChargement();
             });
 
             req.send();
@@ -142,10 +139,10 @@ export default function Activites(props) {
                 setMessageErreur('Erreur réseau');
             });
         } else {
-            setTimeout(() => {
-                props.setConnecter(false);
-                props.setOnglet(1);
-            }, 10000);
+            // setTimeout(() => {
+            //     props.setConnecter(false);
+            //     props.setOnglet(1);
+            // }, 10000);
         }
 
     }, [state]);
@@ -363,7 +360,7 @@ export default function Activites(props) {
                 setListeProduitsRecherches([]);
                 setMedocSelectionne(false);
                 setState(!state);
-                socket.emit('modification_produit');
+                // socket.emit('modification_produit');
                 toast.success('Inventaire sauvegardé avec succès');
             }
         });
@@ -386,133 +383,133 @@ export default function Activites(props) {
     }
 
     return (
-        <animated.div style={props1}>
-        <div><Toaster/></div>
-        <section className="historique">
-            <Modal
-                isOpen={modalInventaire}
-                style={customStyles2}
-                // onRequestClose={fermerModalInventaire}
-            >
-                <SaveInventaire
-                    listeProds={vueListeProduitsInventaires}
-                    listeProduitsRecherches={listeProduitsRecherches}
-                    handleClick={sauvegarderInfosInventaire}
-                    searchProd={searchProd}
-                    handleChangeProd={handleChangeProd}
-                    enCours={enCours}
-                    fermerModalInventaire={fermerModalInventaire}
-                    corrigerStock={callCorrigerStock}
-                    ajouterProduitDansInventaire={ajouterProduitDansInventaire}
-                    supprimerProd={supprimerProdInventaire}
-                />
-            </Modal>
-            <Modal
-                isOpen={modalConfirmation}
-                onRequestClose={fermerModalConfirmation}
-                style={customStyles1}
-                contentLabel="validation commande"
-            >
-                <h2 style={{textAlign: 'center', marginBottom: '10px'}}>Correction du stock de {designation}</h2>
-                <div style={{lineHeight: '24px'}}>
-                    <div style={{textAlign: 'center'}} className='modal-button'>
-                        <label htmlFor="">Stock théorique: </label>
-                        <strong>{stockRestant && stockRestant}</strong>
+        <>
+            <div><Toaster/></div>
+            <section className="historique">
+                <Modal
+                    isOpen={modalInventaire}
+                    style={customStyles2}
+                    // onRequestClose={fermerModalInventaire}
+                >
+                    <SaveInventaire
+                        listeProds={vueListeProduitsInventaires}
+                        listeProduitsRecherches={listeProduitsRecherches}
+                        handleClick={sauvegarderInfosInventaire}
+                        searchProd={searchProd}
+                        handleChangeProd={handleChangeProd}
+                        enCours={enCours}
+                        fermerModalInventaire={fermerModalInventaire}
+                        corrigerStock={callCorrigerStock}
+                        ajouterProduitDansInventaire={ajouterProduitDansInventaire}
+                        supprimerProd={supprimerProdInventaire}
+                    />
+                </Modal>
+                <Modal
+                    isOpen={modalConfirmation}
+                    onRequestClose={fermerModalConfirmation}
+                    style={customStyles1}
+                    contentLabel="validation commande"
+                >
+                    <h2 style={{textAlign: 'center', marginBottom: '10px'}}>Correction du stock de {designation}</h2>
+                    <div style={{lineHeight: '24px'}}>
+                        <div style={{textAlign: 'center'}} className='modal-button'>
+                            <label htmlFor="">Stock théorique: </label>
+                            <strong>{stockRestant && stockRestant}</strong>
+                        </div>
+                        <div style={{textAlign: 'center'}} className='modal-button'>
+                            <label htmlFor="">Stock réel : </label>
+                            <input type="text" style={{width: '75px'}} id="" onChange={handleChange} />
+                        </div>
+                        <div style={{display: `${ecart > 0 || ecart < 0 ? 'block' : 'none'}`, textAlign: 'center'}}>
+                            <label htmlFor="">Ecart : </label>
+                            <strong style={{color: '#ffca18'}}>{ecart > 0 ?  '+' + ecart : ecart}</strong>
+                        </div>
+                        <div style={{textAlign: 'center'}}>
+                            <button ref={btnModifStock} className='bootstrap-btn' style={{cursor: 'pointer', width: '180px', marginTop: '15px'}} onClick={modifierStock}>Enregistrer</button>
+                        </div>
                     </div>
-                    <div style={{textAlign: 'center'}} className='modal-button'>
-                        <label htmlFor="">Stock réel : </label>
-                        <input type="text" style={{width: '75px'}} id="" onChange={handleChange} />
+                </Modal>
+                <h1 >Fiches des stocks du dispensaire</h1>
+                <div className='erreur-message'>{messageErreur}</div>
+                <div className="container-historique">
+                    <div className="medocs-sortis">
+                        <p className="search-zone">
+                            <input type="text" placeholder="recherchez un produit" onChange={filtrerListe2} />
+                        </p>
+                        <p>
+                            <button onClick={ouvrirModalInventaire} className='bootstrap-btn valider' style={{width: '40%'}}>inventaires</button>
+                        </p>
+                        <p>
+                            <select name="genre" id="" onChange={trierAffichage}>
+                                <option value="tout">aucune catégorie</option>
+                                <option value="generique">générique</option>
+                                <option value="sp">spécialité</option>
+                            </select>
+                        </p>
+                        <h1>Produits</h1>
+                        <ul>
+                            <AfficherListeProdInventaires
+                                listeHistorique={listeHistorique}
+                                afficherHistorique={afficherHistorique}
+                            />
+                        </ul>
                     </div>
-                    <div style={{display: `${ecart > 0 || ecart < 0 ? 'block' : 'none'}`, textAlign: 'center'}}>
-                        <label htmlFor="">Ecart : </label>
-                        <strong style={{color: '#ffca18'}}>{ecart > 0 ?  '+' + ecart : ecart}</strong>
-                    </div>
-                    <div style={{textAlign: 'center'}}>
-                        <button ref={btnModifStock} className='bootstrap-btn' style={{cursor: 'pointer', width: '180px', marginTop: '15px'}} onClick={modifierStock}>Enregistrer</button>
-                    </div>
-                </div>
-            </Modal>
-            <h1 >Fiches des stocks du dispensaire</h1>
-            <div className='erreur-message'>{messageErreur}</div>
-            <div className="container-historique">
-                <div className="medocs-sortis">
-                    <p className="search-zone">
-                        <input type="text" placeholder="recherchez un produit" onChange={filtrerListe2} />
-                    </p>
-                    <p>
-                        <button onClick={ouvrirModalInventaire} className='bootstrap-btn valider' style={{width: '40%'}}>inventaires</button>
-                    </p>
-                    <p>
-                        <select name="genre" id="" onChange={trierAffichage}>
-                            <option value="tout">aucune catégorie</option>
-                            <option value="generique">générique</option>
-                            <option value="sp">spécialité</option>
-                        </select>
-                    </p>
-                    <h1>Produits</h1>
-                    <ul>
-                        <AfficherListeProdInventaires
-                            listeHistorique={listeHistorique}
-                            afficherHistorique={afficherHistorique}
-                        />
-                    </ul>
-                </div>
-                <div className="table-commandes">
-                    <div className="entete-historique" style={{display: 'none'}}>
-                        <label htmlFor="filtre">Filtrer : </label>
-                        <input type="checkbox" id="filtre" checked={non_paye} onChange={(e) => setNonPaye(!non_paye)} />
-                    </div>
-                    {/* <div className="entete-historique">
-                        <button className='bootstrap-btn' onClick={() => {setModalConfirmation(true); afterModal();}}>Corriger</button>
-                    </div> */}
-                    <div className="entete-historique" style={{display: `${non_paye ? 'block' : 'none'}`}}>
-                        <label htmlFor="">Date : </label>
-                        <input type="date" id="" ref={date_filtre} onChange={(e) => setDateApprov(e.target.value)} />
-                    </div>
-                    {/* <div className="entete-historique">
-                        Listing du : <span style={{fontWeight: '600'}}>{mois(dateAffiche)}</span>
-                    </div> */}
-                    <div className="entete-historique">Désignation: <span style={{fontWeight: '600'}}>{designation}</span></div>
-                    <div className="entete-historique">Date péremption : <span style={{fontWeight: '600'}}>{datePeremption && datePeremption}</span></div>
-                    <div className="entete-historique">
-                        Total entrées : <span style={{fontWeight: '600'}}>{qteEntre}</span>
-                    </div>
-                    <div className="entete-historique">
-                        Total sorties : <span style={{fontWeight: '600'}}>{qteSortie}</span>
-                    </div>
-                    <div className="entete-historique">Stock Disponible : <span style={{fontWeight: '600'}}>{stockRestant && stockRestant}</span></div>
-                    <h1>Fiche de stock de {designation}</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Le</td>
-                                <td>À</td>
-                                <td>Auteur</td>
-                                <td>Entrée</td>
-                                <td>Sortie</td>
-                                <td>Dispo</td>
-                                <td>Note</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {medocSelectionne ? medocSelectionne.map(item => (
-                                <tr key={item.id_table}>
-                                    <td>{mois(item.date_heure.substring(0, 10))}</td>
-                                    <td>{item.date_heure.substring(11)}</td>
-                                    <td>{item.par.toUpperCase()}</td>
-                                    <td>{item.qte_entre}</td>
-                                    <td>{item.qte_sortie}</td>
-                                    <td>{item.qte_dispo}</td>
-                                    <td>
-                                        <CBadge color={badges[item.remarque]}>{item.remarque}</CBadge>
-                                    </td>
+                    <div className="table-commandes">
+                        <div className="entete-historique" style={{display: 'none'}}>
+                            <label htmlFor="filtre">Filtrer : </label>
+                            <input type="checkbox" id="filtre" checked={non_paye} onChange={(e) => setNonPaye(!non_paye)} />
+                        </div>
+                        {/* <div className="entete-historique">
+                            <button className='bootstrap-btn' onClick={() => {setModalConfirmation(true); afterModal();}}>Corriger</button>
+                        </div> */}
+                        <div className="entete-historique" style={{display: `${non_paye ? 'block' : 'none'}`}}>
+                            <label htmlFor="">Date : </label>
+                            <input type="date" id="" ref={date_filtre} onChange={(e) => setDateApprov(e.target.value)} />
+                        </div>
+                        {/* <div className="entete-historique">
+                            Listing du : <span style={{fontWeight: '600'}}>{mois(dateAffiche)}</span>
+                        </div> */}
+                        <div className="entete-historique">Désignation: <span style={{fontWeight: '600'}}>{designation}</span></div>
+                        <div className="entete-historique">Date péremption : <span style={{fontWeight: '600'}}>{datePeremption && datePeremption}</span></div>
+                        <div className="entete-historique">
+                            Total entrées : <span style={{fontWeight: '600'}}>{qteEntre}</span>
+                        </div>
+                        <div className="entete-historique">
+                            Total sorties : <span style={{fontWeight: '600'}}>{qteSortie}</span>
+                        </div>
+                        <div className="entete-historique">Stock Disponible : <span style={{fontWeight: '600'}}>{stockRestant && stockRestant}</span></div>
+                        <h1>Fiche de stock de {designation}</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Le</td>
+                                    <td>À</td>
+                                    <td>Auteur</td>
+                                    <td>Entrée</td>
+                                    <td>Sortie</td>
+                                    <td>Dispo</td>
+                                    <td>Note</td>
                                 </tr>
-                            )) : null}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {medocSelectionne ? medocSelectionne.map(item => (
+                                    <tr key={item.id_table}>
+                                        <td>{mois(item.date_heure.substring(0, 10))}</td>
+                                        <td>{item.date_heure.substring(11)}</td>
+                                        <td>{item.par.toUpperCase()}</td>
+                                        <td>{item.qte_entre}</td>
+                                        <td>{item.qte_sortie}</td>
+                                        <td>{item.qte_dispo}</td>
+                                        <td>
+                                            <CBadge color={badges[item.remarque]}>{item.remarque}</CBadge>
+                                        </td>
+                                    </tr>
+                                )) : null}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-        </section>
-        </animated.div>
+            </section>
+        </>
     )
 }

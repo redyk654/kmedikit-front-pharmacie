@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import '../Approvisionner/Approvisionner.css';
 import Modal from 'react-modal';
-import { useSpring, animated } from 'react-spring';
 import EditerProd from '../Approvisionner/EditerProd';
 import { Toaster, toast } from "react-hot-toast";
 import Loader from "react-loader-spinner";
@@ -89,8 +88,6 @@ const customStyles3 = {
 
 
 export default function Entrees(props) {
-
-    const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
 
     const elt = useRef();
     const elt2 = useRef();
@@ -392,7 +389,7 @@ export default function Entrees(props) {
     }
 
     return (
-        <animated.div style={props1}>
+        <>
             <div><Toaster/></div>
             <section className="approvisionner">
                 <Modal
@@ -544,6 +541,6 @@ export default function Entrees(props) {
                     </div>
                 </div>
             </section>
-        </animated.div>
+        </>
     )
 }

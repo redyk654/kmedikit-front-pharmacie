@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import AfficherProd from '../AfficherProd/AfficherProd';
 import './ModifierProduit.css';
 import Modal from 'react-modal';
-import { useSpring, animated } from 'react-spring';
 import { ContextChargement } from '../../Context/Chargement';
 import { Toaster, toast } from "react-hot-toast";
 import EditerProd from '../Approvisionner/EditerProd';
@@ -10,7 +9,7 @@ import GererClasses from '../GererClasses/GererClasses';
 import { nomDns, nomServeur } from '../../shared/Globals';
 import { io } from 'socket.io-client';
 
-const socket = io.connect(`${nomServeur}`);
+// const socket = io.connect(`${nomServeur}`);
 
 const customStyles1 = {
     content: {
@@ -56,7 +55,6 @@ const medocs = {
 
 export default function ModifierProduit() {
 
-    const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
     const {darkLight} = useContext(ContextChargement);
 
     const [afficherListe, setAfficherListe] = useState(false);
@@ -157,7 +155,7 @@ export default function ModifierProduit() {
                     setModif(false)
                     setRefetch(!refecth);
                     toastReussi();
-                    socket.emit('modification_produit');
+                    // socket.emit('modification_produit');
                 }
             });
 
@@ -209,7 +207,7 @@ export default function ModifierProduit() {
     }
 
     return (
-        <animated.div style={props1}>
+        <>
             <div><Toaster/></div>
             <section className="modif-produit border border-black">
                 <Modal
@@ -298,6 +296,6 @@ export default function ModifierProduit() {
                     </div>
                 </div>
             </section>
-        </animated.div>
+        </>
     )
 }

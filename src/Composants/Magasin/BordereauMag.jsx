@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
 import AfficherBordereau from '../Bordereau/AfficherBordereau';
 import '../Bordereau/Bordereau.css';
-import { useSpring, animated } from 'react-spring';
 import { ContextChargement } from '../../Context/Chargement';
 import { mois, nomDns } from '../../shared/Globals';
 
 export default function BordereauMag() {
-
-    const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
 
     const {darkLight} = useContext(ContextChargement)
 
@@ -56,7 +53,7 @@ export default function BordereauMag() {
     }
 
     return (
-        <animated.div style={props1}>
+        <>
             <section className="container-bordereaux">
                 <div className="box-liste">
                     <h1>Liste des commandes</h1>
@@ -79,6 +76,6 @@ export default function BordereauMag() {
                     <AfficherBordereau commandesSelectionne={commandesSelectionne} />
                 </div>
             </section>
-        </animated.div>
+        </>
     )
 }

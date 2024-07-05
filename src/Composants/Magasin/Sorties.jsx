@@ -10,10 +10,9 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Loader from "react-loader-spinner";
 import { Toaster, toast } from "react-hot-toast";
 import { FaPlusSquare } from "react-icons/fa";
-import { useSpring, animated } from 'react-spring';
 import { io } from 'socket.io-client';
 
-const socket = io.connect(`${nomServeur}`);
+// const socket = io.connect(`${nomServeur}`);
 
 // Styles pour las fenêtres modales
 const customStyles1 = {
@@ -51,7 +50,6 @@ const customStyles2 = {
 
 export default function Sorties(props) {
 
-    const props1 = useSpring({ to: { opacity: 1 }, from: { opacity: 0 } });
     Modal.defaultStyles.overlay.backgroundColor = '#18202ed3';
 
     const componentRef = useRef();
@@ -232,7 +230,7 @@ export default function Sorties(props) {
             setModalConfirmation(false);
             setEncours(false);
             annulerCommande();
-            socket.emit('modification_produit');
+            // socket.emit('modification_produit');
         });
 
         req.addEventListener("error", function () {
@@ -398,132 +396,132 @@ export default function Sorties(props) {
     }
 
     return (
-        <animated.div style={props1}>
-        <div><Toaster/></div>
-        <section className="commande">
-            <Modal
-                isOpen={modalConfirmation}
-                style={customStyles1}
-                contentLabel="validation commande"
-            >
-                <h2 style={{color: `${darkLight ? '#fff' : '#18202e'}`, textAlign: 'center', marginBottom: '30px'}}>Confirmation</h2>
-                <p style={{fontWeight: '600', textAlign: 'center', opacity: '.8'}}>
-                    Vous allez valider la sortie. Etes-vous sûr ?
-                </p>
-                <div style={{textAlign: 'center', marginTop: '12px'}} className=''>
-                    {enCours ? 
-                    <Loader type="TailSpin" color="#03ca7e" height={50} width={50}/> 
-                        : 
-                    <div>
-                        <button ref={elt2} className='bootstrap-btn annuler' style={{width: '30%', height: '5vh', cursor: 'pointer', marginRight: '10px', borderRadius: '15px'}} onClick={fermerModalConfirmation}>Annuler</button>
-                        <button ref={elt} className="bootstrap-btn valider" style={{width: '30%', height: '5vh', cursor: 'pointer', borderRadius: '15px'}} onClick={validerCommande}>Confirmer</button>
-                    </div>
-                    }
-                </div>
-            </Modal>
-            <div className="left-side">
-
-                <p className="search-zone">
-                    <input type="text" placeholder="recherchez un produit" className="recherche" onChange={filtrerListe} />
-                </p>
-                <p>
-                    {/* <button className="rafraichir" onClick={() => {setRafraichir(!rafraichir)}}>rafraichir</button> */}
-                </p>
-                <div className="liste-medoc">
-                    <h1>Liste de produits</h1>
-                    <ul>
-                        {chargement ? <div className="loader"><Loader type="TailSpin" color="#03ca7e" height={100} width={100}/></div> : listeMedoc.map(item => (
-                            <li value={item.id} key={item.id} onClick={afficherInfos} style={{color: `${parseInt(item.en_stock) < parseInt(item.min_rec) || parseInt(item.en_stock) === 0 ? '#ec4641' : ''}`}}>{item.designation.toLowerCase()}</li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-
-            <div className="right-side">
-                <h1>{medocSelect ? "Détails du produit" : "Selectionnez un produit pour voir les détails"}</h1>
-
-                <div className="infos-medoc">
-                    {medocSelect && medocSelect.map(item => (
-                    <AfficherProd
-                        key={item.id}
-                        code={item.code}
-                        designation={item.designation}
-                        pu_vente={item.pu_vente}
-                        en_stock={item.en_stock}
-                        min_rec={item.min_rec}
-                        categorie={item.categorie}
-                        conditionnement={item.conditionnement}
-                        date_peremption={item.date_peremption}
-                        genre={item.genre}
-                        />
-                    ))}
-                </div>
-                <div className="box">
-                    <div className="detail-item">
-                        <input type="text" name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
-                        {/* <button onClick={ajouterMedoc}>ajouter</button> */}
-                        <div onClick={ajouterMedoc} style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
-                            <FaPlusSquare color='#00BCD4' size={35} />
+        <>
+            <div><Toaster/></div>
+            <section className="commande">
+                <Modal
+                    isOpen={modalConfirmation}
+                    style={customStyles1}
+                    contentLabel="validation commande"
+                >
+                    <h2 style={{color: `${darkLight ? '#fff' : '#18202e'}`, textAlign: 'center', marginBottom: '30px'}}>Confirmation</h2>
+                    <p style={{fontWeight: '600', textAlign: 'center', opacity: '.8'}}>
+                        Vous allez valider la sortie. Etes-vous sûr ?
+                    </p>
+                    <div style={{textAlign: 'center', marginTop: '12px'}} className=''>
+                        {enCours ? 
+                        <Loader type="TailSpin" color="#03ca7e" height={50} width={50}/> 
+                            : 
+                        <div>
+                            <button ref={elt2} className='bootstrap-btn annuler' style={{width: '30%', height: '5vh', cursor: 'pointer', marginRight: '10px', borderRadius: '15px'}} onClick={fermerModalConfirmation}>Annuler</button>
+                            <button ref={elt} className="bootstrap-btn valider" style={{width: '30%', height: '5vh', cursor: 'pointer', borderRadius: '15px'}} onClick={validerCommande}>Confirmer</button>
                         </div>
+                        }
                     </div>
-                </div>
+                </Modal>
+                <div className="left-side">
 
-                <div className='erreur-message'>{messageErreur}</div>
-
-                <div className="details-commande">
-                    <h1>Sortie en cours</h1>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Produits</td>
-                                <td>Quantités</td>
-                                {/* <td>Pu</td>
-                                <td>Total</td> */}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {medocCommandes.map(item => (
-                                <tr key={item.id} style={{fontWeight: '600', color: `${darkLight ? '#fff' : '#012557'}`, cursor: 'pointer'}} onClick={(e) => retirerCommande(e, item.id)}>
-                                    <td>{item.designation}</td>
-                                    <td style={{color: `${parseInt(item.en_stock) < parseInt(item.qte_commander) ? 'red' : ''}`}}>{item.qte_commander}</td>
-                                    {/* <td>{item.pu_vente + ' Fcfa'}</td>
-                                    <td>{item.prix + ' Fcfa' }</td> */}
-                                </tr>
+                    <p className="search-zone">
+                        <input type="text" placeholder="recherchez un produit" className="recherche" onChange={filtrerListe} />
+                    </p>
+                    <p>
+                        {/* <button className="rafraichir" onClick={() => {setRafraichir(!rafraichir)}}>rafraichir</button> */}
+                    </p>
+                    <div className="liste-medoc">
+                        <h1>Liste de produits</h1>
+                        <ul>
+                            {chargement ? <div className="loader"><Loader type="TailSpin" color="#03ca7e" height={100} width={100}/></div> : listeMedoc.map(item => (
+                                <li value={item.id} key={item.id} onClick={afficherInfos} style={{color: `${parseInt(item.en_stock) < parseInt(item.min_rec) || parseInt(item.en_stock) === 0 ? '#ec4641' : ''}`}}>{item.designation.toLowerCase()}</li>
                             ))}
-                        </tbody>
-                    </table>
-
-                    <div className="valider-annuler">
-
-                        <div className="totaux">
-                            Produits : <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: "600"}}>{medocCommandes.length}</span>
-                        </div>
-                        {/* <div className="totaux">
-                            Prix total : <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: "600"}}>{calculerPrixTotal() + ' Fcfa'}</span>
-                        </div> */}
-                        <button className='bootstrap-btn annuler' onClick={annulerCommande}>Annnuler</button>
-                        <button className='bootstrap-btn valider' onClick={demandeConfirmation}>Valider</button>
-
+                        </ul>
                     </div>
-                    {/* <div>
-                        <div style={{display: 'none'}}>
-                            <Facture 
-                            ref={componentRef}
-                            medocCommandes={medocCommandes}
-                            nomConnecte={props.nomConnecte} 
-                            idFacture={idFacture}
-                            prixTotal={qtePrixTotal.prix_total}
-                            aPayer={qtePrixTotal.a_payer}
-                            montantVerse={montantVerse}
-                            relicat={relicat}
-                            resteaPayer={resteaPayer}
-                            />
-                        </div>
-                    </div> */}
                 </div>
-            </div>
-        </section>
-        </animated.div>
+
+                <div className="right-side">
+                    <h1>{medocSelect ? "Détails du produit" : "Selectionnez un produit pour voir les détails"}</h1>
+
+                    <div className="infos-medoc">
+                        {medocSelect && medocSelect.map(item => (
+                        <AfficherProd
+                            key={item.id}
+                            code={item.code}
+                            designation={item.designation}
+                            pu_vente={item.pu_vente}
+                            en_stock={item.en_stock}
+                            min_rec={item.min_rec}
+                            categorie={item.categorie}
+                            conditionnement={item.conditionnement}
+                            date_peremption={item.date_peremption}
+                            genre={item.genre}
+                            />
+                        ))}
+                    </div>
+                    <div className="box">
+                        <div className="detail-item">
+                            <input type="text" name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
+                            {/* <button onClick={ajouterMedoc}>ajouter</button> */}
+                            <div onClick={ajouterMedoc} style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
+                                <FaPlusSquare color='#00BCD4' size={35} />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='erreur-message'>{messageErreur}</div>
+
+                    <div className="details-commande">
+                        <h1>Sortie en cours</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Produits</td>
+                                    <td>Quantités</td>
+                                    {/* <td>Pu</td>
+                                    <td>Total</td> */}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {medocCommandes.map(item => (
+                                    <tr key={item.id} style={{fontWeight: '600', color: `${darkLight ? '#fff' : '#012557'}`, cursor: 'pointer'}} onClick={(e) => retirerCommande(e, item.id)}>
+                                        <td>{item.designation}</td>
+                                        <td style={{color: `${parseInt(item.en_stock) < parseInt(item.qte_commander) ? 'red' : ''}`}}>{item.qte_commander}</td>
+                                        {/* <td>{item.pu_vente + ' Fcfa'}</td>
+                                        <td>{item.prix + ' Fcfa' }</td> */}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+
+                        <div className="valider-annuler">
+
+                            <div className="totaux">
+                                Produits : <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: "600"}}>{medocCommandes.length}</span>
+                            </div>
+                            {/* <div className="totaux">
+                                Prix total : <span style={{color: `${darkLight ? '#fff' : '#012557'}`, fontWeight: "600"}}>{calculerPrixTotal() + ' Fcfa'}</span>
+                            </div> */}
+                            <button className='bootstrap-btn annuler' onClick={annulerCommande}>Annnuler</button>
+                            <button className='bootstrap-btn valider' onClick={demandeConfirmation}>Valider</button>
+
+                        </div>
+                        {/* <div>
+                            <div style={{display: 'none'}}>
+                                <Facture 
+                                ref={componentRef}
+                                medocCommandes={medocCommandes}
+                                nomConnecte={props.nomConnecte} 
+                                idFacture={idFacture}
+                                prixTotal={qtePrixTotal.prix_total}
+                                aPayer={qtePrixTotal.a_payer}
+                                montantVerse={montantVerse}
+                                relicat={relicat}
+                                resteaPayer={resteaPayer}
+                                />
+                            </div>
+                        </div> */}
+                    </div>
+                </div>
+            </section>
+        </>
     )
 }

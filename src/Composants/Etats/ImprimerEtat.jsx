@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { mois, mois2, styleEntete } from "../../shared/Globals";
+import { getDateTime, mois, mois2, styleEntete } from "../../shared/Globals";
 import logo from '../../images/logo-minsante.png';
 import EnteteHopital from '../../shared/EnteteHopital';
 
@@ -37,6 +37,19 @@ const table_styles = {
 
 export default class ImprimerEtat extends Component {
 
+    state = {
+        currentDate: ''
+    }
+
+    componentDidMount() {
+        this.execGetDateTime();
+    }
+
+     execGetDateTime = async () => {
+        const dateTime = await getDateTime();
+        this.setState({currentDate: dateTime.date});
+    }
+
     render() {
         return (
             <div style={{backgroundColor: '#f1f1f1', height: '100vh', marginTop: '70px'}}>
@@ -46,7 +59,7 @@ export default class ImprimerEtat extends Component {
                         <p className='text-center h4'>Fiche des recettes de la pharmacie</p>
                         <div style={{marginTop: 5}}>
                             tiré le &nbsp;
-                            <span style={{fontWeight: '600', marginTop: '15px'}}>{this.props.infoRecette ? mois(this.props.infoRecette[0].date_heure.substring(0, 11)) : (mois(new Date().toLocaleDateString()) + ' ')} à {this.props.infoRecette ? this.props.infoRecette[0].date_heure.substring(11,) : (' ' + new Date().getHours() + 'h' + new Date().getMinutes() + 'min')}</span>
+                            <span style={{fontWeight: '600', marginTop: '15px'}}>{this.props.infoRecette ? mois(this.props.infoRecette[0].date_heure.substring(0, 11)) : (mois(this.state.currentDate.substring(0, 10)) + ' ')} à {this.props.infoRecette ? this.props.infoRecette[0].date_heure.substring(11,) : (' ' + this.state.currentDate.substring(11, 16))}</span>
                         </div>
                         {this.props.filtre ? 
                             <div style={{marginTop: 5}}>Service fait par <span style={{fontWeight: '600', marginTop: '15px'}}>{this.props.caissier.toUpperCase()}</span></div>
