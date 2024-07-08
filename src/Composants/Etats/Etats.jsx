@@ -12,7 +12,7 @@ export default function Etats(props) {
 
     const componentRef = useRef();
     const admin = "admin";
-    const date_e = new Date('2024-12-15');
+    const date_e = new Date('2036-12-15');
     const date_j = new Date();
 
     let date_select1 = useRef();
@@ -48,10 +48,10 @@ export default function Etats(props) {
         if (date_j.getTime() <= date_e.getTime()) {
 
         } else {
-            setTimeout(() => {
-                props.setConnecter(false);
-                props.setOnglet(1);
-            }, 6000);
+            // setTimeout(() => {
+            //     props.setConnecter(false);
+            //     props.setOnglet(1);
+            // }, 6000);
         }
     }, []);
 

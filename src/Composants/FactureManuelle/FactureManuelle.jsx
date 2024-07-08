@@ -98,7 +98,7 @@ export default function FactureManuelle(props) {
     const assuranceDefaut = 'aucune';
     const {chargement, stopChargement, startChargement, darkLight} = useContext(ContextChargement);
 
-    const date_e = new Date('2024-12-15');
+    const date_e = new Date('2036-12-15');
     const date_j = new Date();
 
     const [enDev, setEnDev] = useState(false);
@@ -138,10 +138,10 @@ export default function FactureManuelle(props) {
         if (date_j.getTime() <= date_e.getTime()) {
             fetchProduits();
         } else {
-            setTimeout(() => {
-                props.setConnecter(false);
-                props.setOnglet(1);
-            }, 10000);
+            // setTimeout(() => {
+            //     props.setConnecter(false);
+            //     props.setOnglet(1);
+            // }, 10000);
         }
     }, [rafraichir]);
 

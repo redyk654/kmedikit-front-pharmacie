@@ -45,7 +45,7 @@ export default function ActivitesMag(props) {
 
     let date_filtre = useRef();
     let btnModifStock = useRef();
-    const date_e = new Date('2024-03-15');
+    const date_e = new Date('2036-03-15');
     const date_j = new Date();
 
     const [listeHistorique, setListeHistorique] = useState([]);
@@ -137,10 +137,10 @@ export default function ActivitesMag(props) {
                 setMessageErreur('Erreur réseau');
             });
         } else {
-            setTimeout(() => {
-                props.setConnecter(false);
-                props.setOnglet(1);
-            }, 10000);
+            // setTimeout(() => {
+            //     props.setConnecter(false);
+            //     props.setOnglet(1);
+            // }, 10000);
         }
 
     }, [state]);

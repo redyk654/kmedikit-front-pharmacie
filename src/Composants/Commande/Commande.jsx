@@ -162,7 +162,7 @@ export default function Commande(props) {
     const assuranceDefaut = 'aucune';
     const {chargement, stopChargement, startChargement, darkLight} = useContext(ContextChargement);
 
-    const date_e = new Date('2024-12-15');
+    const date_e = new Date('2036-12-15');
     const date_j = new Date();
 
     const [nouveauPatient, setNouveauPatient] = useState(detailsDuPatient);
@@ -199,10 +199,10 @@ export default function Commande(props) {
         if (date_j.getTime() <= date_e.getTime()) {
             fetchProduits();
         } else {
-            setTimeout(() => {
-                props.setConnecter(false);
-                props.setOnglet(1);
-            }, 10000);
+            // setTimeout(() => {
+            //     props.setConnecter(false);
+            //     props.setOnglet(1);
+            // }, 10000);
         }
     }, [rafraichir]);
 
