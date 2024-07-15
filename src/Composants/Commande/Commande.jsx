@@ -241,11 +241,11 @@ export default function Commande(props) {
 
         if (qteDesire && !isNaN(qteDesire) && medocSelect) {
 
-            if (parseInt(qteDesire) > medocSelect[0].en_stock) {
-                setMessageErreur('Stock insuffisant')
-            } else if (medocSelect[0].en_stock == 0) {
-                setMessageErreur('Le stock de ' + medocSelect[0].designation + ' est épuisé')
-            } else {
+            // if (parseInt(qteDesire) > medocSelect[0].en_stock) {
+            //     setMessageErreur('Stock insuffisant')
+            // } else if (medocSelect[0].en_stock == 0) {
+            //     setMessageErreur('Le stock de ' + medocSelect[0].designation + ' est épuisé')
+            // } else {
                 setMessageErreur('');
                 Object.defineProperty(medocSelect[0], 'qte_commander', {
                     value: qteDesire,
@@ -266,7 +266,7 @@ export default function Commande(props) {
                 setQteDesire('');
                 document.querySelector('.recherche').value = "";
                 document.querySelector('.recherche').focus();
-            }
+            // }
         } else {
             setMessageErreur("La quantité désiré est manquante ou n'est pas un nombre")
         }
@@ -463,11 +463,19 @@ export default function Commande(props) {
                         setMessageErreur('');
                         listeMedocSauvegarde.map(item2 => {
                             if (item2.id == item.id) {
-                                Object.defineProperty(item2, 'en_stock', {
-                                    value: parseInt(item.en_stock) - parseInt(item.qte_commander),
-                                    configurable: true,
-                                    enumerable: true,
-                                });
+                                if (parseInt(item.en_stock) < parseInt(item.qte_commander)) {
+                                    Object.defineProperty(item2, 'en_stock', {
+                                        value: 0,
+                                        configurable: true,
+                                        enumerable: true,
+                                    });
+                                } else {
+                                    Object.defineProperty(item2, 'en_stock', {
+                                        value: parseInt(item.en_stock) - parseInt(item.qte_commander),
+                                        configurable: true,
+                                        enumerable: true,
+                                    });
+                                }
                             }
                         });
                         i++;
