@@ -18,6 +18,7 @@ import Dispensaire from './Composants/Dispensaire/Dispensaire';
 import CIcon from '@coreui/icons-react';
 import { cilMedicalCross } from '@coreui/icons';
 import Historique from './Composants/Historique/Historique';
+import ListingFactures from './Composants/Listing/ListingFactures.jsx';
 
 
 function App() {
@@ -65,6 +66,12 @@ function App() {
     case 9:
       contenu = <Historique nomConnecte={nomConnecte} />
       break;
+    case 10:
+      contenu = <ListingFactures nomConnecte={nomConnecte} role={role} />
+      break;
+
+    case 11:
+      contenu = <GestionFactures nomConnecte={nomConnecte} role={role} />
   }
 
   const changerOnglet = (onglet) => {
@@ -102,6 +109,16 @@ function App() {
                 <FaChartBar size={19} />
                 &nbsp;
                 Statistiques
+              </div>
+              <div className={`tab ${onglet === 10 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(10)}}>
+                <FaClipboardList size={18} />
+                &nbsp;
+                Listing-factures
+              </div>
+              <div className={`tab ${onglet === 11 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(11)}}>
+                <FaReceipt size={18} />
+                &nbsp;
+                Factures
               </div>
             </div>
             <div className="onglets-contenu">
@@ -169,10 +186,15 @@ function App() {
                 &nbsp;
                 Factures Manuelles
               </div>
-              <div className={`tab ${onglet === 9 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(9)}}>
+              <div className={`tab ${onglet === 10 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(10)}}>
                 <FaClipboardList size={18} />
                 &nbsp;
-                Fiche des stocks
+                Listing-factures
+              </div>
+              <div className={`tab ${onglet === 11 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(11)}}>
+                <FaReceipt size={18} />
+                &nbsp;
+                Factures
               </div>
             </div>
             <div className="onglets-contenu">

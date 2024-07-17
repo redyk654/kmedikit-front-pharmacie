@@ -89,10 +89,10 @@ export default class ImprimerEtat extends Component {
                         <div style={{marginTop: 10}}>Specialités : <strong>{this.props.total ? this.props.recetteSp + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
                         <div style={{marginTop: 10}}>Total : <strong>{this.props.total ? this.props.total + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
                         <div style={{marginTop: 5}}>
-                            <h1>
+                            <h5>
                                 ATTENTION AU DECOUPAGE DES DONNÉES LORS DE L'IMPRESSION !
                                 CERTAINES DONNÉES PEUVENT NE PAS APPARAITRE SUR LA COPIE IMPRIMÉE
-                            </h1>
+                            </h5>
                         </div>
                         {/* <div style={{marginTop: 15}}>Recette : <strong>{this.props.total ? this.props.recetteReel + ' Fcfa' : 0 + ' Fcfa'}</strong></div> */}
                     </div>
