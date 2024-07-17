@@ -7,6 +7,7 @@ import { CBadge } from '@coreui/react';
 import CIcon from '@coreui/icons-react'
 import { cilReload, cilXCircle } from '@coreui/icons';
 import { io } from 'socket.io-client';
+import FacturePharmacie from '../Facture/Facture';
 
 // const socket = io.connect('http://serveur:3010');
 
@@ -84,9 +85,9 @@ export default function GestionFactures(props) {
         setfactureSauvegarde([]);
         const req = new XMLHttpRequest();
         if (filtrer) {
-            req.open('GET', `${nomDns}gestion_factures.php?filtrer=oui`);
+            req.open('GET', `${nomDns}factures_pharmacie.php`);
             const req2 = new XMLHttpRequest();
-            req2.open('GET', `${nomDns}gestion_factures.php?filtrer=oui&manquant`);
+            req2.open('GET', `${nomDns}factures_pharmacie.php`);
             req2.addEventListener('load', () => {
                 const result = JSON.parse(req2.responseText);
                 setManquantTotal(result[0].manquant);
@@ -94,7 +95,7 @@ export default function GestionFactures(props) {
             req2.send();
 
         } else {
-            req.open('GET', `${nomDns}gestion_factures.php`);
+            req.open('GET', `${nomDns}factures_pharmacie.php`);
         }
         req.addEventListener("load", () => {
             if (req.status >= 200 && req.status < 400) { // Le serveur a réussi à traiter la requête
@@ -119,7 +120,7 @@ export default function GestionFactures(props) {
         if (factureSelectionne.length > 0) {
             const req = new XMLHttpRequest();
     
-            req.open('GET', `${nomDns}gestion_factures.php?id=${factureSelectionne[0].id}`);
+            req.open('GET', `${nomDns}factures_pharmacie.php?id=${factureSelectionne[0].id}`);
     
             req.addEventListener('load', () => {
                 const result = JSON.parse(req.responseText);
@@ -342,8 +343,8 @@ export default function GestionFactures(props) {
                                             {item.designation}
                                             {parseInt(item.statu_acte) ? <CBadge color='danger'>annulé</CBadge> : null}  
                                         </td>
-                                        <td style={table_styles2}>{item.prix}</td>
-                                        <td style={table_styles2}>{item.qte}</td>
+                                        <td style={table_styles2}>{parseInt(item.prix_total) / parseInt(item.quantite)}</td>
+                                        <td style={table_styles2}>{item.quantite}</td>
                                         <td style={table_styles2}>{item.prix_total}</td>
                                         {/* {(props.role.toUpperCase() === ROLES.regisseur.toUpperCase() || props.role.toUpperCase() === ROLES.admin.toUpperCase()) && (                                            
                                             <td>
@@ -375,10 +376,10 @@ export default function GestionFactures(props) {
                         <div>Net à payer <span style={{fontWeight: 700, color: '#038654'}}>{factureSelectionne.length > 0 && factureSelectionne[0].a_payer + ' Fcfa'}</span></div>
                     </div>
                     <div>
-                        <div>Réduction <span style={{fontWeight: 700, color: '#038654'}}>{factureSelectionne.length > 0 && factureSelectionne[0].reduction + ' %'}</span></div>
+                        <div>Reste à payer <span style={{fontWeight: 700, color: '#038654'}}>{factureSelectionne.length > 0 && factureSelectionne[0].reste_a_payer + ' Fcfa'}</span></div>
                     </div>
                     <div>
-                        <div>Reste à payer <span style={{fontWeight: 700, color: '#038654'}}>{factureSelectionne.length > 0 && factureSelectionne[0].reste_a_payer + ' Fcfa'}</span></div>
+                        <div>Commis pharmacie <span style={{fontWeight: 700, color: '#038654'}}>{factureSelectionne.length > 0 && factureSelectionne[0].vendeur}</span></div>
                     </div>
                     <div>
                         <div>Caissier <span style={{fontWeight: 700, color: '#038654'}}>{factureSelectionne.length > 0 && factureSelectionne[0].caissier.toUpperCase()}</span></div>
@@ -390,31 +391,32 @@ export default function GestionFactures(props) {
                                 content={() => componentRef.current}
                             />
                         </div>
-                        <div style={{display: `${props.role.toUpperCase() !== ROLES.admin.toUpperCase() && 'none' }`}}>
+                        {/* <div style={{display: `${props.role.toUpperCase() !== ROLES.admin.toUpperCase() && 'none' }`}}>
                             <button className='bootstrap-btn annuler' style={{width: '15vw', height: '5vh', marginLeft: '30px'}} onClick={() => {if(detailsFacture.length > 0) setModalConfirmation(true)}}>Annuler</button>
-                        </div>
+                        </div> */}
                     </div>
                     <div>
                         {factureSelectionne.length > 0 && (
                             <div style={{display: 'none'}}>
-                                {/* <FactureEnreg
+                                <FacturePharmacie
                                     ref={componentRef}
-                                    detailsFacture={detailsFacture}
+                                    medocCommandes={detailsFacture}
                                     idFacture={factureSelectionne[0].id}
                                     patient={factureSelectionne[0].patient}
                                     codePatient={factureSelectionne[0].code_patient}
                                     prixTotal={factureSelectionne[0].prix_total}
                                     reduction={factureSelectionne[0].reduction}
                                     aPayer={factureSelectionne[0].a_payer}
-                                    montantVerse={0}
-                                    relicat={factureSelectionne[0].relicat}
+                                    montantVerse={factureSelectionne[0].a_payer}
+                                    relicat={relicat}
+                                    resteaPayer={0}
+                                    date={factureSelectionne[0].date_heure}
+                                    caissier={props.nomConnecte}
+                                    commis={factureSelectionne[0].vendeur}
                                     assurance={factureSelectionne[0].assurance}
                                     type_assurance={factureSelectionne[0].type_assurance}
-                                    resteaPayer={factureSelectionne[0].reste_a_payer}
-                                    date={factureSelectionne[0].date_heure}
-                                    nomConnecte={factureSelectionne[0].caissier}
-                                    montantFrais={factureSelectionne[0].frais}
-                                /> */}
+                                    dateJour={factureSelectionne[0].date_heure}
+                                />
                             </div>
                         )}
                     </div>
