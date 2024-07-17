@@ -127,7 +127,7 @@ export const tipHeureFin = "Pour les recettes du jour, choisissez l'heure de fin
 
 export const genres = {
     "": "non répertorié",
-    specialite: "sp",
+    sp: "specialite",
     generique: "generique",
 }
 
@@ -223,12 +223,12 @@ export const liensPhilmedical = {
 }
 
 
-export const nomDns = backendLocal;
+export const nomDns = hdmbanga;
 export const nomServeur = serveur;
 
 export const getDateTime = async () => {
     try {
-        const response = await fetch(`${backendLocal}get_time.php`);
+        const response = await fetch(`${hdmbanga}get_time.php`);
         const data = await response.json();
         return data;
     } catch (error) {
