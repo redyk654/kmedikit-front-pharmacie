@@ -269,7 +269,9 @@ export default function FactureManuelle(props) {
     }
 
     // Enregistrement d'un médicament dans la commande
-    const ajouterMedoc = () => {
+    const ajouterMedoc = (e) => {
+        e.preventDefault();
+
         /* 
             - Mise à jour de la quantité du médicament commandé dans la liste des commandes
             - Mise à jour du prix total du médicament commandé
@@ -281,11 +283,6 @@ export default function FactureManuelle(props) {
 
         if (qteDesire && !isNaN(qteDesire) && medocSelect) {
 
-            if (parseInt(qteDesire) > medocSelect[0].en_stock) {
-                setMessageErreur('Stock insuffisant')
-            } else if (medocSelect[0].en_stock == 0) {
-                setMessageErreur('Le stock de ' + medocSelect[0].designation + ' est épuisé')
-            } else {
                 setMessageErreur('');
                 Object.defineProperty(medocSelect[0], 'qte_commander', {
                     value: qteDesire,
@@ -306,7 +303,6 @@ export default function FactureManuelle(props) {
                 setQteDesire('');
                 document.querySelector('.recherche').value = "";
                 document.querySelector('.recherche').focus();
-            }
         } else {
             setMessageErreur("La quantité désiré est manquante ou n'est pas un nombre")
         }
@@ -462,11 +458,19 @@ export default function FactureManuelle(props) {
                         setMessageErreur('');
                         listeMedocSauvegarde.map(item2 => {
                             if (item2.id == item.id) {
-                                Object.defineProperty(item2, 'en_stock', {
-                                    value: parseInt(item.en_stock) - parseInt(item.qte_commander),
-                                    configurable: true,
-                                    enumerable: true,
-                                });
+                                if (parseInt(item.en_stock) < parseInt(item.qte_commander)) {
+                                    Object.defineProperty(item2, 'en_stock', {
+                                        value: 0,
+                                        configurable: true,
+                                        enumerable: true,
+                                    });
+                                } else {
+                                    Object.defineProperty(item2, 'en_stock', {
+                                        value: parseInt(item.en_stock) - parseInt(item.qte_commander),
+                                        configurable: true,
+                                        enumerable: true,
+                                    });
+                                }
                             }
                         });
                         i++;
@@ -789,11 +793,13 @@ export default function FactureManuelle(props) {
                     </div>
                     <div className="box">
                         <div className="detail-item">
-                            <input type="text" name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
-                            {/* <button onClick={ajouterMedoc}>ajouter</button> */}
-                            <div onClick={ajouterMedoc} style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
-                                <FaPlusSquare color='#00BCD4' size={35} />
-                            </div>
+                            <form action="" onSubmit={ajouterMedoc}>
+                                <input className=' d-inline-block w-50 h-50' type="text" id='qte_desire' name="qteDesire" value={qteDesire} onChange={(e) => {setQteDesire(e.target.value)}} autoComplete='off' />
+                                {/* <button onClick={ajouterMedoc}>ajouter</button> */}
+                                <button type='submit' style={{display: 'inline-block', marginTop: '6px', cursor: 'pointer'}}>
+                                    ajouter
+                                </button>
+                            </form>
                         </div>
                         {/* <div style={{textAlign: 'center'}}>
                             <button className='btn-patient' onClick={infosPatient}>Infos du patient</button>
@@ -859,7 +865,7 @@ export default function FactureManuelle(props) {
                         </div>
                         <div>
                             <div style={{display: 'none'}}>
-                                <Facture 
+                                {/* <Facture 
                                 ref={componentRef}
                                 medocCommandes={medocCommandes}
                                 nomConnecte={props.nomConnecte} 
@@ -869,7 +875,7 @@ export default function FactureManuelle(props) {
                                 montantVerse={montantVerse}
                                 relicat={relicat}
                                 resteaPayer={resteaPayer}
-                                />
+                                /> */}
                             </div>
                         </div>
                     </div>

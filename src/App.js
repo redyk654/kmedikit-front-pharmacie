@@ -88,7 +88,7 @@ function App() {
               <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(6)}}>
                 <FaReceipt size={18} />
                 &nbsp;
-                Etats
+                Listing-produits
               </div>
               <div className={`tab ${onglet === 2 ? 'active' : ''}  ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(2)}}>
                 <CIcon icon={cilMedicalCross} size={'lg'} />
@@ -146,7 +146,7 @@ function App() {
               <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(6)}}>
                 <FaReceipt size={22} />
                 &nbsp;
-                Etats
+                Listing-produits
               </div>
             <div className={`tab ${onglet === 8 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(8)}}>
                 <FaReceipt size={22} />
@@ -179,7 +179,7 @@ function App() {
               <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(6)}}>
                 <FaClipboardList size={22} />
                 &nbsp;
-                Etats
+                Listing-produits
               </div>
               <div className={`tab ${onglet === 8 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(8)}}>
                 <FaReceipt size={22} />

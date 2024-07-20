@@ -214,7 +214,7 @@ export default function Etats(props) {
     const calculerRecetteParGenre = (tab) => {
 
         let recetteG = tab.reduce((acc, curr) => {
-            if (curr.genre === genres.generique) {
+            if (genres[`${curr.genre}`] === genres.generique) {
                 return acc + parseInt(curr.prix_total)
             } else {
                 return acc;
@@ -222,7 +222,7 @@ export default function Etats(props) {
         }, 0)
 
         let recetteS = tab.reduce((acc, curr) => {
-            if (curr.genre === genres.specialite) {
+            if (genres[`${curr.genre}`] === genres.sp) {
                 return acc + parseInt(curr.prix_total)
             } else {
                 return acc;

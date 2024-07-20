@@ -49,7 +49,7 @@ export default function CorpsFacturePharmacie(props) {
             <div style={{marginTop: 2, textTransform: 'capitalize'}}>
                 patient :
                 <span style={{fontWeight: '600', marginTop: '15px', color: 'black'}}>
-                    &nbsp; {props.patient.toUpperCase()}
+                    &nbsp; {props.patient?.toUpperCase()}
                 </span>
             </div>
             <div style={{marginTop: 2, textTransform: 'capitalize'}}>

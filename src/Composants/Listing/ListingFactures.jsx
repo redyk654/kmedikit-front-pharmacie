@@ -179,7 +179,7 @@ export default function ListingFactures(props) {
 
     const recupererHeureDernierService = () => {
         const req = new XMLHttpRequest();
-        req.open('GET', `${nomDns}horaire_caisse.php?recup_heure`);
+        req.open('GET', `${nomDns}horaire_pharmacie.php?recup_heure`);
 
         req.addEventListener('load', () => {
             if(req.status >= 200 && req.status < 400) {
