@@ -171,7 +171,9 @@ export const SEXES = {
 export const styleEntete = {
     color: 'black',
     borderBottom: '1px dotted #000',
-    letterSpacing: '1px'
+    letterSpacing: '1px',
+    fontSize: 5
+
 }
 
 export const corrigerStock = (e, listeProduitsInventaires) => {

@@ -48,7 +48,7 @@ export default function Activites(props) {
 
     let date_filtre = useRef();
     let btnModifStock = useRef();
-    const date_e = new Date('2036-12-15');
+    const date_e = new Date('2025-07-15');
     const date_j = new Date();
 
     const [listeHistorique, setListeHistorique] = useState([]);
