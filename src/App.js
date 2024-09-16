@@ -138,11 +138,11 @@ function App() {
                 &nbsp;
                 Ventes
               </div>
-              {/* <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(3)}}>
+              <div className={`tab ${onglet === 3 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(3)}}>
                 <FaLayerGroup size={22} />
                 &nbsp;
                 Gestion des stocks
-              </div> */}
+              </div>
               <div className={`tab ${onglet === 6 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(6)}}>
                 <FaReceipt size={22} />
                 &nbsp;
@@ -195,6 +195,11 @@ function App() {
                 <FaReceipt size={18} />
                 &nbsp;
                 Factures
+              </div>
+              <div className={`tab ${onglet === 9 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(9)}}>
+                <FaClipboardList size={18} />
+                &nbsp;
+                Fiche des stocks
               </div>
             </div>
             <div className="onglets-contenu">
