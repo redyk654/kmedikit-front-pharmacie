@@ -16,7 +16,7 @@ import { io } from 'socket.io-client';
 import { CCloseButton } from '@coreui/react';
 import EditerProd from '../Approvisionner/EditerProd';
 
-// const socket = io.connect(`${nomServeur}`);
+const socket = io.connect(`${nomServeur}`);
 
 // Styles pour las fenêtres modales
 const customStyles1 = {
@@ -351,26 +351,26 @@ export default function Commande(props) {
                .substring(1).toUpperCase();
     }
 
-    // useEffect(() => {
-    //   socket.on('maj_produits', (data) => {
-    //     if (data.length > 0) {            
-    //         setListeMedoc(data);
-    //         setListeMedocSauvegarde(data);
-    //         setMedoSelect(false);
-    //         setMedocCommandes([]);
-    //     }
-    //   });
+    useEffect(() => {
+      socket.on('maj_produits', (data) => {
+        if (data.length > 0) {            
+            setListeMedoc(data);
+            setListeMedocSauvegarde(data);
+            setMedoSelect(false);
+            setMedocCommandes([]);
+        }
+      });
 
-    //   socket.on('produit_modifie', () => {
-    //     setMedoSelect(false);
-    //     fetchProduits();
-    //     // console.log('produit modifié');
-    //   })
+      socket.on('produit_modifie', () => {
+        setMedoSelect(false);
+        fetchProduits();
+        // console.log('produit modifié');
+      })
 
-    // }, [socket])
+    }, [socket])
     
     const majListeProduits = (data) => {
-        // socket.emit('enreg_facture', data);
+        socket.emit('enreg_facture', data);
     }
 
     const enregisterFacture = (id) => {
@@ -395,7 +395,7 @@ export default function Commande(props) {
 
         req.addEventListener('load', () => {
             majListeProduits(listeMedocSauvegarde);
-            // socket.emit('actualiser_facture_pharmacie');
+            socket.emit('actualiser_facture_pharmacie');
             setMedoSelect(false);
             setMessageErreur('');
             toastVenteEnregistrer();
