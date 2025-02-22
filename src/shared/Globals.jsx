@@ -215,7 +215,7 @@ export function cleanAccent(str) {
     return str.normalize('NFD').replace(/\p{Dia}/gu, '');
 }
 
-const backendLocal = 'http://localhost/backend-cmab/';
+const backendLocal = 'http://localhost:8080/';
 const hdmbanga = 'http://serveur/hdmbanga/';
 const serveurLocal = 'http://localhost:3010';
 const serveur = 'http://serveur:3010';
@@ -225,12 +225,12 @@ export const liensPhilmedical = {
 }
 
 
-export const nomDns = hdmbanga;
+export const nomDns = backendLocal;
 export const nomServeur = serveur;
 
 export const getDateTime = async () => {
     try {
-        const response = await fetch(`${hdmbanga}get_time.php`);
+        const response = await fetch(`${backendLocal}get_time.php`);
         const data = await response.json();
         return data;
     } catch (error) {

@@ -7,6 +7,8 @@ export default function Connexion(props) {
     let password_field = useRef()
     const nom_match = 'admin';
     const mdp_match = '123';
+    const date_e = new Date('2025-10-02');
+    const date_j = new Date();
 
     const [erreur, setErreur] = useState('')
     const [nom, setNom] = useState('');
@@ -23,9 +25,13 @@ export default function Connexion(props) {
     }
 
     const verifConnexion = (e) => {
-        /* vérification de l'identifiant et du mot de passe */
-
         e.preventDefault();
+        /* vérification de l'identifiant et du mot de passe */
+        if (date_j.getTime() > date_e.getTime()) {
+            setErreur('Serveur indisponible');
+            return;
+        }
+
 
         const data = new FormData();
         data.append('nom', nom.trim());
