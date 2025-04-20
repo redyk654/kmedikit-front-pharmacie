@@ -52,14 +52,14 @@
 }
 
 .container-facture .liste-medoc ul li {
-    color: #03ca7e;
+    color: #1a1919;
     font-weight: 600;
     width: 100%;
     line-height: 35px;
 }
 
 .container-facture .liste-medoc ul li:hover {
-    background-color: #03ca7e;
+    background-color: #05774b;
     color: #f1f1f1;
     cursor: pointer;
 }

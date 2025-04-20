@@ -285,7 +285,7 @@ export default function Etats(props) {
     return (
         <>
             <section className="etats">
-                <h1>Historique des ventes</h1>
+                <h1>Listing des produits</h1>
                 <div className="container-historique">
                     <div className="table-commandes">
                         <div className="entete-historique">

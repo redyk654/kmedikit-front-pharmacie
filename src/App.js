@@ -90,6 +90,11 @@ function App() {
                 &nbsp;
                 Listing-produits
               </div>
+              <div className={`tab ${onglet === 10 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(10)}}>
+                <FaClipboardList size={18} />
+                &nbsp;
+                Listing-factures
+              </div>
               <div className={`tab ${onglet === 2 ? 'active' : ''}  ${darkLight ? 'dark' : ''}`} onClick={ () => {changerOnglet(2)}}>
                 <CIcon icon={cilMedicalCross} size={'lg'} />
                 &nbsp;
@@ -109,11 +114,6 @@ function App() {
                 <FaChartBar size={19} />
                 &nbsp;
                 Statistiques
-              </div>
-              <div className={`tab ${onglet === 10 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(10)}}>
-                <FaClipboardList size={18} />
-                &nbsp;
-                Listing-factures
               </div>
               <div className={`tab ${onglet === 11 ? 'active' : ''} ${darkLight ? 'dark' : ''}`} onClick={ () => {setOnglet(11)}}>
                 <FaReceipt size={18} />

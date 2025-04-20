@@ -11,6 +11,24 @@ import FacturePharmacie from '../Facture/Facture';
 
 // const socket = io.connect('http://serveur:3010');
 
+const customStyles1 = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        background: '#ffffff',
+        borderRadius: '10px',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+        padding: '20px',
+        width: '90%',
+        maxWidth: '500px',
+        color: '#333',
+    },
+};
+
 const customStyles2 = {
     content: {
         top: '50%',
@@ -19,19 +37,14 @@ const customStyles2 = {
         bottom: 'auto',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
-        background: '#0e771a',
-      },
-};
-
-const customStyles1 = {
-    content: {
-      top: '15%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-      background: '#0e771a',
+        background: '#ffffff',
+        borderRadius: '10px',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+        padding: '20px',
+        width: '90%',
+        maxWidth: '500px',
+        color: '#333',
+        textAlign: 'center',
     },
 };
 
@@ -163,7 +176,46 @@ export default function GestionFactures(props) {
         }
     }
 
+    const majDesStocks = () => {
+        // console.log("Données envoyées:", JSON.stringify(detailsFacture));
+        
+        // Mettre à jour les stocks de médicaments
+        fetch(`${nomDns}maj_stocks_supprimes.php?user=${props.nomConnecte}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(detailsFacture)
+        })
+        .then(response => {
+            console.log("Status:", response.status);
+            if (response.ok) {
+                return response.text().then(text => {
+                    console.log("Réponse du serveur:", text);
+                    
+                    setModalReussi(true);
+                    setModalConfirmation(false);
+                    setSupp(false);
+                    seteffet(!effet);
+                    setfactureSelectionne([]);
+                    setdetailsFacture([]);
+                });
+            } else {
+                return response.text().then(text => {
+                    console.error('Erreur:', response.status, text);
+                    throw new Error(`Erreur ${response.status}: ${text}`);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Erreur complète:', error);
+        });
+    }
+
     const supprimerFacture = () => {
+        // console.log(JSON.stringify(detailsFacture));
+        majDesStocks();
+        
         document.querySelector('.valider').disabled = true;
         document.querySelector('.supp').disabled = true;
         // Suppression d'une facture
@@ -175,9 +227,7 @@ export default function GestionFactures(props) {
         
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
-                setModalConfirmation(false);
-                setSupp(true);
-                setModalReussi(true);
+                majDesStocks();
             }
         });
 
@@ -196,78 +246,6 @@ export default function GestionFactures(props) {
         setModalConfirmation(false);
     }
 
-    const annulerActe = (idFacture, designation) => {
-        // mettre à jour le statut de l'acte dans la vue
-        let acte = detailsFacture.filter(item => (item.designation === designation));
-        acte = {...acte[0], statu_acte: 1};
-        let filterDetailsFacture = detailsFacture.filter(item => (item.designation !== designation));
-        filterDetailsFacture.push(acte);
-        
-        // mettre à jour le statut de l'acte dans la base de données
-        const data = new FormData();
-        data.append('id_facture', idFacture);
-        data.append('designation', designation);
-
-        const req = new XMLHttpRequest();
-        req.open('POST', `${nomDns}annuler_acte.php?statu_acte=1`);
-
-        req.addEventListener('load', () => {
-            if (req.status >= 200 && req.status < 400) {
-                setdetailsFacture(filterDetailsFacture);
-                let nouveauNetAPayer = parseInt(factureSelectionne[0].a_payer) - (parseInt(acte.prix_total) - (parseInt(acte.prix_total) * (parseInt(acte.reduction) / 100)));
-                majNetAPayer(idFacture, nouveauNetAPayer);
-            }
-        });
-
-        req.send(data);
-    }
-
-    const majNetAPayer = (idFacture, nouveauNetAPayer) => {
-        const data = new FormData();
-        data.append('id_facture', idFacture);
-        data.append('nouveau_net_a_payer', nouveauNetAPayer);
-
-        const req = new XMLHttpRequest();
-        req.open('POST', `${nomDns}annuler_acte.php?maj_net_a_payer`);
-
-        req.addEventListener('load', () => {
-            if (req.status >= 200 && req.status < 400) {
-                setfactureSelectionne([{...factureSelectionne[0], a_payer: nouveauNetAPayer}]);
-                seteffet(!effet);
-                // socket.emit('suppression_acte');
-            }
-        });
-
-        req.send(data);
-    }
-
-    const restaurerActe = (idFacture, designation) => {
-
-        // mettre à jour le statut de l'acte dans la vue
-        let acte = detailsFacture.filter(item => (item.designation === designation));
-        acte = {...acte[0], statu_acte: 0};
-        let filterDetailsFacture = detailsFacture.filter(item => (item.designation !== designation));
-        filterDetailsFacture.push(acte);
-        
-        // mettre à jour le statut de l'acte dans la base de données
-        const data = new FormData();
-        data.append('id_facture', idFacture);
-        data.append('designation', designation);
-
-        const req = new XMLHttpRequest();
-        req.open('POST', `${nomDns}annuler_acte.php?statu_acte=0`);
-
-        req.addEventListener('load', () => {
-            if (req.status >= 200 && req.status < 400) {
-                setdetailsFacture(filterDetailsFacture);
-                let nouveauNetAPayer = parseInt(factureSelectionne[0].a_payer) + (parseInt(acte.prix_total) - (parseInt(acte.prix_total) * (parseInt(acte.reduction) / 100)));
-                majNetAPayer(idFacture, nouveauNetAPayer);
-            }
-        });
-
-        req.send(data);
-    }
-
     return (
         <div className="container-facture">
             <Modal
@@ -276,10 +254,10 @@ export default function GestionFactures(props) {
                 contentLabel="validation commande"
                 onRequestClose={fermerModalConfirmation}
             >
-                <h5 style={{color: '#fff'}}>Annuler une facture entraine sa suppression de la base de données. Voulez-vous continuer ?</h5>
+                <h4 style={{color: '#000'}}>Annuler une facture entraine sa suppression de la base de données. Voulez-vous continuer ?</h4>
                 <div style={{textAlign: 'center'}} className='modal-button'>
-                    <button className="supp" style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalConfirmation}>NON</button>
-                    <button className="valider" style={{width: '20%', height: '5vh', cursor: 'pointer'}} onClick={supprimerFacture}>OUI</button>
+                    <button className="supp bootstrap-btn annuler" style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalConfirmation}>NON</button>
+                    <button className="bootstrap-btn valider" style={{width: '20%', height: '5vh', cursor: 'pointer'}} onClick={supprimerFacture}>OUI</button>
                 </div>
             </Modal>
             <Modal
@@ -290,10 +268,10 @@ export default function GestionFactures(props) {
             >
                 {
                     supp ? 
-                    (<h2 style={{color: '#fff'}}>Facture supprimé ✔ !</h2>) :
-                    (<h2 style={{color: '#fff'}}>Service effectué !</h2>)
+                    (<h2 style={{color: '#000'}}>Facture annulé ✔ !</h2>) :
+                    (<h2 style={{color: '#000'}}>Facture annulé ✔ !</h2>)
                 }
-                <button style={{width: '30%', height: '5vh', cursor: 'pointer', marginRight: '15px', fontSize: 'large'}} onClick={fermerModalReussi}>Fermer</button>
+                <button className='bootstrap-btn valider' style={{width: '50%'}} onClick={fermerModalReussi}>Fermer</button>
             </Modal>
             <div className="liste-medoc">
 
@@ -391,9 +369,9 @@ export default function GestionFactures(props) {
                                 content={() => componentRef.current}
                             />
                         </div>
-                        {/* <div style={{display: `${props.role.toUpperCase() !== ROLES.admin.toUpperCase() && 'none' }`}}>
+                        <div style={{display: `${props.role.toUpperCase() !== ROLES.admin.toUpperCase() && 'none' }`}}>
                             <button className='bootstrap-btn annuler' style={{width: '15vw', height: '5vh', marginLeft: '30px'}} onClick={() => {if(detailsFacture.length > 0) setModalConfirmation(true)}}>Annuler</button>
-                        </div> */}
+                        </div>
                     </div>
                     <div>
                         {factureSelectionne.length > 0 && (

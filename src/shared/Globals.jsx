@@ -90,6 +90,7 @@ export const badges = {
     correction: "dark",
     sortie: "info",
     livraison: "success",
+    annulation: "danger",
 }
 
 export function isAlertStockShow (produit) {
