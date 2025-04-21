@@ -176,8 +176,16 @@ export default function GestionFactures(props) {
         }
     }
 
-    const majDesStocks = () => {
-        // console.log("Données envoyées:", JSON.stringify(detailsFacture));
+    const annulerProduit = (produit) => {
+        const elt = document.getElementById('annuler-produit');
+        // disable le bouton d'annulation
+        elt.disabled = true;
+        elt.style.cursor = 'not-allowed';
+        elt.style.color = '#f1f1f1';
+        elt.style.pointerEvents = 'none';
+        console.log("Données envoyées:", JSON.stringify(produit));
+        console.log(produit);
+        
         
         // Mettre à jour les stocks de médicaments
         fetch(`${nomDns}maj_stocks_supprimes.php?user=${props.nomConnecte}`, {
@@ -185,20 +193,14 @@ export default function GestionFactures(props) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(detailsFacture)
+            body: JSON.stringify(produit)
         })
         .then(response => {
             console.log("Status:", response.status);
             if (response.ok) {
                 return response.text().then(text => {
                     console.log("Réponse du serveur:", text);
-                    
-                    setModalReussi(true);
-                    setModalConfirmation(false);
-                    setSupp(false);
-                    seteffet(!effet);
-                    setfactureSelectionne([]);
-                    setdetailsFacture([]);
+                    majLaVue(produit);
                 });
             } else {
                 return response.text().then(text => {
@@ -212,9 +214,21 @@ export default function GestionFactures(props) {
         });
     }
 
+    const majLaVue = (produit) => {
+        // Mettre à jour la vue
+        produit = {...produit, status_vente: 'non payé'};
+        let filterDetailsFacture = detailsFacture.filter(item => item.id !== produit.id);
+        filterDetailsFacture.push(produit);
+        setdetailsFacture(filterDetailsFacture);
+
+        let nouveauNetAPayer = parseInt(factureSelectionne[0].a_payer) - parseInt(produit.prix_total);
+        setfactureSelectionne([{...factureSelectionne[0], a_payer: nouveauNetAPayer}]);
+        seteffet(!effet);
+    }
+
     const supprimerFacture = () => {
         // console.log(JSON.stringify(detailsFacture));
-        majDesStocks();
+        // annulerProduit();
         
         document.querySelector('.valider').disabled = true;
         document.querySelector('.supp').disabled = true;
@@ -227,7 +241,7 @@ export default function GestionFactures(props) {
         
         req.addEventListener('load', () => {
             if (req.status >= 200 && req.status < 400) {
-                majDesStocks();
+                annulerProduit();
             }
         });
 
@@ -319,32 +333,23 @@ export default function GestionFactures(props) {
                                     <tr>
                                         <td style={table_styles1} role="button" onClick={() => setVisible(true)}>
                                             {item.designation}
-                                            {parseInt(item.statu_acte) ? <CBadge color='danger'>annulé</CBadge> : null}  
+                                            {item.status_vente === "payé" ? null : <CBadge color='danger'>annulé</CBadge>}  
                                         </td>
                                         <td style={table_styles2}>{parseInt(item.prix_total) / parseInt(item.quantite)}</td>
                                         <td style={table_styles2}>{item.quantite}</td>
                                         <td style={table_styles2}>{item.prix_total}</td>
-                                        {/* {(props.role.toUpperCase() === ROLES.regisseur.toUpperCase() || props.role.toUpperCase() === ROLES.admin.toUpperCase()) && (                                            
-                                            <td>
-                                                {parseInt(item.statu_acte) ? 
-                                                (<CIcon
-                                                    onClick={() => restaurerActe(item.id_facture, item.designation)}
-                                                    icon={cilReload}
-                                                    className="text-success"
-                                                    role="button"
-                                                    size='lg'
-                                                />) : 
-                                                (
-                                                    <CIcon
-                                                        onClick={() => annulerActe(item.id_facture, item.designation)}
-                                                        icon={cilXCircle}
-                                                        className="text-danger"
-                                                        role="button"
-                                                        size='lg'
-                                                    />
-                                                )}
-                                            </td>
-                                        )} */}
+                                        <td>
+                                            {item.status_vente === "payé" && 
+                                            <CIcon
+                                                id='annuler-produit'
+                                                onClick={() => annulerProduit(item)}
+                                                icon={cilXCircle}
+                                                className="text-danger"
+                                                role="button"
+                                                size='lg'
+                                            />
+                                            }
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
