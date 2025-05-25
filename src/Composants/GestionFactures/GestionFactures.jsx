@@ -374,9 +374,9 @@ export default function GestionFactures(props) {
                                 content={() => componentRef.current}
                             />
                         </div>
-                        <div style={{display: `${props.role.toUpperCase() !== ROLES.admin.toUpperCase() && 'none' }`}}>
+                        {/* <div style={{display: `${props.role.toUpperCase() !== ROLES.admin.toUpperCase() && 'none' }`}}>
                             <button className='bootstrap-btn annuler' style={{width: '15vw', height: '5vh', marginLeft: '30px'}} onClick={() => {if(detailsFacture.length > 0) setModalConfirmation(true)}}>Annuler</button>
-                        </div>
+                        </div> */}
                     </div>
                     <div>
                         {factureSelectionne.length > 0 && (
