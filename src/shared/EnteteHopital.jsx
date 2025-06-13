@@ -21,7 +21,7 @@ export default function EnteteHopital() {
                 </div>
             </CCol>
             <CCol className='text-center pt-5'>
-                <img src={logo} alt="" width={100} height={100} />
+                <img src={logo} alt="" width={60} height={60} />
             </CCol>
             <CCol style={{ lineHeight: '20px'}}>
                 <div style={styleEntete}><strong>Republic of Cameroon <br/><em style={{textTransform: 'capitalize'}}>Peace-Work-Fatherland</em></strong></div>
