@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import './GestionFactures.css';
 import ReactToPrint from 'react-to-print';
 import Modal from 'react-modal';
@@ -8,45 +8,9 @@ import CIcon from '@coreui/icons-react'
 import { cilReload, cilXCircle } from '@coreui/icons';
 import { io } from 'socket.io-client';
 import FacturePharmacie from '../Facture/Facture';
+import { ContextChargement } from '../../Context/Chargement';
 
 // const socket = io.connect('http://serveur:3010');
-
-const customStyles1 = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-        background: '#ffffff',
-        borderRadius: '10px',
-        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-        padding: '20px',
-        width: '90%',
-        maxWidth: '500px',
-        color: '#333',
-    },
-};
-
-const customStyles2 = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-        background: '#ffffff',
-        borderRadius: '10px',
-        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-        padding: '20px',
-        width: '90%',
-        maxWidth: '500px',
-        color: '#333',
-        textAlign: 'center',
-    },
-};
 
 const table_styles1 = {
     border: '1px solid #000',
@@ -74,45 +38,47 @@ const table_styles = {
 
 export default function GestionFactures(props) {
 
+    const { dateDebut, dateFin, changeDateDebut, changeDateFin } = useContext(ContextChargement);
+    
+
     const componentRef = useRef();
+
+    let date_select1 = useRef();
+    let date_select2 = useRef();
+    
 
     const [factures, setFactures] = useState([]);
     const [factureSauvegarde, setfactureSauvegarde] = useState([]);
-    const [montantVerse, setmontantVerse] = useState('');
     const [verse, setverse] = useState(0);
     const [relicat, setrelicat] = useState(0);
     const [resteaPayer, setresteaPayer] = useState(0);
     const [filtrer, setFiltrer] = useState(false);
-    const [manquantTotal, setManquantTotal] = useState(0);
     const [factureSelectionne, setfactureSelectionne] = useState([]);
     const [detailsFacture, setdetailsFacture] = useState([]);
     const [effet, seteffet] = useState(false);
     const [effet2, seteffet2] = useState(false);
-    const [supp, setSupp] =  useState(true);
-    const [modalReussi, setModalReussi] = useState(false);
-    const [modalConfirmation, setModalConfirmation] = useState(false);
-    const [visible, setVisible] = useState(false)
+    const [isLoad, SetIsLoad] =  useState(false);
 
     useEffect(() => {
+        fetchFactures()
+    }, [dateDebut, dateFin, effet])
+
+    const fetchFactures = () => {
+
+        if (!dateDebut || !dateFin) {
+            return
+        }
+
         setFactures([])
         setfactureSauvegarde([]);
-        const req = new XMLHttpRequest();
-        if (filtrer) {
-            req.open('GET', `${nomDns}factures_pharmacie.php`);
-            const req2 = new XMLHttpRequest();
-            req2.open('GET', `${nomDns}factures_pharmacie.php`);
-            req2.addEventListener('load', () => {
-                const result = JSON.parse(req2.responseText);
-                setManquantTotal(result[0].manquant);
-            })
-            req2.send();
 
-        } else {
-            req.open('GET', `${nomDns}factures_pharmacie.php`);
-        }
+        const req = new XMLHttpRequest();
+        req.open('GET', `${nomDns}get_factures_pharmacie_by_date.php?pharmacie&debut=${dateDebut}&fin=${dateFin}`);
+
         req.addEventListener("load", () => {
             if (req.status >= 200 && req.status < 400) { // Le serveur a réussi à traiter la requête
                 const result = JSON.parse(req.responseText);
+                
                 setFactures(result);
                 setfactureSauvegarde(result);
 
@@ -127,7 +93,7 @@ export default function GestionFactures(props) {
         });
 
         req.send();
-    }, [filtrer, effet])
+    }
 
     useEffect(() => {
         if (factureSelectionne.length > 0) {
@@ -138,7 +104,6 @@ export default function GestionFactures(props) {
             req.addEventListener('load', () => {
                 const result = JSON.parse(req.responseText);
                 setdetailsFacture(result);
-                fermerModalConfirmation();
             });
 
             req.send();
@@ -177,15 +142,10 @@ export default function GestionFactures(props) {
     }
 
     const annulerProduit = (produit) => {
-        const elt = document.getElementById('annuler-produit');
         // disable le bouton d'annulation
-        elt.disabled = true;
-        elt.style.cursor = 'not-allowed';
-        elt.style.color = '#f1f1f1';
-        elt.style.pointerEvents = 'none';
-        console.log("Données envoyées:", JSON.stringify(produit));
-        console.log(produit);
-        
+        SetIsLoad(true);
+        // console.log("Données envoyées:", JSON.stringify(produit));
+        // console.log(produit);
         
         // Mettre à jour les stocks de médicaments
         fetch(`${nomDns}maj_stocks_supprimes.php?user=${props.nomConnecte}`, {
@@ -216,92 +176,52 @@ export default function GestionFactures(props) {
 
     const majLaVue = (produit) => {
         // Mettre à jour la vue
-        produit = {...produit, status_vente: 'non payé'};
+        produit = {...produit, status_vente: 'annuled'};
         let filterDetailsFacture = detailsFacture.filter(item => item.id !== produit.id);
         filterDetailsFacture.push(produit);
         setdetailsFacture(filterDetailsFacture);
 
         let nouveauNetAPayer = parseInt(factureSelectionne[0].a_payer) - parseInt(produit.prix_total);
-        setfactureSelectionne([{...factureSelectionne[0], a_payer: nouveauNetAPayer}]);
+        setfactureSelectionne([{...factureSelectionne[0], a_payer: nouveauNetAPayer < 0 ? 0 : nouveauNetAPayer}]);
+
+        const elt = document.getElementById('annuler-produit');
+        // disable le bouton d'annulation
+        elt.disabled = false;
+        elt.style.cursor = 'pointer';
+
         seteffet(!effet);
     }
 
-    const supprimerFacture = () => {
-        // console.log(JSON.stringify(detailsFacture));
-        // annulerProduit();
-        
-        document.querySelector('.valider').disabled = true;
-        document.querySelector('.supp').disabled = true;
-        // Suppression d'une facture
-        const data = new FormData();
-        data.append('id', factureSelectionne[0].id);
-
-        const req = new XMLHttpRequest();
-        req.open('POST', `${nomDns}supprimer_facture.php`);
-        
-        req.addEventListener('load', () => {
-            if (req.status >= 200 && req.status < 400) {
-                annulerProduit();
-            }
-        });
-
-        req.send(data);
-    }
-
-    const fermerModalReussi = () => {
-        setModalReussi(false);
-        seteffet(!effet);
-        reinitialsation();
-        setfactureSelectionne([]);
-        setdetailsFacture([]);
-    }
-
-    const fermerModalConfirmation = () => {
-        setModalConfirmation(false);
+    const rechercherHistorique = () => {
+        changeDateDebut(date_select1.current.value + ' 00:00:00')
+        changeDateFin(date_select2.current.value + ' 23:59:59')
+        seteffet(!effet)
     }
 
     return (
         <div className="container-facture">
-            <Modal
-                isOpen={modalConfirmation}
-                style={customStyles1}
-                contentLabel="validation commande"
-                onRequestClose={fermerModalConfirmation}
-            >
-                <h4 style={{color: '#000'}}>Annuler une facture entraine sa suppression de la base de données. Voulez-vous continuer ?</h4>
-                <div style={{textAlign: 'center'}} className='modal-button'>
-                    <button className="supp bootstrap-btn annuler" style={{width: '20%', height: '5vh', cursor: 'pointer', marginRight: '10px'}} onClick={fermerModalConfirmation}>NON</button>
-                    <button className="bootstrap-btn valider" style={{width: '20%', height: '5vh', cursor: 'pointer'}} onClick={supprimerFacture}>OUI</button>
-                </div>
-            </Modal>
-            <Modal
-                isOpen={modalReussi}
-                style={customStyles2}
-                contentLabel="Commande réussie"
-                onRequestClose={fermerModalReussi}
-            >
-                {
-                    supp ? 
-                    (<h2 style={{color: '#000'}}>Facture annulé ✔ !</h2>) :
-                    (<h2 style={{color: '#000'}}>Facture annulé ✔ !</h2>)
-                }
-                <button className='bootstrap-btn valider' style={{width: '50%'}} onClick={fermerModalReussi}>Fermer</button>
-            </Modal>
             <div className="liste-medoc">
-
+                <div style={{ margin: 2 }}>
+                    <p>
+                        <label htmlFor="">Date début : </label>
+                        <input id='date-d-listing' type="date" ref={date_select1} />
+                    </p>
+                    <p>
+                        <label htmlFor="">Date fin : </label>
+                        <input id='date-f-listing' type="date" ref={date_select2} />
+                        
+                    </p>
+                    <button onClick={rechercherHistorique}>
+                        rechercher
+                    </button>
+                </div>
                 <p className="search-zone">
                     <input type="text" placeholder="Nom patient" onChange={filtrerListe} />
                 </p>
-                {/* <p>
-                    <label htmlFor="" style={{marginRight: 5, fontWeight: 700}}>Non réglés</label>
-                    <input type="checkbox" name="non_regle" id="non_regle" checked={filtrer} onChange={() => setFiltrer(!filtrer)} />
-                </p> */}
-                {/* <div>
-                    {filtrer ? (
-                        <div>Total non réglés: <span style={{fontWeight: 700}}>{manquantTotal == null ? '0 Fcfa' : manquantTotal + ' Fcfa'}</span></div>
-                        ) : null}
-                </div> */}
-                <h3>{filtrer ? 'Factures non réglés' : 'Factures'}</h3>
+                <p>
+                    {factures.length + ' factures trouvées'} 
+                </p>
+                <h3>Liste des factures</h3>
                 <ul>
                     {factures.length > 0 ? factures.map(item => (
                         <li id={item.id} key={item.id} onClick={afficherInfos}>{item.patient}</li>
@@ -331,7 +251,7 @@ export default function GestionFactures(props) {
                             <tbody>
                                 {detailsFacture.map(item => (
                                     <tr>
-                                        <td style={table_styles1} role="button" onClick={() => setVisible(true)}>
+                                        <td style={table_styles1}>
                                             {item.designation}
                                             {item.status_vente === "payé" ? null : <CBadge color='danger'>annulé</CBadge>}  
                                         </td>
@@ -339,15 +259,19 @@ export default function GestionFactures(props) {
                                         <td style={table_styles2}>{item.quantite}</td>
                                         <td style={table_styles2}>{item.prix_total}</td>
                                         <td>
-                                            {item.status_vente === "payé" && 
-                                            <CIcon
+                                            {item.status_vente === "payé" && props.role === ROLES.admin && 
+                                            <button
+                                                style={{ background: '#fff', border: 'none', cursor: 'pointer' }}
                                                 id='annuler-produit'
                                                 onClick={() => annulerProduit(item)}
-                                                icon={cilXCircle}
-                                                className="text-danger"
-                                                role="button"
-                                                size='lg'
-                                            />
+                                                disabled={isLoad}
+                                            >
+                                                <CIcon
+                                                    icon={cilXCircle}
+                                                    className="text-danger"
+                                                    size='lg'
+                                                />
+                                            </button>
                                             }
                                         </td>
                                     </tr>
@@ -374,9 +298,6 @@ export default function GestionFactures(props) {
                                 content={() => componentRef.current}
                             />
                         </div>
-                        {/* <div style={{display: `${props.role.toUpperCase() !== ROLES.admin.toUpperCase() && 'none' }`}}>
-                            <button className='bootstrap-btn annuler' style={{width: '15vw', height: '5vh', marginLeft: '30px'}} onClick={() => {if(detailsFacture.length > 0) setModalConfirmation(true)}}>Annuler</button>
-                        </div> */}
                     </div>
                     <div>
                         {factureSelectionne.length > 0 && (

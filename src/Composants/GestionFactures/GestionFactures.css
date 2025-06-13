@@ -27,7 +27,7 @@
     height: 5vh;
     outline: none;
     border-radius: 5px;
-    color: #03ca7e;
+    color: #1a1919;
     font-size: 17px;
     margin-bottom: 5px;
 }
@@ -52,7 +52,7 @@
 }
 
 .container-facture .liste-medoc ul li {
-    color: #1a1919;
+    /* color: #1a1919; */
     font-weight: 600;
     width: 100%;
     line-height: 35px;
