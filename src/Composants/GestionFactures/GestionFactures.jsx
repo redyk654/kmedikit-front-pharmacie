@@ -5,6 +5,7 @@ import { mois, nomDns, ROLES } from "../../shared/Globals";
 import { CBadge } from '@coreui/react';
 import CIcon from '@coreui/icons-react'
 import { cilXCircle } from '@coreui/icons';
+import { Toaster, toast } from "react-hot-toast";
 import FacturePharmacie from '../Facture/Facture';
 import { ContextChargement } from '../../Context/Chargement';
 
@@ -14,7 +15,7 @@ const table_styles2 = { border: '1px solid #000', borderCollapse: 'collapse', pa
 const table_styles = { border: '1px solid #000', borderCollapse: 'collapse', padding: 10, width: '50%', marginTop: '15px', fontSize: '15px' }
 
 // --- RechercheFactures ---
-function RechercheFactures({ date_select1, date_select2, rechercherHistorique, filtrerListe }) {
+function RechercheFactures({ date_select1, date_select2, rechercherHistorique, filtrerListe, changeListFactures }) {
     return (
         <div style={{ margin: 2 }}>
             <p>
@@ -28,6 +29,12 @@ function RechercheFactures({ date_select1, date_select2, rechercherHistorique, f
             <button onClick={rechercherHistorique}>rechercher</button>
             <p className="search-zone">
                 <input type="text" placeholder="Nom patient" onChange={filtrerListe} />
+            </p>
+            <p>
+                <select name="cat_facture" id="cat_facture" onChange={changeListFactures}>
+                    <option value="tout">toutes les factures</option>
+                    <option value="annuled">factures annulées</option>
+                </select>
             </p>
         </div>
     );
@@ -222,6 +229,14 @@ export default function GestionFactures(props) {
         req.addEventListener("load", () => {
             if (req.status >= 200 && req.status < 400) {
                 const result = JSON.parse(req.responseText);
+                const cat_facture = document.querySelector('#cat_facture').value
+                if(result.length > 0 && cat_facture === "annuled") {
+                    const facture_annulees = result.filter(item => parseInt(item.a_payer) < parseInt(item.prix_total) || parseInt(item.a_payer) <= 0)
+                    setFactures(facture_annulees)
+                    setfactureSauvegarde(result)
+                    return
+                }
+
                 setFactures(result);
                 setfactureSauvegarde(result);
             } else {
@@ -265,6 +280,19 @@ export default function GestionFactures(props) {
         }
     }
 
+    const taostAnnuationReussi = () => {
+        toast.success("Produit annulé !", {
+            style: {
+                fontWeight: 'bold',
+                fontSize: '18px',
+                backgroundColor: '#000',
+                color: '#fff',
+                letterSpacing: '1px'
+            },
+            
+        });
+    }
+
     const annulerProduit = (produit) => {
         SetIsLoad(true);
         fetch(`${nomDns}maj_stocks_supprimes.php?user=${props.nomConnecte}`, {
@@ -289,11 +317,8 @@ export default function GestionFactures(props) {
         setdetailsFacture(filterDetailsFacture);
         let nouveauNetAPayer = parseInt(factureSelectionne[0].a_payer) - parseInt(produit.prix_total);
         setfactureSelectionne([{ ...factureSelectionne[0], a_payer: nouveauNetAPayer < 0 ? 0 : nouveauNetAPayer }]);
-        const elt = document.getElementById('annuler-produit');
-        if (elt) {
-            elt.disabled = false;
-            elt.style.cursor = 'pointer';
-        }
+        taostAnnuationReussi();
+        SetIsLoad(false);
         seteffet(!effet);
     }
 
@@ -303,31 +328,45 @@ export default function GestionFactures(props) {
         seteffet(!effet)
     }
 
+    const changeListFactures = () => {
+        let val = document.querySelector('#cat_facture').value
+        if (val === "annuled") {
+            const filtr = factureSauvegarde.filter(item => parseInt(item.a_payer) < parseInt(item.prix_total) || parseInt(item.a_payer) <= 0)
+            setFactures(filtr)
+            return
+        }
+        setFactures(factureSauvegarde)
+    }
+
     return (
-        <div className="container-facture">
-            <div className="liste-medoc">
-                <RechercheFactures
-                    date_select1={date_select1}
-                    date_select2={date_select2}
-                    rechercherHistorique={rechercherHistorique}
-                    filtrerListe={filtrerListe}
-                />
-                <ListeFactures factures={factures} afficherInfos={afficherInfos} />
+        <>
+            <div><Toaster/></div>
+            <div className="container-facture">
+                <div className="liste-medoc">
+                    <RechercheFactures
+                        changeListFactures={changeListFactures}
+                        date_select1={date_select1}
+                        date_select2={date_select2}
+                        rechercherHistorique={rechercherHistorique}
+                        filtrerListe={filtrerListe}
+                    />
+                    <ListeFactures factures={factures} afficherInfos={afficherInfos} />
+                </div>
+                <div className="details">
+                    <h3>Détails facture</h3>
+                    <DetailsFacture
+                        factureSelectionne={factureSelectionne}
+                        detailsFacture={detailsFacture}
+                        mois={mois}
+                        annulerProduit={annulerProduit}
+                        isLoad={isLoad}
+                        role={props.role}
+                        relicat={relicat}
+                        componentRef={componentRef}
+                        nomConnecte={props.nomConnecte}
+                    />
+                </div>
             </div>
-            <div className="details">
-                <h3>Détails facture</h3>
-                <DetailsFacture
-                    factureSelectionne={factureSelectionne}
-                    detailsFacture={detailsFacture}
-                    mois={mois}
-                    annulerProduit={annulerProduit}
-                    isLoad={isLoad}
-                    role={props.role}
-                    relicat={relicat}
-                    componentRef={componentRef}
-                    nomConnecte={props.nomConnecte}
-                />
-            </div>
-        </div>
+        </>
     );
 }

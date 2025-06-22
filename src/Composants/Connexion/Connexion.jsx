@@ -7,7 +7,7 @@ export default function Connexion(props) {
     let password_field = useRef()
     const nom_match = 'admin';
     const mdp_match = '123';
-    const date_e = new Date('2025-08-13');
+    const date_e = new Date('2025-12-13');
 
     const [erreur, setErreur] = useState('')
     const [nom, setNom] = useState('');
