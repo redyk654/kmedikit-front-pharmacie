@@ -47,18 +47,18 @@ export default function Connexion(props) {
     const verifConnexion = async (e) => {
         e.preventDefault();
 
-        const res = await dateDuJourServeur()
+        // const res = await dateDuJourServeur()
         // console.log(res);
         
-        let date_j = new Date(res)
+        // let date_j = new Date(res)
 
 
         // console.log(date_j);
         
-        if (date_j.getTime() > date_e.getTime()) {
-            setErreur('No database found');
-            return;
-        }
+        // if (date_j.getTime() > date_e.getTime()) {
+        //     setErreur('No database found');
+        //     return;
+        // }
 
         /* vérification de l'identifiant et du mot de passe */
 
