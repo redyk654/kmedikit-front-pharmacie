@@ -98,9 +98,6 @@ export default function FactureManuelle(props) {
     const assuranceDefaut = 'aucune';
     const {chargement, stopChargement, startChargement, darkLight} = useContext(ContextChargement);
 
-    const date_e = new Date('2036-12-15');
-    const date_j = new Date();
-
     const [enDev, setEnDev] = useState(false);
     const [listeMedoc, setListeMedoc] = useState([]);
     const [listeMedocSauvegarde, setListeMedocSauvegarde] = useState([]);
@@ -135,14 +132,7 @@ export default function FactureManuelle(props) {
     useEffect(() => {
         startChargement();
         // Récupération des médicaments dans la base via une requête Ajax
-        if (date_j.getTime() <= date_e.getTime()) {
-            fetchProduits();
-        } else {
-            // setTimeout(() => {
-            //     props.setConnecter(false);
-            //     props.setOnglet(1);
-            // }, 10000);
-        }
+        fetchProduits();
     }, [rafraichir]);
 
     useEffect(() => {

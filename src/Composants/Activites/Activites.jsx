@@ -48,8 +48,6 @@ export default function Activites(props) {
 
     let date_filtre = useRef();
     let btnModifStock = useRef();
-    const date_e = new Date('2026-07-15');
-    const date_j = new Date();
 
     const [listeHistorique, setListeHistorique] = useState([]);
     const [listeSauvegarde, setListeSauvegarde] = useState([]);
@@ -118,32 +116,25 @@ export default function Activites(props) {
 
     useEffect(() => {
         startChargement();
-        if (date_j.getTime() <= date_e.getTime()) {
-            // Récupération de la liste de produits
-            const req = new XMLHttpRequest();
-            req.open('GET', `${nomDns}recuperer_historique.php`);
+        // Récupération de la liste de produits
+        const req = new XMLHttpRequest();
+        req.open('GET', `${nomDns}recuperer_historique.php`);
 
-            req.addEventListener('load', () => {
-                // console.log(req.responseText);
-                const result = JSON.parse(req.responseText);
-                setListeHistorique(result);
-                setListeSauvegarde(result);
-                // creerListeProduitsInventaires(result);
-                stopChargement();
-            });
+        req.addEventListener('load', () => {
+            // console.log(req.responseText);
+            const result = JSON.parse(req.responseText);
+            setListeHistorique(result);
+            setListeSauvegarde(result);
+            // creerListeProduitsInventaires(result);
+            stopChargement();
+        });
 
-            req.send();
+        req.send();
 
-            req.addEventListener("error", function () {
-                // La requête n'a pas réussi à atteindre le serveur
-                setMessageErreur('Erreur réseau');
-            });
-        } else {
-            // setTimeout(() => {
-            //     props.setConnecter(false);
-            //     props.setOnglet(1);
-            // }, 10000);
-        }
+        req.addEventListener("error", function () {
+            // La requête n'a pas réussi à atteindre le serveur
+            setMessageErreur('Erreur réseau');
+        });
 
     }, [state]);
 
