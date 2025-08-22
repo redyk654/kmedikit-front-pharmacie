@@ -118,33 +118,25 @@ export default function Activites(props) {
 
     useEffect(() => {
         startChargement();
-        if (date_j.getTime() <= date_e.getTime()) {
-            // Récupération de la liste de produits
-            const req = new XMLHttpRequest();
-            req.open('GET', `${nomDns}recuperer_historique.php`);
+        // Récupération de la liste de produits
+        const req = new XMLHttpRequest();
+        req.open('GET', `${nomDns}recuperer_historique.php`);
 
-            req.addEventListener('load', () => {
-                // console.log(req.responseText);
-                const result = JSON.parse(req.responseText);
-                setListeHistorique(result);
-                setListeSauvegarde(result);
-                // creerListeProduitsInventaires(result);
-                stopChargement();
-            });
+        req.addEventListener('load', () => {
+            // console.log(req.responseText);
+            const result = JSON.parse(req.responseText);
+            setListeHistorique(result);
+            setListeSauvegarde(result);
+            // creerListeProduitsInventaires(result);
+            stopChargement();
+        });
 
-            req.send();
+        req.send();
 
-            req.addEventListener("error", function () {
-                // La requête n'a pas réussi à atteindre le serveur
-                setMessageErreur('Erreur réseau');
-            });
-        } else {
-            // setTimeout(() => {
-            //     props.setConnecter(false);
-            //     props.setOnglet(1);
-            // }, 10000);
-        }
-
+        req.addEventListener("error", function () {
+            // La requête n'a pas réussi à atteindre le serveur
+            setMessageErreur('Erreur réseau');
+        });
     }, [state]);
 
     // const creerListeProduitsInventaires = (listeProduits) => {

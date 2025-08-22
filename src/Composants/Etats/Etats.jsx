@@ -12,8 +12,6 @@ export default function Etats(props) {
 
     const componentRef = useRef();
     const admin = "admin";
-    const date_e = new Date('2026-04-15');
-    const date_j = new Date();
 
     let date_select1 = useRef();
     let date_select2 = useRef();
@@ -45,14 +43,6 @@ export default function Etats(props) {
         recupererDateJour('date-f-etats');
         recupererHeureJour('heure-f-etats')
         recupererHeureDernierService();
-        if (date_j.getTime() <= date_e.getTime()) {
-
-        } else {
-            // setTimeout(() => {
-            //     props.setConnecter(false);
-            //     props.setOnglet(1);
-            // }, 6000);
-        }
     }, []);
 
     // useEffect(() => {
