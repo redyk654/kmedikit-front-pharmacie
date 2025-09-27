@@ -186,6 +186,7 @@ export default function Commande(props) {
     const [modalNouveauProduit, setModalNouveauProduit] = useState(false);
     const [msgErreur, setMsgErreur] = useState('');
     const [msgPatient, setMsgPatient] = useState('');
+    const [isAssure, setIsAssure] = useState('');
 
     const { code, nom, age, sexe, quartier, assurance, type_assurance } = nouveauPatient;
     const {code_prod, designation, classe, pu_achat, pu_vente, conditionnement, stock_ajoute, min_rec, categorie, date_peremption, montant_commande, genre} = infosMedoc;
@@ -311,6 +312,7 @@ export default function Commande(props) {
     }
 
     const annulerCommande = () => {
+        setIsAssure('')
         setMedocCommandes([]);
         setmontantVerse('');
         setMessageErreur('');
@@ -379,6 +381,7 @@ export default function Commande(props) {
         data.append('assurance', patientChoisi.assurance);
         data.append('type_assurance', patientChoisi.type_assurance);
         data.append('statu', statu);
+        data.append('is_assure', isAssure);
 
         const req = new XMLHttpRequest();
         req.open('POST', `${nomDns}index.php?enreg_facture_pharmacie`);
@@ -427,6 +430,7 @@ export default function Commande(props) {
 
             let i = 0;
             const idFac = idUnique();
+
             medocCommandes.map(item => {
 
                 const data2 = new FormData();
@@ -442,12 +446,13 @@ export default function Commande(props) {
                 data2.append('nom_vendeur', props.nomConnecte);
                 data2.append('status_vente', 'non payé');
                 data2.append('patient', patientChoisi.nom);
+                data2.append('is_assure', isAssure);
 
                 // Envoi des données
                 const req2 = new XMLHttpRequest();
                 req2.open('POST', `${nomDns}maj_historique.php`);
                 
-                // Une fois la requête charger on vide tout les états
+                // 
                 req2.addEventListener('load', () => {
                     if (req2.status >= 200 && req2.status < 400) {
                         setMessageErreur('');
@@ -485,11 +490,22 @@ export default function Commande(props) {
     }
 
     const demandeConfirmation = () => {
+        // const is_assure = document.querySelector('#is_assure').value
+        // console.log(isAssure);
+        
+        if (!isAssure) {
+            setMessageErreur("Précisez si le patient est assuré ou non");
+            return;
+        }
         if(medocCommandes.length === 0) {
             setMessageErreur("Aucun médicament n'a été ajouté à la facture en cours");
+            return;
         } else if (patientChoisi.nom === "") {
             setMessageErreur("Choisissez un patient")
+            // ouvrirModalPatient();
+            return;
         } else {
+            setMessageErreur('')
             afterModal();
             setModalConfirmation(true);
         }
@@ -925,16 +941,14 @@ export default function Commande(props) {
                                     Patient: <span style={{color: `${darkLight ? '#fff' : '#000'}`, fontWeight: '700'}}>{patientChoisi.nom.toUpperCase()}</span>
                                 </div>
                             ) : null}
-                            {patientChoisi.nom.length > 0 ? (
-                                <div>
-                                    Code patient: <span style={{color: '#0e771a', fontWeight: '700'}}>{patientChoisi.code.toUpperCase()}</span>
-                                </div>
-                            ) : null}
-                            {patientChoisi.assurance.toUpperCase() !== assuranceDefaut.toUpperCase() ? (
-                                <div style={{}}>
-                                    Couvert par: <span style={{color: `${darkLight ? '#fff' : '#000'}`, fontWeight: '700'}}>{patientChoisi.assurance.toLocaleUpperCase()}</span>
-                                </div>
-                            ) : null}
+                            <div>
+                                Code patient: <span style={{color: '#0e771a', fontWeight: '700'}}>{patientChoisi.code.toUpperCase()}</span>
+                            </div>
+                            <select  value={isAssure} onChange={(e) => setIsAssure(e.target.value)} name="is_assure" id="is_assure" style={{marginTop: '10px', padding: '5px', borderRadius: '5px', border: '1px solid lightgray', backgroundColor: `${darkLight ? '#18202e' : '#fff'}`, color: `${darkLight ? '#fff' : '#000'}`}}>
+                                <option>le patient est assuré ?</option>
+                                <option value="0">non</option>
+                                <option value="1">oui</option>
+                            </select>
                         </div>
                     </div>
 
