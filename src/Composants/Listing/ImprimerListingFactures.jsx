@@ -39,6 +39,10 @@ const table_styles = {
 export default class ImprimerListingFactures extends Component {
 
     render() {
+        // Déterminer le libellé du filtre assurance
+        const v = this.props.assurance;
+        const assuranceLabel = v === 'oui' ? 'Assurés' : (v === 'non' ? 'Non assurés' : 'Tous');
+
         return (
             <div style={{backgroundColor: '#f1f1f1', height: '100vh', marginTop: '0px'}}>
                 <div className='w-75 m-auto'>
@@ -53,6 +57,8 @@ export default class ImprimerListingFactures extends Component {
                             <span style={{fontWeight: '600', marginTop: '15px'}}>{this.props.infoRecette ? mois(this.props.dateDuJour.substring(0, 11)) : (mois(this.props.dateDuJour.substring(0, 10)) + ' ')} à {this.props.infoRecette ? this.props.dateDuJour.substring(11,) : (' ' + this.props.dateDuJour.substring(11, 16))}</span>
                         </div>
                         <div style={{marginTop: 5}}>Service fait par <span style={{fontWeight: '600', marginTop: '15px'}}>{this.props.nomConnecte.toUpperCase()}</span></div>
+                        {/* Affichage du filtre Assurance */}
+                        <div style={{marginTop: 5}}>Type : <strong>{assuranceLabel}</strong></div>
                         <div style={{marginTop: 5}}>Du <span style={{fontWeight: '600', marginTop: '15px'}}>{mois2(this.props.dateDepart)} à {this.props.dateDepart.substring(10, 13)}h{this.props.dateDepart.substring(14, 16)}min</span> Au <strong>{mois2(this.props.dateFin)} à {this.props.dateFin.substring(10, 13)}h{this.props.dateFin.substring(14, 16)}min</strong></div>
                         <div style={{textAlign: 'center', marginBottom: 15}}>
                             <table style={table_styles}>
@@ -75,7 +81,8 @@ export default class ImprimerListingFactures extends Component {
                                 </tbody>
                             </table>
                         </div>
-                        <div style={{marginTop: 5}}>Total : <strong>{this.props.recetteTotal ? (this.props.total) + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
+                        <div style={{marginTop: 5}}>Total : <strong>{this.props.total ? (this.props.total) + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
+                        <div style={{marginTop: 5}}>Recette : <strong>{this.props.recetteTotal ? (this.props.recetteTotal) + ' Fcfa' : 0 + ' Fcfa'}</strong></div>
                         {/* <div style={{marginTop: 5}}>
                             <h6>
                                 ATTENTION AU DECOUPAGE DES DONNÉES LORS DE L'IMPRESSION !

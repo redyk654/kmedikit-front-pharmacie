@@ -28,7 +28,8 @@ export default function ListingFactures(props) {
     const [dateDepart, setdateDepart] = useState('');
     const [dateFin, setdateFin] = useState('');
     const [vendeur, setVendeur] = useState('');
-    const [assurance, setAssurance] = useState('non');
+    // const [assurance, setAssurance] = useState('non');
+    const [assurance, setAssurance] = useState('tous');
     const [messageErreur, setMessageErreur] = useState('');
     const [filtre, setFiltre] = useState(true);
     const [currentDate, setCurrentDate] = useState('');
@@ -51,7 +52,10 @@ export default function ListingFactures(props) {
             data.append('dateD', dateD);
             data.append('dateF', dateF);
             data.append('vendeur', vendeur.toLowerCase());
+            // Conserve l’ancien param pour compatibilité
             data.append('assurance', assurance);
+            // Nouveau param unifié (sera géré côté backend après adaptation)
+            data.append('is_assure', assurance === 'tous' ? 'tous' : (assurance === 'oui' ? '1' : '0'));
     
             const req = new XMLHttpRequest();
     
@@ -123,25 +127,9 @@ export default function ListingFactures(props) {
                 }
             }
             
-            let recette = 0, resteAPayer = 0;
-            if (assurance === "non") {
-                result.forEach(item => {
-                    if (item.assurance.toUpperCase() === "aucune".toUpperCase()) {
-                        recette += parseInt(item.a_payer);
-                        resteAPayer += parseInt(item.reste_a_payer)
-                    }
-                });
-            } else {
-                result.forEach(item => {
-                    if (item.assurance.toUpperCase() !== "aucune".toUpperCase()) {
-                        recette += parseInt(item.a_payer);
-                        resteAPayer += parseInt(item.reste_a_payer)
-                    }
-                });
-            }
-            // recette -= resteAPayer
+            let recette = 0;
+            recette = result.reduce((acc, item) => acc + parseInt(item.a_payer), 0);
             setRecetteTotal(recette);
-            setDette(resteAPayer);
     }
 
     const rechercherHistorique = () => {
@@ -231,11 +219,12 @@ export default function ListingFactures(props) {
                                 }
                             </p>
                             <p>
-                                {/* <label htmlFor="assure">Categorie : </label>
-                                <select name="" id="assure" onChange={(e) => setAssurance(e.target.value)}>
-                                    <option value="non">non assuré</option>
-                                    <option value="oui">assuré</option>
-                                </select> */}
+                                <label htmlFor="assure">Assurance : </label>
+                                <select id="assure" value={assurance} onChange={(e) => setAssurance(e.target.value)}>
+                                    <option value="tous">Tous</option>
+                                    <option value="oui">Assurés</option>
+                                    <option value="non">Non assurés</option>
+                                </select>
                             </p>
                             <p style={{display: `${filtre ? 'block' : 'none'}`}}>
                                 <label htmlFor="">Commis : </label>
@@ -243,7 +232,7 @@ export default function ListingFactures(props) {
                                     {props.role === "vendeur" ? 
                                     <option value={props.nomConnecte.toLowerCase()}>{props.nomConnecte.toUpperCase()}</option> :
                                     listeComptes.map(item => (
-                                        <option value={item.nom_user.toLowerCase()}>{item.nom_user.toUpperCase()}</option>
+                                        <option key={item.nom_user} value={item.nom_user.toLowerCase()}>{item.nom_user.toUpperCase()}</option>
                                     ))}
                                 </select>
                             </p>
@@ -301,6 +290,7 @@ export default function ListingFactures(props) {
                     dateDepart={dateDepart}
                     dateFin={dateFin}
                     dateDuJour={currentDate}
+                    assurance={assurance}
                 />
             </div>
         </section>

@@ -35,6 +35,8 @@ export default function Etats(props) {
     const [filtre, setFiltre] = useState(false);
     const [non_paye, setNonPaye] = useState(false);
     const [reload, setReload] = useState(false);
+    // Nouveau filtre assurance (tous | 1 | 0)
+    const [assureFiltre, setAssureFiltre] = useState('tous');
 
     useEffect(() => {
         startChargement();
@@ -60,6 +62,8 @@ export default function Etats(props) {
             const data = new FormData();
             data.append('dateD', dateD);
             data.append('dateF', dateF);
+            // Transmettre le filtre assurance au backend
+            data.append('is_assure', assureFiltre);
 
             const req = new XMLHttpRequest();
             if (props.role !== admin) {
@@ -109,13 +113,14 @@ export default function Etats(props) {
             req.send(data);
         }
 
-    }, [dateDepart, dateFin, search, filtre, caissier]);
+    }, [dateDepart, dateFin, search, filtre, caissier, assureFiltre]);
 
     const recupererRecetteReel = (dateD, dateF) => {
         // console.log("passage");
         const data = new FormData();
         data.append('dateD', dateD);
         data.append('dateF', dateF);
+        data.append('is_assure', assureFiltre);
 
         if (props.role !== admin) {
             data.append('vendeur', props.nomConnecte);
@@ -290,6 +295,20 @@ export default function Etats(props) {
                                     <input id='date-f-etats' type="date" ref={date_select2} />
                                     <input id='heure-f-etats' type="time" ref={heure_select2} />
                                 </p>
+                                {/* Nouveau sélecteur Assurance */}
+                                <p>
+                                    <label htmlFor="assure-filtre">Assurance : </label>
+                                    <CFormSelect 
+                                        id="assure-filtre"
+                                        className='w-10'
+                                        value={assureFiltre}
+                                        onChange={(e) => setAssureFiltre(e.target.value)}
+                                    >
+                                        <option value="tous">Tous</option>
+                                        <option value="1">Assurés</option>
+                                        <option value="0">Non assurés</option>
+                                    </CFormSelect>
+                                </p>
                                 <p>
                                     {
                                     props.role === admin && 
@@ -380,6 +399,7 @@ export default function Etats(props) {
                         recetteGenerique={recetteGenerique}
                         recetteSp={recetteSp}
                         filtre={filtre}
+                        assureFiltre={assureFiltre}
                     />
                 </div>
             </section>

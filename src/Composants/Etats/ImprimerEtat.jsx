@@ -51,6 +51,10 @@ export default class ImprimerEtat extends Component {
     }
 
     render() {
+        // Déterminer le libellé du filtre assurance
+        const v = this.props.assureFiltre;
+        const assuranceLabel = (v === '1' || v === 1) ? 'Assurés' : ((v === '0' || v === 0) ? 'Non assurés' : 'Tous');
+
         return (
             <div style={{backgroundColor: '#f1f1f1', height: '100vh', marginTop: '0px'}}>
                 <div className='w-75 m-auto'>
@@ -59,7 +63,7 @@ export default class ImprimerEtat extends Component {
                 </div>
                     <div style={{fontSize: 9, display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '10px',}}>
                         <div style={{textAlign: 'center', width: '410px'}}>
-                            <p className='text-center h4'>Fiche des recettes de la pharmacie</p>
+                            <p className='text-center h4'>Listing des produits de la pharmacie</p>
                             <div style={{marginTop: 5}}>
                                 tiré le &nbsp;
                                 <span style={{fontWeight: '600', marginTop: '15px'}}>{this.props.infoRecette ? mois(this.props.infoRecette[0].date_heure.substring(0, 11)) : (mois(this.state.currentDate.substring(0, 10)) + ' ')} à {this.props.infoRecette ? this.props.infoRecette[0].date_heure.substring(11,) : (' ' + this.state.currentDate.substring(11, 16))}</span>
@@ -68,6 +72,8 @@ export default class ImprimerEtat extends Component {
                                 <div style={{marginTop: 5}}>Service fait par <span style={{fontWeight: '600', marginTop: '15px'}}>{this.props.caissier.toUpperCase()}</span></div>
                                 : null
                             }
+                            {/* Affichage du filtre Assurance */}
+                            <div style={{marginTop: 5}}>Type : <span style={{fontWeight: '600', marginTop: '15px'}}>{assuranceLabel}</span></div>
                             <div style={{marginTop: 5}}>Du <span style={{fontWeight: '600', marginTop: '15px'}}>{mois2(this.props.dateDepart)} à {this.props.dateDepart.substring(10, 13)}h{this.props.dateDepart.substring(14, 16)}min</span> Au <strong>{mois2(this.props.dateFin)} à {this.props.dateFin.substring(10, 13)}h{this.props.dateFin.substring(14, 16)}min</strong></div>
                             <div style={{textAlign: 'center', marginBottom: 15}}>
                                 <table style={table_styles}>
