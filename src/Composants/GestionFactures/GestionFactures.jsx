@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import './GestionFactures.css';
 import ReactToPrint from 'react-to-print';
-import { mois, nomDns, ROLES } from "../../shared/Globals";
+import { formaterNombre, mois, nomDns, ROLES } from "../../shared/Globals";
 import { CBadge } from '@coreui/react';
 import CIcon from '@coreui/icons-react'
 import { cilXCircle } from '@coreui/icons';
@@ -41,10 +41,13 @@ function RechercheFactures({ date_select1, date_select2, rechercherHistorique, f
 }
 
 // --- ListeFactures ---
-function ListeFactures({ factures, afficherInfos }) {
+function ListeFactures({ factures, afficherInfos, somme, sommeAssure, sommeNonAssures }) {
     return (
         <>
             <p>{factures.length + ' factures trouvées'}</p>
+            <p>Montant total : {formaterNombre(somme)}</p>
+            <p>Montant assuré : {formaterNombre(sommeAssure)}</p>
+            <p>Montant non assuré : {formaterNombre(sommeNonAssures)}</p>
             <h3>Liste des factures</h3>
             <ul>
                 {factures.length > 0 ? factures.map(item => (
@@ -164,7 +167,7 @@ function DetailsFacture({
             <div>
                 <div>Le <strong>{mois(facture.date_heure.substring(0, 10))}</strong> à <strong>{facture.date_heure.substring(11)}</strong></div>
             </div>
-            <div style={{ marginTop: 5 }}>patient : <span style={{ fontWeight: '600', marginTop: '15px' }}>{facture.patient}</span></div>
+            <div style={{ marginTop: 5 }}>patient : <span style={{ fontWeight: '600', marginTop: '15px' }}>{facture.patient}</span>{parseInt(facture.is_assure) === 0 ? "(non assuré)" : "(assuré)"}</div>
             <div style={{ marginTop: 5 }}>code patient : <span style={{ fontWeight: '600', marginTop: '15px' }}>{facture.code_patient}</span></div>
             {facture.assurance.toUpperCase() !== "AUCUNE" &&
                 <div>couvert par : <strong>{facture.assurance.toUpperCase()}</strong></div>
@@ -232,6 +235,8 @@ export default function GestionFactures(props) {
                 const cat_facture = document.querySelector('#cat_facture').value
                 if(result.length > 0 && cat_facture === "annuled") {
                     const facture_annulees = result.filter(item => parseInt(item.a_payer) < parseInt(item.prix_total) || parseInt(item.a_payer) <= 0)
+                    console.log(result);
+                    
                     setFactures(facture_annulees)
                     setfactureSauvegarde(result)
                     return
@@ -245,6 +250,23 @@ export default function GestionFactures(props) {
         });
         req.addEventListener("error", function () { console.error("Erreur réseau"); });
         req.send();
+    }
+
+    const calculeSommes = () => {
+        const somme = factures.reduce((acc, item) => acc + parseInt(item.prix_total), 0);
+        return somme;
+    }
+
+    const calculSommesAssures = () => {
+        const filtre = factures.filter(item => parseInt(item.is_assure) === 1);
+        const somme = filtre.reduce((acc, item) => acc + parseInt(item.prix_total), 0);
+        return somme;
+    }
+
+    const calculSommesNonAssures = () => {
+        const filtre = factures.filter(item => parseInt(item.is_assure) === 0);
+        const somme = filtre.reduce((acc, item) => acc + parseInt(item.prix_total), 0);
+        return somme;
     }
 
     useEffect(() => {
@@ -350,7 +372,7 @@ export default function GestionFactures(props) {
                         rechercherHistorique={rechercherHistorique}
                         filtrerListe={filtrerListe}
                     />
-                    <ListeFactures factures={factures} afficherInfos={afficherInfos} />
+                    <ListeFactures factures={factures} afficherInfos={afficherInfos} somme={calculeSommes()} sommeNonAssures={calculSommesNonAssures()} sommeAssure={calculSommesAssures()} />
                 </div>
                 <div className="details">
                     <h3>Détails facture</h3>
